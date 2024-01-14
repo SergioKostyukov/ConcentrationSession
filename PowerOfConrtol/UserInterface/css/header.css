@@ -23,30 +23,111 @@ header {
     cursor: pointer;
 }
 
-.app-title h1 {
-    margin-left: 20px;
+.app-logo-button {
+    background-color: #eaeaea;
+    width: auto;
+    height: 40px;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    padding-right: 10px;
+}
+
+.app-logo {
+    width: 40px; 
+    height: auto; 
+    padding: 0px 10px;
+    pointer-events: none;
+}
+
+.app-logo-button h1 {
+    color: #000;
 }
 
 .user-account {
     display: flex;
     align-items: center;
-}
-
-.profile-link {
-    text-decoration: none;
-    color: #fff;
+    position: relative;
 }
 
 .profile-button {
-    background-color: #eee;
-    color: #fff;
-    width: 120px;
+    background-color: #eaeaea;
+    width: auto;
+    min-width: 100px;
     height: 30px;
     border-radius: 30px;
     border: 1px solid #ccc;
     text-decoration: none;
-    color: #000;
     display: flex;
     align-items: center;
-    justify-content: center;
+    padding-right: 10px;
+}
+
+.user-avatar{
+    width: 30px; 
+    height: auto; 
+    padding-right: 5px;
+    pointer-events: none;
+}
+
+.profile-button h2 {
+    font-size: 18px;
+    color: #000;
+}
+
+.user-menu {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 250px;
+    background-color: #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    z-index: 1;
+}
+
+.user-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-menu li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 15px;
+    background-color: #fff;
+}
+
+.user-menu li:last-child {
+    border-bottom: none;
+}
+
+.user-menu a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.user-menu a:hover {
+    background-color: #eee;
+}
+
+.user-info {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    color: #000;
+    padding: 10px 10px 0px 10px;
+    border-radius: 15px;
+    user-select:text;
+}
+
+.user-info-item {
+    font-weight: bold; 
+    color: #333; 
+    margin: 0px 10px 10px 0px;
 }

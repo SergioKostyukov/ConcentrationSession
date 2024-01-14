@@ -1,7 +1,5 @@
-.body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
+body {
+    user-select: none;
 }
 
 main {
@@ -10,22 +8,28 @@ main {
 }
 
 .center-blocks {
+    height: 90vh;
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
-    margin: 20px;
+    margin: 20px 0px 0px 0px;
     align-content: flex-start;
 }
 
 .block {
-    width: 500px;
-    height: 350px;
+    width: 480px;
+    height: 400px;
     background-color: #eee;
-    margin: 0px 40px; 
+    margin: 0px 30px; 
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #ccc;
     border-radius: 40px;
     margin-bottom: 60px;
+    text-decoration: none;
+
+    color: #000; /* Додав колір тексту, якщо потрібно виділити текст на фоні зображення */
+    background-size: cover; /* Розмір зображення відповідатиме розмірам блоку */
+    background-position: center; /* Центрує зображення в блоку */
+    background-repeat: no-repeat;
 }
