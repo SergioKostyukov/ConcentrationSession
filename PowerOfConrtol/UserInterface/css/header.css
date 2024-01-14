@@ -1,0 +1,52 @@
+header {
+    background-color: #333;
+    color: #fff;
+    height: 40px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 25px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-button {
+    background-color: #333;
+    color: #fff;
+    font-size: 20px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.app-title h1 {
+    margin-left: 20px;
+}
+
+.user-account {
+    display: flex;
+    align-items: center;
+}
+
+.profile-link {
+    text-decoration: none;
+    color: #fff;
+}
+
+.profile-button {
+    background-color: #eee;
+    color: #fff;
+    width: 120px;
+    height: 30px;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

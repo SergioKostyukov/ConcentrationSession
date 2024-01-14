@@ -1,0 +1,103 @@
+.navigation-panel {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    width: 60px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 25px;
+    transition: width 0.3s ease;
+}
+
+.navigation-panel:hover {
+    width: 360px;
+    /* Ширина при наведенні */
+}
+
+.navigation-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.navigation-panel li {
+    margin-bottom: 10px;
+    transition: opacity 0.3s ease;
+}
+
+.navigation-panel:hover li {
+    opacity: 1;
+    /* Показати текст при наведенні */
+}
+
+.navigation-panel a {
+    text-decoration: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.navigation-panel a:hover {
+    color: #eee;
+    /* Зміна кольору тексту при наведенні на кнопку */
+}
+
+.navigation-panel:hover .round-button span {
+    opacity: 1;
+}
+
+.navigation-panel.expanded {
+    width: 360px;
+    /* Змініть ширину за вашим вибором для розширеної панелі */
+}
+
+.navigation-panel img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.navigation-panel:hover img {
+    filter: brightness(1.5);
+    /* Збільшити яскравість при наведенні на зображення */
+}
+
+
+.top-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.round-button {
+    background-color: grey;
+    border: 1px solid #333;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.round-button:hover {
+    background-color:rgb(149, 149, 149);
+    border: 1px solid #000;
+}
+
+.round-button span {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 10px);
+    transform: translateY(-50%);
+    transition: opacity 0.3s ease;
+}
+
+.bottom-button {
+    margin-top: auto;
+    /* Встановлення нижньої кнопки внизу панелі */
+}

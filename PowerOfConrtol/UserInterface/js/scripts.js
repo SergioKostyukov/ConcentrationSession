@@ -1,4 +1,4 @@
-let isPanelExpandedByButtom = false; // Початковий стан розширення панелі
+let isPanelExpandedByButtom = false;
 let isPanelExpandedByCursor = false;
 
 function toggleNavigationPanel() {
@@ -41,9 +41,6 @@ function updateButtonLabelsVisibilityByCursor() {
     });
 }
 
-// Додайте подію для розширення панелі при натисканні
-document.getElementById('navigationPanel').addEventListener('click', toggleNavigationPanel);
-
 // Додайте подію для розширення панелі при наведенні
 document.getElementById('navigationPanel').addEventListener('mouseenter', () => {
     if (!isPanelExpandedByButtom) {
@@ -57,6 +54,7 @@ document.getElementById('navigationPanel').addEventListener('mouseenter', () => 
 document.getElementById('navigationPanel').addEventListener('mouseleave', () => {
     if (!isPanelExpandedByButtom) {
         if (isPanelExpandedByCursor) {
-        toggleNavigationPanelByCursor();
-    }}
+            toggleNavigationPanelByCursor();
+        }
+    }
 });
