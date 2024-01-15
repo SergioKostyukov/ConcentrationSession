@@ -8,24 +8,27 @@ main {
 }
 
 .center-blocks {
-    height: 90vh;
+    height: 85vh;
     display: flex;
     flex-wrap: wrap;
     margin: 20px 0px 0px 0px;
-    align-content: flex-start;
+    flex-grow: 1;
 }
 
 .block {
-    width: 480px;
-    height: 400px;
+    width: calc(33.33% - 126px/3);
+    min-width: 300px;
+    max-width: 800px;
+    height: calc(50% - 54px/2);
+    max-height: 700px;
     background-color: #eee;
-    margin: 0px 30px; 
+    margin: 0px 20px; 
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #ccc;
     border-radius: 40px;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
     text-decoration: none;
 
     color: #000; /* Додав колір тексту, якщо потрібно виділити текст на фоні зображення */

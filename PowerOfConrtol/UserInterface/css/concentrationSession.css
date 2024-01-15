@@ -1,0 +1,43 @@
+body {
+    user-select: none;
+}
+
+main {
+    display: flex;
+    padding: 5px 0px;
+}
+
+.center-blocks {
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0px 0px 0px;
+    align-content: flex-start;
+    flex-grow: 1;
+}
+
+.center-blocks .half-page{
+    width: 50%;
+    height: 100%
+}
+
+.block {
+    background-color: #eee;
+    margin: 0px 20px 20px 20px; 
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #000; 
+}
+
+.center-blocks .block.full-height {
+    width: auto;
+    height: calc(100% - 2px);
+}
+
+.center-blocks .block.half-width {
+    width: auto;
+    height: calc(50% - 24px/2);
+}

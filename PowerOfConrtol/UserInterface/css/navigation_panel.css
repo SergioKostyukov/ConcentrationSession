@@ -2,17 +2,13 @@
     background-color: #333;
     color: #fff;
     padding: 10px;
-    width: 60px;
-    height: 90vh;
+    width: auto;
+    min-width: 47px;
+    max-width: 200px;
     display: flex;
     flex-direction: column;
     border-radius: 25px;
-    transition: width 0.3s ease;
-}
-
-.navigation-panel:hover {
-    width: 360px;
-    /* Ширина при наведенні */
+    transition: max-width 0.3s ease, min-width 0.3s ease;
 }
 
 .navigation-panel ul {
@@ -25,11 +21,6 @@
     transition: opacity 0.3s ease;
 }
 
-.navigation-panel:hover li {
-    opacity: 1;
-    /* Показати текст при наведенні */
-}
-
 .navigation-panel a {
     text-decoration: none;
     color: #fff;
@@ -39,7 +30,6 @@
 
 .navigation-panel a:hover {
     color: #eee;
-    /* Зміна кольору тексту при наведенні на кнопку */
 }
 
 .navigation-panel:hover .round-button span {
@@ -47,8 +37,8 @@
 }
 
 .navigation-panel.expanded {
-    width: 360px;
-    /* Змініть ширину за вашим вибором для розширеної панелі */
+    min-width: 200px;
+    max-width: 200px;
 }
 
 .navigation-panel img {
@@ -59,9 +49,7 @@
 
 .navigation-panel:hover img {
     filter: brightness(1.5);
-    /* Збільшити яскравість при наведенні на зображення */
 }
-
 
 .top-buttons {
     display: flex;
@@ -101,5 +89,4 @@
 
 .bottom-button {
     margin-top: auto;
-    /* Встановлення нижньої кнопки внизу панелі */
 }
