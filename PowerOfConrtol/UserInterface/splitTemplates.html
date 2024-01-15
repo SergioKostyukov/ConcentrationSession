@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App Name</title>
+    <link rel="stylesheet" href="css/tasks.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/navigation_panel.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="toggle-button" onclick="toggleNavigationPanel()">☰</button>
+            <a href="index.html" class="app-logo-button">
+                <img src="images/title.png" alt="App Logo" class="app-logo">
+                <h1>Power Of Control</h1>
+            </a>
+        </div>
+        <nav class="user-account">
+            <button class="profile-button" onclick="toggleUserMenu()">
+                <img src="images/avatar.png" alt="Avatar" class="user-avatar">
+                <h2>User</h2> 
+            </button>
+            <div class="user-menu" id="userMenu">
+                <div id="userInfo" class="user-info"></div>
+                <ul id="userOptions">
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="signup.html">Signup</a></li>
+                    <li><a href="account.html">User Account</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-container">
+        <aside class="navigation-panel" id="navigationPanel">
+            <div class="top-buttons">
+                <a href="index.html" class="round-button">
+                    <img src="images/globe_white.png" alt="Home">
+                    <span class="button-text">Home</span>
+                </a>
+                <a href="concentrationSession.html" class="round-button">
+                    <img src="images/clock_white.png" alt="Concentration">
+                    <span class="button-text">Concentration</span>
+                </a>
+                <a href="tasks.html" class="round-button">
+                    <img src="images/book_white.png" alt="Tasks">
+                    <span class="button-text">Tasks</span>
+                </a>
+                <a href="splitTemplates.html" class="round-button">
+                    <img src="images/folder_white.png" alt="Sets">
+                    <span class="button-text">Sets</span>
+                </a>
+                <a href="statistic.html" class="round-button">
+                    <img src="images/statistic.png" alt="Statistic">
+                    <span class="button-text">Statistic</span>
+                </a>
+                <a href="#" class="round-button">
+                    <img src="images/notes_white.png" alt="Notes">
+                    <span class="button-text">Notes</span>
+                </a>
+            </div>
+            <div class="bottom-button">
+                <a href="about.html" class="round-button">
+                    <img src="images/about_white.png" alt="About">
+                    <span class="button-text">About</span>
+                </a>
+                <a href="#" class="round-button">
+                    <img src="images/settings.png" alt="Settings">
+                    <span class="button-text">Settings</span>
+                </a>
+                <a href="#" class="round-button">
+                    <img src="images/trash_white.png" alt="Trash/Archive">
+                    <span class="button-text">Trash/Archive</span>
+                </a>
+            </div>
+        </aside>
+
+        <section class="center-blocks">
+            
+        </section>
+    </main>
+
+    <script src="js/account_bar.js"></script>
+    <script src="js/navigation_panel.js"></script>
+
+</body>
+
+</html>
