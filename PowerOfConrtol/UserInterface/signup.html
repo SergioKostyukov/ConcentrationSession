@@ -20,18 +20,29 @@
         <div class="block">
             <h2>Sign up</h2>
 
-            <input type="text" id="tag_name" name="tag_name" placeholder="Tag name">
-            <input type="text" id="user_name" name="user_name" placeholder="User name">
-            <input type="email" id="email" name="email" placeholder="Email">
-            <input type="password" id="password" name="password" placeholder="Password">
-            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password">
+            <input type="text" id="TagName" name="TagName" placeholder="Tag name" oninput="updateUserData('TagName')">
+            <span id="TagName_error" class="error-message"></span>
 
-            <button onclick="signup()">Sign up</button>
+            <input type="text" id="UserName" name="UserName" placeholder="User name" oninput="updateUserData('UserName')">
+            <span id="UserName_error" class="error-message"></span>
+
+            <input type="email" id="Email" name="Email" placeholder="Email" oninput="updateUserData('Email')">
+            <span id="Email_error" class="error-message"></span>
+
+            <input type="password" id="Password" name="Password" placeholder="Password" oninput="updateUserData('Password')">
+            <span id="Password_error" class="error-message"></span>
+
+            <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm password" oninput="updateUserData('ConfirmPassword')">
+            <span id="ConfirmPassword_error" class="error-message"></span>
+
+            <button id="Sign up" onclick="signup()">Sign up</button>
         </div>
         <div class="block">
             <p>Already have an account? <a href="login.html">Login</a></p>
         </div>
     </div>
+
+    <script src="js/Authorization_authentication.js"></script>
 
 </body>
 

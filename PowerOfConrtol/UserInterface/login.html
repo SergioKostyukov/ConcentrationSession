@@ -20,8 +20,11 @@
         <div class="block">
             <h2>Login</h2>
 
-            <input type="text" id="username" name="username" placeholder="Login">
-            <input type="password" id="password" name="password" placeholder="Password">
+            <input type="text" id="TagName" name="TagName" placeholder="Tag name" oninput="updateUserLoginData('TagName')">
+            <span id="TagName_error" class="error-message"></span>
+
+            <input type="password" id="Password" name="Password" placeholder="Password" oninput="updateUserLoginData('Password')">
+            <span id="Password_error" class="error-message"></span>
 
             <button onclick="login()">Login</button>
         </div>
@@ -29,6 +32,8 @@
             <p>Don't have an account? <a href="signup.html">Sign up</a></p>
         </div>
     </div>
+
+    <script src="js/Authorization_authentication.js"></script>
 
 </body>
 
