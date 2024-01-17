@@ -6,42 +6,9 @@ const currentUser = {
     registered: false,
 };
 
-function getUserInfo(){
-    fetch('https://localhost:7131/api/Account/GetUser', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    }).then(data => {
-        if (data.message === "User data get successful") {
-            currentUser.tag_name = data.user.tag_name;
-            currentUser.user_name = data.user.user_name;
-            currentUser.email = data.user.email;
-            currentUser.notifications = data.user.notifications;
-            currentUser.registered = true;
-            console.log('User info:', data);
-
-            updateProfileButtonText();
-        } else if (data.message === "User not found") {
-            console.log('User not found');
-        } else {
-            console.log('Unexpected response:', data);
-        }
-    }).catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 // Функція для оновлення тексту на кнопці
-async function updateProfileButtonText() {
+function updateProfileButtonText() {
     const profileButton = document.querySelector('.profile-button');
-
-    await getUserInfo(); 
 
     profileButton.querySelector('h2').textContent = currentUser.registered ? currentUser.tag_name : "user";
 }
@@ -80,15 +47,36 @@ function toggleUserMenu() {
     }
 }
 
-// Закривати меню, якщо користувач клікає за межами меню
-document.addEventListener('click', function (event) {
-    const userMenu = document.getElementById('userMenu');
-    const profileButton = document.querySelector('.profile-button');
+function getUserInfo(){
+    fetch('https://localhost:7131/api/Account/GetUser', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    }).then(data => {
+        if (data.message === "User data get successful") {
+            currentUser.tag_name = data.user.tag_name;
+            currentUser.user_name = data.user.user_name;
+            currentUser.email = data.user.email;
+            currentUser.notifications = data.user.notifications;
+            currentUser.registered = true;
+            console.log('User info:', data);
 
-    if (event.target !== profileButton && !profileButton.contains(event.target) && event.target !== userMenu && !userMenu.contains(event.target)) {
-        userMenu.style.display = 'none';
-    }
-});
+            updateProfileButtonText();
+        } else if (data.message === "User not found") {
+            console.log('User not found');
+        } else {
+            console.log('Unexpected response:', data);
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 // Функція для виходу користувача
 function logout() {
@@ -116,6 +104,16 @@ function logout() {
     });
     toggleUserMenu(); // Оновлюємо меню після виходу
 }
+
+// Закривати меню, якщо користувач клікає за межами меню
+document.addEventListener('click', function (event) {
+    const userMenu = document.getElementById('userMenu');
+    const profileButton = document.querySelector('.profile-button');
+
+    if (event.target !== profileButton && !profileButton.contains(event.target) && event.target !== userMenu && !userMenu.contains(event.target)) {
+        userMenu.style.display = 'none';
+    }
+});
 
 getUserInfo();
 updateProfileButtonText(); 
