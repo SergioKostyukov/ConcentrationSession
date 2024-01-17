@@ -8,28 +8,14 @@ const userData = {
     notifications: false
 };
 
-const userLoginData = {
-    tag_name: "",
-    password: ""
-}
-
 const errorMessages = {
-    tag_name: "Tag name must be unique.",
-    user_name: "",
     email: "Email must have a gmail.com domain.",
-    password: "Password and confirm password must match.",
     confirm_password: "Password and confirm password must match."
 };
 
 // Функція для збереження введених даних в об'єкт та верифікації
 function updateUserData(fieldId) {
     userData[fieldId] = document.getElementById(fieldId).value;
-    validateField(fieldId);
-}
-
-// Функція для збереження введених даних в об'єкт та верифікації
-function updateUserLoginData(fieldId) {
-    userLoginData[fieldId] = document.getElementById(fieldId).value;
     validateField(fieldId);
 }
 
@@ -55,13 +41,6 @@ function signup(){
         }
     }
     if (is_error) return;
-
-    // Верифікація унікальності tag name - НЕДОРОБЛЕНО
-    const uniqueTagName = true;
-    if (!uniqueTagName) {
-        displayError('TagName', errorMessages.tag_name);
-        is_error = true;
-    }
 
     // Верифікація домену email
     if (!userData.email.endsWith('@gmail.com')) {
@@ -100,41 +79,6 @@ function signup(){
     }).catch(error => {
         // Відображення повідомлення про помилку
         alert('Error during Signup. Please try again.');
-        clearInputFields();
-        console.error('Error:', error);
-    });
-}
-
-function login(){
-    let is_error = false;
-    // Верифікація заповнення полів
-    for (const field in userLoginData) {
-        if (userLoginData[field] === "") {
-            displayError(field, `Please fill in ${field.replace('_', ' ')}`);
-            is_error = true;
-        }
-    }
-    if (is_error) return;
-
-    // fetch для відправки Post-запиту на сервер
-    fetch('https://localhost:7131/api/Account/Login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userLoginData),
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    }).then(data => {
-        // Відображення повідомлення про вдалий вхід
-        alert('Login successful. Redirecting to index page.');
-        // Перехід на сторінку index
-        window.location.href = 'index.html';
-    }).catch(error => {
-        alert('Error during Login. Please check your credentials.');
         clearInputFields();
         console.error('Error:', error);
     });

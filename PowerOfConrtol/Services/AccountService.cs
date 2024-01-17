@@ -90,6 +90,23 @@ public class AccountService
         }
     }
 
+    public bool LogoutUser()
+    {
+        try
+        {
+            File.WriteAllText(UserDataFilePath, string.Empty);
+
+            logger.LogInfo($"Logout successfull");
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Logout error: {ex.Message}");
+            return false;
+        }
+    }
+
     public bool DeleteUser(UserDto user)
     {
         try
@@ -126,8 +143,33 @@ public class AccountService
         }
     }
 
+    public User? GetCurrentUser()
+    {
+        string json = File.ReadAllText(UserDataFilePath);
+        if(json == "")
+        {
+            return null;
+        }
+
+        var userFileData = JsonConvert.DeserializeObject<UserToken>(json);
+
+        var user = new User
+        {
+            id = userFileData.Id,
+            user_name = userFileData.UserName,
+            tag_name = userFileData.UserTag,
+            email = userFileData.Email,
+            password = "",
+            notifications = userFileData.Notifications
+        };
+
+        return user;
+    }
+
     private void SaveCurrentUser(UserToken token)
     {
+        File.WriteAllText(UserDataFilePath, string.Empty);
+
         string json = JsonConvert.SerializeObject(token);
 
         File.AppendAllText(UserDataFilePath, json + Environment.NewLine);

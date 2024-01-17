@@ -8,7 +8,6 @@ public class Logger
     public Logger(string logFilePath)
     {
         LogFilePath = logFilePath;
-        ClearFileContent();
     }
 
     public void LogInfo(string message)
