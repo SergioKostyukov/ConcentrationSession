@@ -3,8 +3,10 @@
 public class User
 {
     // class that stores full user information
-    public string TagName { get; set; }
-    public string UserName { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public int id { get; set; }
+    public string tag_name { get; set; }
+    public string user_name { get; set; }
+    public string email { get; set; }
+    public string password { get; set; }
+    public bool notifications { get; set; }
 }

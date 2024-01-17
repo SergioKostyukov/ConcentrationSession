@@ -5,7 +5,9 @@ namespace PowerOfControl.Models;
 // class that stores user information at the login stage
 public class UserDto
 {
-    public string TagName { get; set; }
+    [Required]
+    public string tag_name { get; set; }
 
-    public string Password { get; set; }
+    [Required]
+    public string password { get; set; }
 }

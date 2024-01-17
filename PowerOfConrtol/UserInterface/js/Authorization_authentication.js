@@ -1,23 +1,24 @@
 // Об'єкт для збереження введених даних та помилок
 const userData = {
-    TagName: "",
-    UserName: "",
-    Email: "",
-    Password: "",
-    ConfirmPassword: ""
+    tag_name: "",
+    user_name: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+    notifications: false
 };
 
 const userLoginData = {
-    TagName: "",
-    Password: ""
+    tag_name: "",
+    password: ""
 }
 
 const errorMessages = {
-    TagName: "Tag name must be unique.",
-    UserName: "",
-    Email: "Email must have a gmail.com domain.",
-    Password: "Password and confirm password must match.",
-    ConfirmPassword: "Password and confirm password must match."
+    tag_name: "Tag name must be unique.",
+    user_name: "",
+    email: "Email must have a gmail.com domain.",
+    password: "Password and confirm password must match.",
+    confirm_password: "Password and confirm password must match."
 };
 
 // Функція для збереження введених даних в об'єкт та верифікації
@@ -38,7 +39,7 @@ function getSignupFormData() {
     const formData = Object.assign({}, userData);
 
     // Вилучити confirm_password з нового об'єкту
-    delete formData.ConfirmPassword;
+    delete formData.confirm_password;
 
     return formData;
 }
@@ -55,22 +56,22 @@ function signup(){
     }
     if (is_error) return;
 
-    // Верифікація унікальності tag name
+    // Верифікація унікальності tag name - НЕДОРОБЛЕНО
     const uniqueTagName = true;
     if (!uniqueTagName) {
-        displayError('TagName', errorMessages.TagName);
+        displayError('TagName', errorMessages.tag_name);
         is_error = true;
     }
 
     // Верифікація домену email
-    if (!userData.Email.endsWith('@gmail.com')) {
-        displayError('Email', errorMessages.Email);
+    if (!userData.email.endsWith('@gmail.com')) {
+        displayError('Email', errorMessages.email);
         is_error = true;
     }
 
     // Верифікація відповідності паролів
-    if (userData.Password !== userData.ConfirmPassword) {
-        displayError('ConfirmPassword', errorMessages.ConfirmPassword);
+    if (userData.password !== userData.confirm_password) {
+        displayError('ConfirmPassword', errorMessages.confirm_password);
         is_error = true;
     }
 
@@ -79,7 +80,7 @@ function signup(){
     // Отримання даних для відправлення на back-end
     const formData = getSignupFormData();
 
-    // Використовуйте fetch або інші методи для відправки Post-запиту на сервер
+    // fetch для відправки Post-запиту на сервер
     fetch('https://localhost:7131/api/Account/Authorization', {
         method: 'POST',
         headers: {
@@ -92,9 +93,14 @@ function signup(){
         }
         return response.json();
     }).then(data => {
-        // Відобразіть результат на сторінці
-        console.log('Success:', data);
+        // Відображення повідомлення про вдалу реєстрацію
+        alert('Signup successful. Redirecting to Login page.');
+        // Перехід на сторінку Login
+        window.location.href = 'login.html';
     }).catch(error => {
+        // Відображення повідомлення про помилку
+        alert('Error during Signup. Please try again.');
+        clearInputFields();
         console.error('Error:', error);
     });
 }
@@ -110,7 +116,7 @@ function login(){
     }
     if (is_error) return;
 
-    // Використовуйте fetch або інші методи для відправки Post-запиту на сервер
+    // fetch для відправки Post-запиту на сервер
     fetch('https://localhost:7131/api/Account/Login', {
         method: 'POST',
         headers: {
@@ -123,10 +129,23 @@ function login(){
         }
         return response.json();
     }).then(data => {
-        // Відобразіть результат на сторінці
-        console.log('Success:', data);
+        // Відображення повідомлення про вдалий вхід
+        alert('Login successful. Redirecting to index page.');
+        // Перехід на сторінку index
+        window.location.href = 'index.html';
     }).catch(error => {
+        alert('Error during Login. Please check your credentials.');
+        clearInputFields();
         console.error('Error:', error);
+    });
+}
+
+// Функція для очищення полів вводу
+function clearInputFields() {
+    const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
+    
+    inputFields.forEach(input => {
+        input.value = '';
     });
 }
 
@@ -145,6 +164,4 @@ function hideError(fieldId) {
 // Функція для валідації поля
 function validateField(fieldId) {
     hideError(fieldId);
-
-    // Додайте додаткові перевірки, якщо потрібно
 }

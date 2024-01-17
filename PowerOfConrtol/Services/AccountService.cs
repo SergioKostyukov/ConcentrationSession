@@ -1,39 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PowerOfControl.Controllers;
+﻿using Newtonsoft.Json;
+using PowerOfControl.Data;
 using PowerOfControl.Models;
-using System.Text;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 
 namespace PowerOfControl.Services;
 
 public class AccountService
 {
     private readonly string LogFilePath = "./Data/account_log.txt";
-    private readonly string UserDataFilePath = "./Data/user_data.txt";
+    private readonly string UserDataFilePath = "./Data/user_data.json";
+    private readonly JwtSettings jwtSettings;
     private readonly Logger logger;
-    public AccountService()
+    public AccountService(JwtSettings jwtSettings)
     {
+        this.jwtSettings = jwtSettings;
         logger = new Logger(LogFilePath);
     }
 
-    public bool AuthUser(User user)
+    public bool AuthorizationUser(User user)
     {
         try
         {
             // make user password hash
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            user.Email = user.Email.ToLower();
+            user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
+            user.email = user.email.ToLower();
+            user.tag_name = user.tag_name.ToLower();
 
             // is this user already exists
-            var userExist = FindUser(user.Email);
+            var userExist = FindUser(user.tag_name);
             if (userExist != null)
             {
                 throw new Exception($"User alredy exists: {JsonConvert.SerializeObject(user)}");
             }
 
-            // Saving user data to "db"
+            // save user data to DB
             SaveUserToDB(user);
+
+            logger.LogInfo($"New user data saved: {JsonConvert.SerializeObject(user)}");
 
             return true;
         }
@@ -44,13 +46,48 @@ public class AccountService
         }
     }
 
-    public bool LoginUser(UserDto userDto)
+    public bool LoginUser(UserDto request)
     {
-        string json = JsonConvert.SerializeObject(userDto);
+        try
+        {
+            // compare users db data with user request data
+            request.tag_name = request.tag_name.ToLower();
+            var storedUser = FindUser(request.tag_name);
+            if (storedUser == null)
+            {
+                throw new Exception("User not find");
+            }
 
-        logger.LogInfo($"Login: {json}");
+            // if user was found
+            if (BCrypt.Net.BCrypt.Verify(request.password, storedUser.password))
+            {
+                // create token
+                var TokenObj = JwtHelpers.JwtHelpers.GenTokenkey(new UserToken()
+                {
+                    Id = storedUser.id,
+                    UserName = storedUser.user_name,
+                    UserTag = storedUser.tag_name,
+                    Email = storedUser.email,
+                    Notifications = storedUser.notifications,
+                }, jwtSettings);
 
-        return true;
+                // save current user data to Redis
+                SaveCurrentUser(TokenObj);
+
+                logger.LogInfo($"Login: {JsonConvert.SerializeObject(TokenObj.Token)}");
+
+                return true;
+            }
+            else
+            {
+                throw new Exception("Wrong password");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Login error: {ex.Message}");
+            return false;
+        }
     }
 
     public bool DeleteUser(UserDto user)
@@ -89,36 +126,47 @@ public class AccountService
         }
     }
 
-    private void SaveUserToDB(User user)
+    private void SaveCurrentUser(UserToken token)
     {
-        string json = JsonConvert.SerializeObject(user);
-        using (var writer = new StreamWriter(UserDataFilePath, true))
-        {
-            writer.WriteLine(json);
-        }
+        string json = JsonConvert.SerializeObject(token);
 
-        logger.LogInfo($"Authorized: {json}");
+        File.AppendAllText(UserDataFilePath, json + Environment.NewLine);
     }
 
-    private User? FindUser(string request)
+    private static void SaveUserToDB(User user)
     {
-        string[] jsonLines = File.ReadAllLines(UserDataFilePath);
+        var dbContext = new DataBaseContext();
 
-        if (jsonLines.Length == 0) return null;
+        var command = $"INSERT INTO users(user_name, tag_name, email, password, notifications) " +
+            $"VALUES ('{user.user_name}', '{user.tag_name}', '{user.email}', '{user.password}', '{user.notifications}')";
 
-        // compare users db data with user request data
-        var storedUser = new User();
-        foreach (string line in jsonLines)
+        dbContext.ExecuteNonQuery(command);
+    }
+
+    private static User? FindUser(string request)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = $"SELECT * FROM users WHERE tag_name = '{request}'";
+
+        using (var reader = dbContext.ExecuteQuery(command))
         {
-            storedUser = JsonConvert.DeserializeObject<User>(line);
-
-            if (storedUser != null && storedUser.Email == request)
+            if (reader.Read())
             {
-                break;
+                var user = new User
+                {
+                    id = Convert.ToInt16(reader["id"]),
+                    tag_name = reader["tag_name"].ToString(),
+                    user_name = reader["user_name"].ToString(),
+                    email = reader["email"].ToString(),
+                    password = reader["password"].ToString(),
+                    notifications = Convert.ToBoolean(reader["notifications"])
+                };
+
+                return user;
             }
-            storedUser = null;
         }
 
-        return storedUser;
+        return null;
     }
 }
