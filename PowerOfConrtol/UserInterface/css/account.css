@@ -1,0 +1,138 @@
+body {
+    user-select: none;
+}
+
+main {
+    display: flex;
+    padding: 5px 0px;
+}
+
+.profile-container {
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0px 0px 40px;
+    align-content: flex-start;
+    flex-grow: 1;
+}
+
+.profile-container .half-page{
+    width: 50%;
+    height: 100%;
+    align-content: center;
+}
+
+.profile-container h1 {
+    margin: 0px;
+    font-size: 36px;
+}
+
+.profile-container h2 {
+    margin: 20px 0px 10px 0px;
+    font-size: 22px;
+}
+
+input {
+    width: 60%;
+    height: 45px;
+    padding: 0px 15px;
+    margin-bottom: 15px; 
+    border-radius: 20px;
+    border: 1px solid #333;
+}
+
+hr {
+    margin-left: 0;
+    width: 90%;
+}
+
+.update-button {
+    background-color: #333;
+    color: #fff;
+    width: 30%;
+    height: 40px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 18px;
+    border: 1px solid #ccc;
+
+    display: block;
+    margin: 0 17%;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin-bottom: 15px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #555;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #555;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.delete-button{
+    width: 120px;
+    height: 40px;
+    margin-top: 40px;
+    background-color: #af1b01;
+    color: white;
+    border-radius: 17px;
+    border: 1px solid rgb(150, 0, 0);
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: red;
+    border: 1px solid black;
+}

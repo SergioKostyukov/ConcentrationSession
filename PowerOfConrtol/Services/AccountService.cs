@@ -6,62 +6,65 @@ namespace PowerOfControl.Services;
 
 public class AccountService
 {
-    private readonly string LogFilePath = "./Data/account_log.txt";
-    private readonly string UserDataFilePath = "./Data/user_data.json";
+    private static readonly string LogFilePath = "./Data/account_log.txt";
+    private static readonly string UserDataFilePath = "./Data/user_data.json";
     private readonly JwtSettings jwtSettings;
     private readonly Logger logger;
+
     public AccountService(JwtSettings jwtSettings)
     {
         this.jwtSettings = jwtSettings;
         logger = new Logger(LogFilePath);
     }
 
+    // Method to handle user authorization
     public bool AuthorizationUser(User user)
     {
         try
         {
-            // make user password hash
+            // Hash the user's password
             user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
             user.email = user.email.ToLower();
             user.tag_name = user.tag_name.ToLower();
 
-            // is this user already exists
+            // Check if the user already exists
             var userExist = FindUser(user.tag_name);
             if (userExist != null)
             {
-                throw new Exception($"User alredy exists: {JsonConvert.SerializeObject(user)}");
+                throw new Exception($"User already exists: {JsonConvert.SerializeObject(user)}");
             }
 
-            // save user data to DB
+            // Save user data to the database
             SaveUserToDB(user);
 
-            logger.LogInfo($"New user data saved: {JsonConvert.SerializeObject(user)}");
+            logger.LogInfo($"New user authorized");
 
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Autherization error: {ex.Message}");
+            logger.LogError($"Authorization error: {ex.Message}");
             return false;
         }
     }
 
-    public bool LoginUser(UserDto request)
+    // Method to handle user login
+    public bool LoginUser(UserLoginDto request)
     {
         try
         {
-            // compare users db data with user request data
+            // Compare users' database data with user request data
             request.tag_name = request.tag_name.ToLower();
             var storedUser = FindUser(request.tag_name);
             if (storedUser == null)
             {
-                throw new Exception("User not find");
+                throw new Exception("User not found");
             }
 
-            // if user was found
+            // If the user was found, verify the password
             if (BCrypt.Net.BCrypt.Verify(request.password, storedUser.password))
             {
-                // create token
+                // Create a token
                 var TokenObj = JwtHelpers.JwtHelpers.GenTokenkey(new UserToken()
                 {
                     Id = storedUser.id,
@@ -71,10 +74,10 @@ public class AccountService
                     Notifications = storedUser.notifications,
                 }, jwtSettings);
 
-                // save current user data to Redis
-                SaveCurrentUser(TokenObj);
+                // Save current user data to Redis
+                SaveUserToCashe(TokenObj);
 
-                logger.LogInfo($"Login: {JsonConvert.SerializeObject(TokenObj.Token)}");
+                logger.LogInfo($"Login successful");
 
                 return true;
             }
@@ -90,13 +93,87 @@ public class AccountService
         }
     }
 
+    // Method to handle user data update 
+    public bool UpdateUser(UpdateUserDto request)
+    {
+        try
+        {
+            request.email = request.email.ToLower();
+            request.tag_name = request.tag_name.ToLower();
+
+            string data = File.ReadAllText(UserDataFilePath);
+            var currentUser = JsonConvert.DeserializeObject<UserToken>(data);
+
+            if (currentUser.UserTag != request.tag_name)
+            {
+                // Check if the user already exists
+                var userExist = FindUser(request.tag_name);
+                if (userExist != null)
+                {
+                    throw new Exception($"User with this tag already exists: {JsonConvert.SerializeObject(request.tag_name)}");
+                }
+            }
+
+            UpdateUserCasheData(request);
+
+            UpdateUserDataBaseData(request);
+
+            logger.LogInfo($"User data updated successful");
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Update user data error: {ex.Message}");
+            return false;
+        }
+    }
+
+    // Method to handle user password update
+    public bool UpdatePassword(UpdatePasswordDto request)
+    {
+        try
+        {
+            User? storedUser = GetCurrentUser();
+            if (storedUser == null)
+            {
+                throw new Exception("No such user");
+            }
+
+            // Verify the password
+            if (BCrypt.Net.BCrypt.Verify(request.old_password, storedUser.password))
+            {
+                // Hash the user's password
+                request.password = BCrypt.Net.BCrypt.HashPassword(request.password, BCrypt.Net.BCrypt.GenerateSalt());
+
+                // Save current user data to Redis
+                UpdateUserPassword(request);
+
+                logger.LogInfo($"Update password successful");
+
+                return true;
+            }
+            else
+            {
+                throw new Exception("Wrong password");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Update user password error: {ex.Message}");
+            return false;
+        }
+    }
+
+    // Method to handle user logout
     public bool LogoutUser()
     {
         try
         {
+            // Clear user data file
             File.WriteAllText(UserDataFilePath, string.Empty);
 
-            logger.LogInfo($"Logout successfull");
+            logger.LogInfo($"Logout successful");
 
             return true;
         }
@@ -107,32 +184,16 @@ public class AccountService
         }
     }
 
-    public bool DeleteUser(UserDto user)
+    // Method to handle user deletion
+    public bool DeleteUser()
     {
         try
         {
-            //// find user
-            //var ObjToRemove = FindUser(user.Email);
-            //if (ObjToRemove == null)
-            //{
-            //    throw new Exception($"User not find: {JsonConvert.SerializeObject(user)}");
-            //}
-            //var lineToRemove = JsonConvert.SerializeObject(ObjToRemove);
-            //Console.WriteLine(lineToRemove);
+            DeleteUserFromDB();
 
-            //string[] lines = File.ReadAllLines(UserDataFilePath);
+            DeleteUserFromCashe();
 
-            //// create new file data
-            //var newLines = new StringBuilder();
-            //foreach (string line in lines)
-            //{
-            //    if (line.Normalize() != lineToRemove.Normalize())
-            //    {
-            //        newLines.AppendLine(line);
-            //    }
-            //}
-
-            //File.WriteAllText(UserDataFilePath, newLines.ToString());
+            logger.LogInfo($"Delete successful");
 
             return true;
         }
@@ -143,10 +204,13 @@ public class AccountService
         }
     }
 
+
+    // ---------------- CASHE methods ----------------
+    // Method to get the user from Cashe
     public User? GetCurrentUser()
     {
         string json = File.ReadAllText(UserDataFilePath);
-        if(json == "")
+        if (json == "")
         {
             return null;
         }
@@ -166,7 +230,22 @@ public class AccountService
         return user;
     }
 
-    private void SaveCurrentUser(UserToken token)
+    // Method to get the user id from Cashe
+    private static int GetUserID()
+    {
+        string json = File.ReadAllText(UserDataFilePath);
+        if (json == "")
+        {
+            return -1;
+        }
+
+        var userFileData = JsonConvert.DeserializeObject<UserToken>(json);
+
+        return userFileData.Id;
+    }
+
+    // Method to save user data to the Cashe
+    private static void SaveUserToCashe(UserToken token)
     {
         File.WriteAllText(UserDataFilePath, string.Empty);
 
@@ -175,23 +254,42 @@ public class AccountService
         File.AppendAllText(UserDataFilePath, json + Environment.NewLine);
     }
 
-    private static void SaveUserToDB(User user)
+    // Method to update user data in Cashe
+    private static void UpdateUserCasheData(UpdateUserDto request)
     {
-        var dbContext = new DataBaseContext();
+        string data = File.ReadAllText(UserDataFilePath);
 
-        var command = $"INSERT INTO users(user_name, tag_name, email, password, notifications) " +
-            $"VALUES ('{user.user_name}', '{user.tag_name}', '{user.email}', '{user.password}', '{user.notifications}')";
+        var userFileData = JsonConvert.DeserializeObject<UserToken>(data);
 
-        dbContext.ExecuteNonQuery(command);
+        File.WriteAllText(UserDataFilePath, string.Empty);
+
+        userFileData.UserName = request.user_name;
+        userFileData.UserTag = request.tag_name;
+        userFileData.Email = request.email;
+        userFileData.Notifications = request.notifications;
+
+        string json = JsonConvert.SerializeObject(userFileData);
+
+        File.AppendAllText(UserDataFilePath, json + Environment.NewLine);
     }
 
+    // Method to delete user data from the Cashe
+    private static void DeleteUserFromCashe()
+    {
+        File.WriteAllText(UserDataFilePath, string.Empty);
+    }
+
+
+    // ---------------- DATABASE methods ----------------
+    // Method to find a user in the DataBase
     private static User? FindUser(string request)
     {
         var dbContext = new DataBaseContext();
 
-        var command = $"SELECT * FROM users WHERE tag_name = '{request}'";
+        var command = "SELECT * FROM users WHERE tag_name = @request";
+        var parameters = new Dictionary<string, object> { { "@request", request } };
 
-        using (var reader = dbContext.ExecuteQuery(command))
+        using (var reader = dbContext.ExecuteQuery(command, parameters))
         {
             if (reader.Read())
             {
@@ -210,5 +308,76 @@ public class AccountService
         }
 
         return null;
+    }
+
+    // Method to save user data to the DataBase
+    private static void SaveUserToDB(User user)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "INSERT INTO users(user_name, tag_name, email, password, notifications) " +
+            "VALUES (@user_name, @tag_name, @email, @password, @notifications)";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@user_name", user.user_name },
+            { "@tag_name", user.tag_name },
+            { "@email", user.email },
+            { "@password", user.password },
+            { "@notifications", user.notifications }
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
+    }
+
+    // Method to update user data in DataBase
+    private static void UpdateUserDataBaseData(UpdateUserDto request)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "UPDATE users SET user_name = @user_name, tag_name = @tag_name, email = @email, notifications = @notifications WHERE id = @id;";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", GetUserID()},
+            { "@user_name", request.user_name },
+            { "@tag_name", request.tag_name },
+            { "@email", request.email },
+            { "@notifications", request.notifications }
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
+    }
+
+    // Method to update user password 
+    private static void UpdateUserPassword(UpdatePasswordDto request)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "UPDATE users SET password = @Newpassword WHERE id = @id AND password =@Oldpassword;";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", GetUserID()},
+            { "@Newpassword", request.password },
+            { "@Oldpassword", request.old_password }
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
+    }
+
+    // Method to delate user data from the DataBase
+    private static void DeleteUserFromDB()
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "DELETE FROM users WHERE id = @id;";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", GetUserID()}
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
     }
 }

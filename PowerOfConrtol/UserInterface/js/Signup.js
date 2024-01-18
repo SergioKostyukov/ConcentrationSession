@@ -1,4 +1,4 @@
-// Об'єкт для збереження введених даних та помилок
+// Object to store input data and errors
 const userData = {
     tag_name: "",
     user_name: "",
@@ -8,32 +8,30 @@ const userData = {
     notifications: false
 };
 
+// Error messages for validation
 const errorMessages = {
     email: "Email must have a gmail.com domain.",
     confirm_password: "Password and confirm password must match."
 };
 
-// Функція для збереження введених даних в об'єкт та верифікації
+// Function to update user data and perform validation
 function updateUserData(fieldId) {
     userData[fieldId] = document.getElementById(fieldId).value;
     validateField(fieldId);
 }
 
-// Функція для вибору значень для відправлення на back-end
+// Function to get form data for signup
 function getSignupFormData() {
-    // Створити новий об'єкт
-    const formData = Object.assign({}, userData);
-
-    // Вилучити confirm_password з нового об'єкту
+    const formData = { ...userData };
     delete formData.confirm_password;
-
     return formData;
 }
 
-// Функція для верифікації та відправлення на back-end
-function signup(){
+// Function for signup validation and sending data to the backend
+function signup() {
     let is_error = false;
-    // Верифікація заповнення полів
+
+    // Validation for empty fields
     for (const field in userData) {
         if (userData[field] === "") {
             displayError(field, `Please fill in ${field.replace('_', ' ')}`);
@@ -42,13 +40,13 @@ function signup(){
     }
     if (is_error) return;
 
-    // Верифікація домену email
+    // Validation for email domain
     if (!userData.email.endsWith('@gmail.com')) {
         displayError('Email', errorMessages.email);
         is_error = true;
     }
 
-    // Верифікація відповідності паролів
+    // Validation for password match
     if (userData.password !== userData.confirm_password) {
         displayError('ConfirmPassword', errorMessages.confirm_password);
         is_error = true;
@@ -56,10 +54,10 @@ function signup(){
 
     if (is_error) return;
 
-    // Отримання даних для відправлення на back-end
+    // Get data for backend submission
     const formData = getSignupFormData();
 
-    // fetch для відправки Post-запиту на сервер
+    // Fetch to send a POST request to the server
     fetch('https://localhost:7131/api/Account/Authorization', {
         method: 'POST',
         headers: {
@@ -72,19 +70,18 @@ function signup(){
         }
         return response.json();
     }).then(data => {
-        // Відображення повідомлення про вдалу реєстрацію
+        // Display successful signup message and redirect to Login page
         alert('Signup successful. Redirecting to Login page.');
-        // Перехід на сторінку Login
         window.location.href = 'login.html';
     }).catch(error => {
-        // Відображення повідомлення про помилку
+        // Display error message and clear input fields
         alert('Error during Signup. Please try again.');
         clearInputFields();
         console.error('Error:', error);
     });
 }
 
-// Функція для очищення полів вводу
+// Function to clear input fields
 function clearInputFields() {
     const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
     
@@ -93,19 +90,19 @@ function clearInputFields() {
     });
 }
 
-// Функція для відображення помилок
+// Function to display errors
 function displayError(fieldId, errorMessage) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = errorMessage;
 }
 
-// Функція для приховання помилок
+// Function to hide errors
 function hideError(fieldId) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = "";
 }
 
-// Функція для валідації поля
+// Function to validate a field
 function validateField(fieldId) {
     hideError(fieldId);
 }

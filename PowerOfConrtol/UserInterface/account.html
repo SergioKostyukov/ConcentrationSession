@@ -7,7 +7,7 @@
     <title>Account</title>
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
-    <link rel="stylesheet" href="css/tasks.css">
+    <link rel="stylesheet" href="css/account.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
         <nav class="user-account">
             <button class="profile-button" onclick="toggleUserMenu()">
                 <img src="images/avatar.png" alt="Avatar" class="user-avatar">
-                <h2>User</h2> 
+                <h2>User</h2>
             </button>
             <div class="user-menu" id="userMenu">
                 <div id="userInfo" class="user-info"></div>
@@ -81,16 +81,56 @@
             </div>
         </aside>
 
-        <section class="center-blocks">
+        <div class="profile-container">
             <div class="half-page">
-                
+                <h1>Profile</h1>
+                <hr>
+
+                <h2>Your name</h2>
+                <input type="text" id="usernameField" value="User name" readonly>
+
+                <h2>Your tag</h2>
+                <input type="text" id="usertagField" value="User tag" readonly>
+
+                <h2>Your Email</h2>
+                <input type="text" id="useremailField" value="User email" readonly>
+
+                <div id="displayNewField">
+                    <h2>Notifacations</h2>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="newFieldSwitch">
+                    <span class="slider round"></span>
+                </label>
+
+                <button class="update-button" id="userDataUpdate"
+                    onclick="enableEditMode(usernameField, usertagField, useremailField, userDataUpdate)">Want to
+                    change</button>
+
+                <button class="delete-button" id="userAccountDelete" onclick="deleteAccount()">Delete account</button>
             </div>
+
             <div class="half-page">
-                
+                <h1>Change password</h1>
+                <hr>
+
+                <h2>Current password</h2>
+                <input type="text" id="passwordField" placeholder="Password" readonly>
+
+                <h2>New password</h2>
+                <input type="text" id="newpasswordField" placeholder="New password" readonly>
+
+                <h2>Confirm new password</h2>
+                <input type="text" id="confirmnewpasswordField" placeholder="Confirm new password" readonly>
+
+                <button class="update-button" id="userPasswordUpdate"
+                    onclick="enableEditMode(passwordField, newpasswordField, confirmnewpasswordField, userPasswordUpdate)">Want
+                    to change</button>
             </div>
-        </section>
+        </div>
     </main>
 
+    <script src="js/account.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
 

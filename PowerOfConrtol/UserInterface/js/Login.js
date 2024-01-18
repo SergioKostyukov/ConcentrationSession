@@ -1,26 +1,29 @@
+// Object to store user login data
 const userLoginData = {
     tag_name: "",
     password: ""
-}
+};
 
-// Функція для збереження введених даних в об'єкт та верифікації
-function updateUserLoginData(fieldId) {
-    userLoginData[fieldId] = document.getElementById(fieldId).value;
-    validateField(fieldId);
-}
+// Error messages for login validation
+const ERROR_MESSAGES = {
+    tag_name: "Please fill in the tag name",
+    password: "Please fill in the password",
+};
 
-function login(){
+// Function for login validation and sending data to the backend
+function login() {
     let is_error = false;
-    // Верифікація заповнення полів
+
+    // Validation for empty fields
     for (const field in userLoginData) {
         if (userLoginData[field] === "") {
-            displayError(field, `Please fill in ${field.replace('_', ' ')}`);
+            displayError(field, ERROR_MESSAGES[field]);
             is_error = true;
         }
     }
     if (is_error) return;
 
-    // Відправки Post-запиту на сервер
+    // Sending a POST request to the server
     fetch('https://localhost:7131/api/Account/Login', {
         method: 'POST',
         headers: {
@@ -33,17 +36,24 @@ function login(){
         }
         return response.json();
     }).then(data => {
-        // Відображення повідомлення про вдалий вхід
+        // Display successful login message and redirect to index page
         alert('Login successful. Redirecting to index page.');
         window.location.href = 'index.html';
     }).catch(error => {
+        // Display error message and clear input fields
         alert('Error during Login. Please check your credentials.');
         clearInputFields();
         console.error('Error:', error);
     });
 }
 
-// Функція для очищення полів вводу
+// Function to update user login data and perform validation
+function updateUserLoginData(fieldId) {
+    userLoginData[fieldId] = document.getElementById(fieldId).value;
+    validateField(fieldId);
+}
+
+// Function to clear input fields
 function clearInputFields() {
     const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
     
@@ -52,19 +62,19 @@ function clearInputFields() {
     });
 }
 
-// Функція для відображення помилок
+// Function to display errors
 function displayError(fieldId, errorMessage) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = errorMessage;
 }
 
-// Функція для приховання помилок
+// Function to hide errors
 function hideError(fieldId) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = "";
 }
 
-// Функція для валідації поля
+// Function to validate a field
 function validateField(fieldId) {
     hideError(fieldId);
 }

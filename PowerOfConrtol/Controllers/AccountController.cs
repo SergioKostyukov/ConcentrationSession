@@ -4,6 +4,7 @@ using PowerOfControl.Models;
 
 namespace PowerOfControl.Controllers;
 
+[Produces("application/json")]
 [Route("api/[controller]/[action]")]
 [ApiController]
 public class AccountController : ControllerBase
@@ -15,9 +16,36 @@ public class AccountController : ControllerBase
         _authService = authService;
     }
 
+    // GET: api/Account/GetUser
+    [HttpGet]
+    public IActionResult GetUser()
+    {
+        // Retrieve current user information
+        var user = _authService.GetCurrentUser();
+        if (user != null)
+        {
+            // Create a simplified user DTO for response
+            var UserLoginDto = new
+            {
+                user.tag_name,
+                user.user_name,
+                user.email,
+                user.notifications
+            };
+
+            return Ok(new { message = "User data get successful", user = UserLoginDto });
+        }
+        else
+        {
+            return Ok(new { message = "User not found" });
+        }
+    }
+
+    // POST: api/Account/Authorization
     [HttpPost]
     public IActionResult Authorization(User user)
     {
+        // Attempt to authorize the user
         if (_authService.AuthorizationUser(user))
         {
             return Ok(new { message = "User authorization successfully" });
@@ -28,9 +56,11 @@ public class AccountController : ControllerBase
         }
     }
 
+    // POST: api/Account/Login
     [HttpPost]
-    public IActionResult Login(UserDto user)
+    public IActionResult Login(UserLoginDto user)
     {
+        // Attempt to log in the user
         if (_authService.LoginUser(user))
         {
             return Ok(new { message = "User login successfully" });
@@ -41,34 +71,44 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet]
-    public IActionResult GetUser()
+    // PATCH: api/Account/UpdateUser
+    [HttpPatch]
+    public IActionResult UpdateUser(UpdateUserDto request)
     {
-        var user = _authService.GetCurrentUser();
-        if (user != null)
+        // Attempt to update user data
+        if (_authService.UpdateUser(request))
         {
-            var userDto = new
-            {
-                user.tag_name,
-                user.user_name,
-                user.email,
-                user.notifications
-            };
-
-            return Ok(new { message = "User data get successful", user = userDto });
+            return Ok(new { message = "User data update successfully" });
         }
         else
         {
-            return Ok(new { message = "User not found" });
+            return BadRequest(new { message = "User data update failed" });
         }
     }
 
-    [HttpDelete]
-    public IActionResult Delete(UserDto user)
+    // PATCH: api/Account/UpdatePassword
+    [HttpPatch]
+    public IActionResult UpdatePassword(UpdatePasswordDto request)
     {
-        if (_authService.DeleteUser(user))
+        // Attempt to update user password
+        if (_authService.UpdatePassword(request))
         {
-            return Ok(new { message = "User delete successfull" });
+            return Ok(new { message = "User password update successfully" });
+        }
+        else
+        {
+            return BadRequest(new { message = "User password update failed" });
+        }
+    }
+
+    // DELETE: api/Account/DeleteAccount
+    [HttpDelete]
+    public IActionResult DeleteAccount()
+    {
+        // Attempt to delete the user
+        if (_authService.DeleteUser())
+        {
+            return Ok(new { message = "User delete successful" });
         }
         else
         {
@@ -76,12 +116,14 @@ public class AccountController : ControllerBase
         }
     }
 
+    // DELETE: api/Account/Logout
     [HttpDelete]
     public IActionResult Logout()
     {
+        // Attempt to log out the user
         if (_authService.LogoutUser())
         {
-            return Ok(new { message = "User logout successfull" });
+            return Ok(new { message = "User logout successful" });
         }
         else
         {

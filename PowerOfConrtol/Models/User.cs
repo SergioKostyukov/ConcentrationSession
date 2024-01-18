@@ -1,8 +1,8 @@
 ﻿namespace PowerOfControl.Models;
 
+// class that stores full user information
 public class User
 {
-    // class that stores full user information
     public int id { get; set; }
     public string tag_name { get; set; }
     public string user_name { get; set; }

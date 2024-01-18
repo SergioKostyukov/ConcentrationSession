@@ -1,36 +1,36 @@
-let isPanelExpandedByButtom = false;
+let isPanelExpandedByButton = false;
 let isPanelExpandedByCursor = false;
 
 function toggleNavigationPanel() {
     const navigationPanel = document.getElementById('navigationPanel');
 
-    // Змінити стан розширення панелі
-    isPanelExpandedByButtom = !isPanelExpandedByButtom;
+    // Toggle the panel expansion state
+    isPanelExpandedByButton = !isPanelExpandedByButton;
 
-    // Змінити клас для анімації розширення/звуження
-    navigationPanel.classList.toggle('expanded', isPanelExpandedByButtom);
+    // Toggle the class for expanding/collapsing animation
+    navigationPanel.classList.toggle('expanded', isPanelExpandedByButton);
 
-    // Оновити видимість тексту кнопок
+    // Update the visibility of button labels
     updateButtonLabelsVisibility();
 }
 
 function toggleNavigationPanelByCursor() {
     const navigationPanel = document.getElementById('navigationPanel');
 
-    // Змінити стан розширення панелі
+    // Toggle the panel expansion state
     isPanelExpandedByCursor = !isPanelExpandedByCursor;
 
-    // Змінити клас для анімації розширення/звуження
+    // Toggle the class for expanding/collapsing animation
     navigationPanel.classList.toggle('expanded', isPanelExpandedByCursor);
 
-    // Оновити видимість тексту кнопок
+    // Update the visibility of button labels
     updateButtonLabelsVisibilityByCursor();
 }
 
 function updateButtonLabelsVisibility() {
     const roundButtons = document.querySelectorAll('.round-button span');
     roundButtons.forEach((span) => {
-        span.style.opacity = isPanelExpandedByButtom ? '1' : '0';
+        span.style.opacity = isPanelExpandedByButton ? '1' : '0';
     });
 }
 
@@ -41,18 +41,18 @@ function updateButtonLabelsVisibilityByCursor() {
     });
 }
 
-// Додайте подію для розширення панелі при наведенні
+// Add event for expanding the panel on mouse enter
 document.getElementById('navigationPanel').addEventListener('mouseenter', () => {
-    if (!isPanelExpandedByButtom) {
+    if (!isPanelExpandedByButton) {
         if (!isPanelExpandedByCursor) {
             toggleNavigationPanelByCursor();
         }
     }
 });
 
-// Додайте подію для звуження панелі при виході з області наведення
+// Add event for collapsing the panel on mouse leave
 document.getElementById('navigationPanel').addEventListener('mouseleave', () => {
-    if (!isPanelExpandedByButtom) {
+    if (!isPanelExpandedByButton) {
         if (isPanelExpandedByCursor) {
             toggleNavigationPanelByCursor();
         }

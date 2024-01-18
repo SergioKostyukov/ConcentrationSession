@@ -1,3 +1,4 @@
+// Object to store current user information
 const currentUser = {
     tag_name: "",
     user_name: "",
@@ -6,20 +7,21 @@ const currentUser = {
     registered: false,
 };
 
-// Функція для оновлення тексту на кнопці
+// Function to asynchronously update the profile button text
 function updateProfileButtonText() {
     const profileButton = document.querySelector('.profile-button');
 
     profileButton.querySelector('h2').textContent = currentUser.registered ? currentUser.tag_name : "user";
 }
 
+// Function to toggle the user menu visibility
 function toggleUserMenu() {
     const userMenu = document.getElementById('userMenu');
     const userInfo = document.getElementById('userInfo');
     const userOptions = document.getElementById('userOptions');
 
     if (userMenu.style.display === 'none' || userMenu.style.display === '') {
-        // Показуємо меню, якщо воно приховане
+        // Show the menu if it is hidden
         if (currentUser.registered) {
             userInfo.innerHTML = `
             <p class="user-info-item">Name: ${currentUser.tag_name}</p>
@@ -30,7 +32,7 @@ function toggleUserMenu() {
             <li><a href="#" onclick="logout()">Logout</a></li>
         `;
         } else {
-            // Користувач не зареєстрований, виводимо опції для входу/реєстрації
+            // User is not registered, display options for login/signup
             userInfo.innerHTML = `
             <p class="user-info-item">You are not registered</p>
         `;
@@ -42,11 +44,12 @@ function toggleUserMenu() {
 
         userMenu.style.display = 'block';
     } else {
-        // Ховаємо меню, якщо воно відкрите
+        // Hide the menu if it is open
         userMenu.style.display = 'none';
     }
 }
 
+// Function to fetch user information from the server
 function getUserInfo(){
     fetch('https://localhost:7131/api/Account/GetUser', {
         method: 'GET',
@@ -78,7 +81,7 @@ function getUserInfo(){
     });
 }
 
-// Функція для виходу користувача
+// Function to handle user logout
 function logout() {
     fetch('https://localhost:7131/api/Account/Logout', {
         method: 'DELETE',
@@ -102,10 +105,10 @@ function logout() {
     }).catch(error => {
         console.error('Error:', error);
     });
-    toggleUserMenu(); // Оновлюємо меню після виходу
+    toggleUserMenu(); // Update the menu after logout
 }
 
-// Закривати меню, якщо користувач клікає за межами меню
+// Close the menu if the user clicks outside of it
 document.addEventListener('click', function (event) {
     const userMenu = document.getElementById('userMenu');
     const profileButton = document.querySelector('.profile-button');

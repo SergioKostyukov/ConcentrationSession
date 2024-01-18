@@ -10,23 +10,26 @@ public class Logger
         LogFilePath = logFilePath;
     }
 
+    // Logs informational messages
     public void LogInfo(string message)
     {
         LogMessage($"[INFO] {message}");
     }
 
+    // Logs error messages
     public void LogError(string message)
     {
         LogMessage($"[ERROR] {message}");
     }
 
+    // Writes the given message to the log file
     private void LogMessage(string message)
     {
         Console.WriteLine(message);
 
         try
         {
-            // writes a message to the end of "LogFilePath" file (by using true parameter)
+            // Writes a message to the end of "LogFilePath" file (using true parameter for append mode)
             using StreamWriter writer = new(LogFilePath, true);
             writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
         }
@@ -36,6 +39,7 @@ public class Logger
         }
     }
 
+    // Clears the content of the log file
     public void ClearFileContent()
     {
         try
