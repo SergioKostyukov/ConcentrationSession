@@ -14,6 +14,14 @@ function toggleNavigationPanel() {
     updateButtonLabelsVisibility();
 }
 
+function updateButtonLabelsVisibility() {
+    const roundButtons = document.querySelectorAll('.round-button span');
+    roundButtons.forEach((span) => {
+        span.style.opacity = isPanelExpandedByButton ? '1' : '0';
+    });
+}
+
+
 function toggleNavigationPanelByCursor() {
     const navigationPanel = document.getElementById('navigationPanel');
 
@@ -25,13 +33,6 @@ function toggleNavigationPanelByCursor() {
 
     // Update the visibility of button labels
     updateButtonLabelsVisibilityByCursor();
-}
-
-function updateButtonLabelsVisibility() {
-    const roundButtons = document.querySelectorAll('.round-button span');
-    roundButtons.forEach((span) => {
-        span.style.opacity = isPanelExpandedByButton ? '1' : '0';
-    });
 }
 
 function updateButtonLabelsVisibilityByCursor() {

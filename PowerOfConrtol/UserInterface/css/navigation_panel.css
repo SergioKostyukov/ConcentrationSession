@@ -90,3 +90,11 @@
 .bottom-button {
     margin-top: auto;
 }
+
+.navigation-panel .round-button span {
+    pointer-events: none;
+}
+
+.navigation-panel.expanded .round-button span {
+    pointer-events: all;
+}

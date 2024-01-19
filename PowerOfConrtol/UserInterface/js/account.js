@@ -29,6 +29,10 @@ function saveChanges(editField1, editField2, editField3, updateButton) {
         sendUserData(editField1.value, editField2.value, editField3.value, );
     } else if (updateButton.id === "userPasswordUpdate") {
         sendUserPassword(editField1.value, editField2.value, editField3.value);
+
+        editField1.value = "";
+        editField2.value = "";
+        editField3.value = "";
     }
     // Disable edit mode
     enableEditMode(editField1, editField2, editField3, updateButton);

@@ -64,6 +64,7 @@ header {
     display: flex;
     align-items: center;
     padding-right: 10px;
+    cursor: pointer;
 }
 
 .user-avatar{
@@ -96,15 +97,12 @@ header {
     margin: 0;
 }
 
-.user-menu li {
+.user-menu .user-menu-choise{
     padding: 10px;
     border-bottom: 1px solid #ddd;
     border-radius: 15px;
     background-color: #fff;
-}
-
-.user-menu li:last-child {
-    border-bottom: none;
+    cursor: pointer;
 }
 
 .user-menu a {

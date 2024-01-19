@@ -28,8 +28,8 @@ function toggleUserMenu() {
             <p class="user-info-item">Email: ${currentUser.email}</p>
         `;
             userOptions.innerHTML = `
-            <li><a href="account.html">User Account</a></li>
-            <li><a href="#" onclick="logout()">Logout</a></li>
+            <a href="account.html" class="user-menu-choise">User Account</a>
+            <a href="#"  class="user-menu-choise" onclick="logout()">Logout</a>
         `;
         } else {
             // User is not registered, display options for login/signup
@@ -37,8 +37,8 @@ function toggleUserMenu() {
             <p class="user-info-item">You are not registered</p>
         `;
             userOptions.innerHTML = `
-            <li><a href="login.html">Login</a></li>
-            <li><a href="signup.html">Sign up</a></li>
+            <a href="login.html" class="user-menu-choise">Login</a>
+            <a href="signup.html" class="user-menu-choise">Signup</a>
         `;
         }
 
@@ -50,7 +50,7 @@ function toggleUserMenu() {
 }
 
 // Function to fetch user information from the server
-function getUserInfo(){
+function getUserInfo() {
     fetch('https://localhost:7131/api/Account/GetUser', {
         method: 'GET',
         headers: {
@@ -100,7 +100,7 @@ function logout() {
         currentUser.email = "";
         currentUser.notifications = false;
         currentUser.registered = false;
-        
+
         updateProfileButtonText();
     }).catch(error => {
         console.error('Error:', error);

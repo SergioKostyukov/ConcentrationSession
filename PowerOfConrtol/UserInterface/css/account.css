@@ -4,16 +4,18 @@ body {
 
 main {
     display: flex;
-    padding: 5px 0px;
+    padding: 5px 0px 0px 0px;
 }
 
 .profile-container {
     height: 85vh;
     display: flex;
     flex-wrap: wrap;
-    margin: 20px 0px 0px 40px;
+    margin: 30px 0px 0px 40px;
     align-content: flex-start;
     flex-grow: 1;
+
+    position: relative;
 }
 
 .profile-container .half-page{
@@ -59,6 +61,11 @@ hr {
 
     display: block;
     margin: 0 17%;
+}
+
+.update-button:hover {
+    background-color: #555;
+    border: 2px solid #555;
 }
 
 .switch {
@@ -130,6 +137,9 @@ input:checked + .slider:before {
     border-radius: 17px;
     border: 1px solid rgb(150, 0, 0);
     cursor: pointer;
+
+    position: absolute;
+    bottom: 10px;
 }
 
 .delete-button:hover {
