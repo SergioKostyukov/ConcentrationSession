@@ -56,7 +56,7 @@ function updateUserLoginData(fieldId) {
 // Function to clear input fields
 function clearInputFields() {
     const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
-    
+
     inputFields.forEach(input => {
         input.value = '';
     });

@@ -21,7 +21,6 @@ function updateButtonLabelsVisibility() {
     });
 }
 
-
 function toggleNavigationPanelByCursor() {
     const navigationPanel = document.getElementById('navigationPanel');
 
