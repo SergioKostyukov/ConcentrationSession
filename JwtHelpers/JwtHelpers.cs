@@ -8,22 +8,22 @@ namespace PowerOfControl.JwtHelpers;
 public static class JwtHelpers
 {
     // Helper method to generate claims for a user
-    private static IEnumerable<Claim> GetClaims(this UserToken userAccounts)
+    private static IEnumerable<Claim> GetClaims(this UserDto userAccounts)
     {
         IEnumerable<Claim> claims = new Claim[]
         {
-            new Claim(ClaimTypes.Name, userAccounts.UserName),
-            new Claim(ClaimTypes.Email, userAccounts.Email),
-            new Claim(ClaimTypes.NameIdentifier, userAccounts.Id.ToString()),
-            new Claim("UserTag", userAccounts.UserTag),
-            new Claim("Notifications", userAccounts.Notifications.ToString()),
-            new Claim(ClaimTypes.Expiration, DateTime.UtcNow.AddDays(1).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+            new Claim("user_name", userAccounts.user_name),
+            new Claim("email", userAccounts.email),
+            new Claim("id", userAccounts.id.ToString()),
+            new Claim("tag_name", userAccounts.tag_name),
+            new Claim("notifications", userAccounts.notifications.ToString()),
+            new Claim("expiration", DateTime.UtcNow.AddDays(1).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
         };
         return claims;
     }
 
     // Generate a JWT token for a given user model and JWT settings
-    public static UserToken GenTokenkey(UserToken model, JwtSettings jwtSettings)
+    public static string GenTokenkey(UserDto model, JwtSettings jwtSettings)
     {
         try
         {
@@ -42,19 +42,7 @@ public static class JwtHelpers
                 expires: new DateTimeOffset(expireTime).DateTime,
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
 
-            // Create a UserToken object with the generated token and other information
-            var UserToken = new UserToken
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(JWToken),
-                Id = model.Id,
-                UserName = model.UserName,
-                UserTag = model.UserTag,
-                Email = model.Email,
-                Notifications = model.Notifications,
-                ExpiredTime = DateTime.Now.AddDays(1),
-                Validaty = expireTime.TimeOfDay
-            };
-            return UserToken;
+            return new JwtSecurityTokenHandler().WriteToken(JWToken);
         }
         catch (Exception)
         {

@@ -1,3 +1,6 @@
-﻿1. Small view fixes and bug fixes
-2. The update of general architecture settings
-3. Cleaned css files
+﻿1. General fixes in authorization architecture
+2. Added middleware authorization before necessary manufacturers
+3. Tokens are now stored in cookies locally
+4. Account bar take info from token (no more create request to DataBase)
+5. Cleaned and optimized server files
+6. Requests to the token for receiving server data have been implemented

@@ -51,61 +51,52 @@ function toggleUserMenu() {
 
 // Function to fetch user information from the server
 function getUserInfo() {
-    fetch('https://localhost:7131/api/Account/GetUser', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    }).then(data => {
-        if (data.message === "User data get successful") {
-            currentUser.tag_name = data.user.tag_name;
-            currentUser.user_name = data.user.user_name;
-            currentUser.email = data.user.email;
-            currentUser.notifications = data.user.notifications;
-            currentUser.registered = true;
-            console.log('User info:', data);
+    var userToken = getCookieValue("jwtToken");
 
-            updateProfileButtonText();
-        } else if (data.message === "User not found") {
-            console.log('User not found');
-        } else {
-            console.log('Unexpected response:', data);
+    if (userToken !== null) {
+        var tokenParts = userToken.split('.');
+
+        try {
+            var payload = JSON.parse(atob(tokenParts[1].replace(/-/g, '+').replace(/_/g, '/')));
+
+            currentUser.tag_name = payload.tag_name;
+            currentUser.user_name = payload.user_name;
+            currentUser.email = payload.email;
+            currentUser.notifications = payload.notifications;
+            currentUser.registered = true;
+
+            console.log("Registered user: " + currentUser.tag_name);
+        } catch (error) {
+            console.error('Error decoding token body: ', error);
         }
-    }).catch(error => {
-        console.error('Error:', error);
-    });
+    } else {
+        console.log("Unregistered user.");
+    }
+
+    updateProfileButtonText();
 }
 
 // Function to handle user logout
 function logout() {
-    fetch('https://localhost:7131/api/Account/Logout', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    }).then(data => {
-        console.log('User info:', data);
-        currentUser.tag_name = "";
-        currentUser.user_name = "";
-        currentUser.email = "";
-        currentUser.notifications = false;
-        currentUser.registered = false;
+    // Clear cookie values
+    setCookie("jwtToken", "", new Date(0), "/");
 
+    // Update user information locally
+    currentUser.tag_name = "";
+    currentUser.user_name = "";
+    currentUser.email = "";
+    currentUser.notifications = false;
+    currentUser.registered = false;
+
+    console.log('Logout successful');
+
+    if (!window.location.href.endsWith('index.html')) {
+        window.location.href = 'index.html';
+    }
+    else {
         updateProfileButtonText();
-    }).catch(error => {
-        console.error('Error:', error);
-    });
-    toggleUserMenu(); // Update the menu after logout
+        toggleUserMenu(); // Update the menu after logout
+    }
 }
 
 // Close the menu if the user clicks outside of it
@@ -119,4 +110,3 @@ document.addEventListener('click', function (event) {
 });
 
 getUserInfo();
-updateProfileButtonText(); 

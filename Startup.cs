@@ -16,18 +16,21 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddJWTTokenServices(_configuration);
-        services.AddControllers();
+
         services.AddScoped<AccountService>();
 
         services.AddCors(options =>
         {
-            options.AddDefaultPolicy(builder =>
+            options.AddPolicy("AllowOrigin", builder =>
             {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
+                builder.WithOrigins("http://127.0.0.1:5500")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .AllowCredentials(); // Allows the use of cookies in CORS requests
             });
         });
+        
+        services.AddControllers();
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
@@ -37,7 +40,6 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseAuthentication();
-        app.UseAuthorization();
 
         if (env.IsDevelopment())
         {
@@ -47,9 +49,11 @@ public class Startup
 
         app.UseHttpsRedirection();
 
-        app.UseCors();
+        app.UseCors("AllowOrigin");
 
         app.UseRouting();
+
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {

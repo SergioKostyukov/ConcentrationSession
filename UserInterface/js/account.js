@@ -21,6 +21,9 @@ function enableEditMode(editField1, editField2, editField3, updateButton) {
 
         // Confirm button to return to view mode
         updateButton.innerHTML = "Want to change";
+        updateButton.onclick = function () {
+            enableEditMode(editField1, editField2, editField3, updateButton);
+        };
     }
 }
 
@@ -41,6 +44,7 @@ function saveChanges(editField1, editField2, editField3, updateButton) {
 // Function to send user profile data to the server
 function sendUserData(userName, userTag, userEmail) {
     var userData = {
+        id: getUserId("jwtToken"),
         tag_name: userTag,
         user_name: userName,
         email: userEmail,
@@ -50,7 +54,8 @@ function sendUserData(userName, userTag, userEmail) {
     fetch('https://localhost:7131/api/Account/UpdateUser', {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
         },
         body: JSON.stringify(userData)
     })
@@ -61,7 +66,11 @@ function sendUserData(userName, userTag, userEmail) {
             return response.json();
         })
         .then(data => {
-            console.log('User data updated successfully:', data);
+            console.log(data.message);
+
+            // Update cookie`s token
+            setCookie("jwtToken", data.user_token, new Date(Date.now() + 3600 * 1000), "/");
+            console.log("Token was updated");
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -85,7 +94,8 @@ function sendUserPassword(currentPassword, newPassword, confirmNewPassword) {
     fetch('https://localhost:7131/api/Account/UpdatePassword', {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
         },
         body: JSON.stringify(passwordData)
     })
@@ -96,7 +106,7 @@ function sendUserPassword(currentPassword, newPassword, confirmNewPassword) {
             return response.json();
         })
         .then(data => {
-            console.log('Password updated successfully:', data);
+            console.log(data.message);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -108,7 +118,8 @@ function getUserInfo() {
     fetch('https://localhost:7131/api/Account/GetUser', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
         }
     })
         .then(response => {
@@ -138,7 +149,8 @@ function deleteAccount() {
         fetch('https://localhost:7131/api/Account/DeleteAccount', {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
             }
         })
             .then(response => {
@@ -148,8 +160,8 @@ function deleteAccount() {
                 return response.json();
             })
             .then(data => {
-                console.log('Account deleted successfully:', data);
-                window.location.href = 'index.html';
+                console.log(data.message);
+                logout();
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);

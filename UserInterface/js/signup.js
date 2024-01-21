@@ -9,7 +9,7 @@ const userData = {
 };
 
 // Error messages for validation
-const errorMessages = {
+const ERROR_MESSAGES = {
     email: "Email must have a gmail.com domain.",
     confirm_password: "Password and confirm password must match."
 };
@@ -17,42 +17,19 @@ const errorMessages = {
 // Function to update user data and perform validation
 function updateUserData(fieldId) {
     userData[fieldId] = document.getElementById(fieldId).value;
-    validateField(fieldId);
+    hideError(fieldId);
 }
 
-// Function to get form data for signup
-function getSignupFormData() {
-    const formData = { ...userData };
-    delete formData.confirm_password;
-    return formData;
+// Function to hide errors
+function hideError(fieldId) {
+    const errorElement = document.getElementById(`${fieldId}_error`);
+    errorElement.textContent = "";
 }
 
 // Function for signup validation and sending data to the backend
 function signup() {
-    let is_error = false;
-
-    // Validation for empty fields
-    for (const field in userData) {
-        if (userData[field] === "") {
-            displayError(field, `Please fill in ${field.replace('_', ' ')}`);
-            is_error = true;
-        }
-    }
-    if (is_error) return;
-
-    // Validation for email domain
-    if (!userData.email.endsWith('@gmail.com')) {
-        displayError('Email', errorMessages.email);
-        is_error = true;
-    }
-
-    // Validation for password match
-    if (userData.password !== userData.confirm_password) {
-        displayError('ConfirmPassword', errorMessages.confirm_password);
-        is_error = true;
-    }
-
-    if (is_error) return;
+    // Validate input
+    if(validateFields()) return;
 
     // Get data for backend submission
     const formData = getSignupFormData();
@@ -71,14 +48,21 @@ function signup() {
         return response.json();
     }).then(data => {
         // Display successful signup message and redirect to Login page
-        alert('Signup successful. Redirecting to Login page.');
+        alert(data.message + '. Redirecting to Login page.');
         window.location.href = 'login.html';
     }).catch(error => {
         // Display error message and clear input fields
-        alert('Error during Signup. Please try again.');
+        alert(data.message + '. Please try again.');
         clearInputFields();
         console.error('Error:', error);
     });
+}
+
+// Function to get form data for signup
+function getSignupFormData() {
+    const formData = { ...userData };
+    delete formData.confirm_password;
+    return formData;
 }
 
 // Function to clear input fields
@@ -90,19 +74,36 @@ function clearInputFields() {
     });
 }
 
+// Function to validate a field
+function validateFields() {
+    let is_error = false;
+
+    // Validation for empty fields
+    for (const field in userData) {
+        if (userData[field] === "") {
+            displayError(field, `Please fill in ${field.replace('_', ' ')}`);
+            is_error = true;
+        }
+    }
+    if (is_error) return is_error;
+
+    // Validation for email domain
+    if (!userData.email.endsWith('@gmail.com')) {
+        displayError('Email', ERROR_MESSAGES.email);
+        is_error = true;
+    }
+
+    // Validation for password match
+    if (userData.password !== userData.confirm_password) {
+        displayError('ConfirmPassword', ERROR_MESSAGES.confirm_password);
+        is_error = true;
+    }
+
+    return is_error;
+}
+
 // Function to display errors
 function displayError(fieldId, errorMessage) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = errorMessage;
-}
-
-// Function to hide errors
-function hideError(fieldId) {
-    const errorElement = document.getElementById(`${fieldId}_error`);
-    errorElement.textContent = "";
-}
-
-// Function to validate a field
-function validateField(fieldId) {
-    hideError(fieldId);
 }

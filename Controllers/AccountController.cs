@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PowerOfControl.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PowerOfControl.Models;
+using PowerOfControl.Services;
 
 namespace PowerOfControl.Controllers;
 
 [Produces("application/json")]
 [Route("api/[controller]/[action]")]
 [ApiController]
+[Authorize]
 public class AccountController : ControllerBase
 {
     private readonly AccountService _authService;
@@ -17,11 +19,15 @@ public class AccountController : ControllerBase
     }
 
     // GET: api/Account/GetUser
+    [Authorize]
     [HttpGet]
     public IActionResult GetUser()
     {
+        // Attempt to update the user
+        var currentUserTag = User.FindFirst("tag_name")?.Value;
+
         // Retrieve current user information
-        var user = _authService.GetCurrentUser();
+        var user = _authService.GetCurrentUser(currentUserTag);
         if (user != null)
         {
             // Create a simplified user DTO for response
@@ -42,6 +48,7 @@ public class AccountController : ControllerBase
     }
 
     // POST: api/Account/Authorization
+    [AllowAnonymous]
     [HttpPost]
     public IActionResult Authorization(User user)
     {
@@ -57,13 +64,16 @@ public class AccountController : ControllerBase
     }
 
     // POST: api/Account/Login
+    [AllowAnonymous]
     [HttpPost]
     public IActionResult Login(UserLoginDto user)
     {
         // Attempt to log in the user
-        if (_authService.LoginUser(user))
+        var userToken = _authService.LoginUser(user);
+
+        if (userToken != "")
         {
-            return Ok(new { message = "User login successfully" });
+            return Ok(new { message = "User login successfully", user_token = userToken });
         }
         else
         {
@@ -72,13 +82,19 @@ public class AccountController : ControllerBase
     }
 
     // PATCH: api/Account/UpdateUser
+    [Authorize]
     [HttpPatch]
-    public IActionResult UpdateUser(UpdateUserDto request)
+    public IActionResult UpdateUser(UserDto request)
     {
+        // Attempt to update the user
+        var currentUserTag = User.FindFirst("tag_name").Value;
+
+        var userToken = _authService.UpdateUser(request, currentUserTag);
+
         // Attempt to update user data
-        if (_authService.UpdateUser(request))
+        if (userToken != "")
         {
-            return Ok(new { message = "User data update successfully" });
+            return Ok(new { message = "User data update successfully", user_token = userToken });
         }
         else
         {
@@ -87,6 +103,7 @@ public class AccountController : ControllerBase
     }
 
     // PATCH: api/Account/UpdatePassword
+    [Authorize]
     [HttpPatch]
     public IActionResult UpdatePassword(UpdatePasswordDto request)
     {
@@ -102,32 +119,20 @@ public class AccountController : ControllerBase
     }
 
     // DELETE: api/Account/DeleteAccount
+    [Authorize]
     [HttpDelete]
     public IActionResult DeleteAccount()
     {
+        var currentUserID = User.FindFirst("id")?.Value;
+
         // Attempt to delete the user
-        if (_authService.DeleteUser())
+        if ((currentUserID != null) && _authService.DeleteUser(currentUserID))
         {
-            return Ok(new { message = "User delete successful" });
+            return Ok(new { message = "Account deleted successfully" });
         }
         else
         {
             return BadRequest(new { message = "User delete failed" });
-        }
-    }
-
-    // DELETE: api/Account/Logout
-    [HttpDelete]
-    public IActionResult Logout()
-    {
-        // Attempt to log out the user
-        if (_authService.LogoutUser())
-        {
-            return Ok(new { message = "User logout successful" });
-        }
-        else
-        {
-            return BadRequest(new { message = "User logout failed" });
         }
     }
 }

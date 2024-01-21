@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using PowerOfControl.Models;
+using Newtonsoft.Json;
 using Npgsql;
-using PowerOfControl.Models;
 
 namespace PowerOfControl.Data;
 
