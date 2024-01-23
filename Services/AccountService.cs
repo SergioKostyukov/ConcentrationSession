@@ -99,7 +99,7 @@ public class AccountService
                     throw new Exception($"User with this tag already exists: {JsonConvert.SerializeObject(request.tag_name)}");
                 }
             }
-            UpdateUserDataBaseData(request);
+            UpdateUserData(request);
 
             logger.LogInfo($"User data updated successful");
 
@@ -250,7 +250,7 @@ public class AccountService
     }
 
     // Method to update user data in DataBase
-    private static void UpdateUserDataBaseData(UserDto request)
+    private static void UpdateUserData(UserDto request)
     {
         var dbContext = new DataBaseContext();
 

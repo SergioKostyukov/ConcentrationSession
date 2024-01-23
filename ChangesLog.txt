@@ -1,3 +1,4 @@
-﻿1. Realizing simple concentration page elements
-2. Created temporary functional to timer element
-3. Implemented a view template for the tasks page
+﻿1. Added task controller
+2. Fully implemented server methods for task service
+3. Changed blocks on the tasks page
+4. Implemented connection of the client and server parts

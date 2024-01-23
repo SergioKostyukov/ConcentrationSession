@@ -1,4 +1,4 @@
-// Object to store input data and errors
+// Object to store input data
 const userData = {
     tag_name: "",
     user_name: "",

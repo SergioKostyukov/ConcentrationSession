@@ -18,6 +18,7 @@ public class Startup
         services.AddJWTTokenServices(_configuration);
 
         services.AddScoped<AccountService>();
+        services.AddScoped<TaskService>();
 
         services.AddCors(options =>
         {
