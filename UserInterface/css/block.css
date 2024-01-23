@@ -1,0 +1,10 @@
+.block {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #000;
+}
+

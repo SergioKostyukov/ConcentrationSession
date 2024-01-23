@@ -1,12 +1,4 @@
 .block {
-    display: flex;
-    justify-content: center;
-    border: 1px solid #ccc;
-    background-color: #eee;
-    border-radius: 40px;
-    text-decoration: none;
-    color: #000;
-
     width: calc(33.33% - 126px/3);
     min-width: 300px;
     max-width: 800px;

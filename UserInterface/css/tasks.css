@@ -1,22 +1,205 @@
-.block {
+/* Add task panel styling */
+.center-blocks .add-task-panel {
+    width: 100%;
+    height: 80px;
+}
+
+.add-task-panel .add-task-button {
+    display: block;
+    margin: 0px auto;
+    width: 600px;
+    height: 60px;
+    border-radius: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    padding: 0px 20px;
+    text-align: left;
+}
+
+.add-task-panel .add-task-button:hover {
+    background-color: #e5e5e5;
+}
+
+/* Tasks panel styling */
+.center-blocks .tasks-panel {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    width: 100%;
+    height: calc(100% - 62px);
+    padding: 0px 20px;
+}
+
+/* Individual task block styling */
+.task-block {
+    width: calc(20%);
+    min-width: 250px;
+    max-width: 300px;
+    height: calc(40%);
+    max-height: 700px;
+    margin: 0px 20px 40px 20px;
     border: 1px solid #ccc;
     background-color: #eee;
     border-radius: 40px;
     text-decoration: none;
     color: #000;
+    text-align: left;
+    padding: 0px 20px;
+    position: relative;
+    overflow-y: auto;
+}
 
+.task-block:hover {
+    background-color: #e5e5e5;
+}
+
+/* Text container styling */
+.text-container {
+    margin-top: 10px;
+}
+
+.text-container p {
+    margin: 0;
+}
+
+/* Scrollbar styling */
+.task-block::-webkit-scrollbar {
+    width: 12px;
+}
+
+.task-block::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 6px;
+    border: 3px solid #fff;
+}
+
+.task-block::-webkit-scrollbar-track {
+    background-color: #eee;
+    border-radius: 6px;
+}
+
+.task-block:not(:hover)::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+/* Common styling for task blocks */
+h3 {
+    font-size: 20px;
+    margin: 20px 0px 10px 0px;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+.pin-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 40px;
+    border: none;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    position: absolute;
+    padding: 8px;
+}
+
+.pin-button img {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+}
+
+.pin-button:hover img {
+    filter: brightness(1.5);
+}
+
+/* Modal styling for new tasks */
+.new-task-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    margin: 50px auto;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#taskTitle,
+#taskContent {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.save-task-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Modal styling for task editing */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
     align-items: center;
-    margin: 0px 0px 20px 0px;
+    justify-content: center;
+    z-index: 1000;
 }
 
-.block.full-height {
-    width: auto;
-    height: calc(100% - 2px);
+form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
 }
 
-.block.half-width {
-    width: auto;
-    height: calc(50% - 24px/2);
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+}
+
+.text-container button {
+    background: #3498db;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }

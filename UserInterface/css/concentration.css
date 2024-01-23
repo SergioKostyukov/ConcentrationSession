@@ -1,0 +1,213 @@
+.block {
+    margin: 0px 0px 20px 0px;
+    align-items: center;
+}
+
+.block.tasks {
+    height: calc(100% - 2px);
+}
+
+/*------------------------TIMER-----------------------*/
+.block.timer {
+    height: calc(65% - 24px/2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 40px;
+    text-align: center;
+    position: relative;
+}
+
+.timer-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.settings-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.timer-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-display {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.timer-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.timer-button {
+    padding: 5px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.break-info {
+    margin: 10px 0;
+}
+
+.break-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.break-toggle label {
+    margin-left: 5px;
+}
+
+.start-button {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    background-color: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    background-color: #336699;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    width: 300px; /* Змініть розмір вікна за потреби */
+}
+
+.circle-timer {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #f2f2f2;
+    position: relative;
+}
+
+.circle-timer:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.circle-timer:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 50%;
+    background-color: #ccc;
+    transform-origin: 50% 100%;
+}
+
+.timer-buttons {
+    margin-top: 20px;
+}
+
+.timer-buttons button {
+    margin-right: 10px;
+}
+
+.exit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+/*------------------------GOALS-----------------------*/
+.block.goals {
+    height: calc(35% - 24px/2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.goal-item {
+    width: 100%;
+    max-width: 300px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.goal-label {
+    font-weight: bold;
+}
+
+.goal-value {
+    color: #333;
+}
+
+.progress-bar {
+    width: 100%;
+    max-width: 300px; 
+    position: relative;
+    height: 20px;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    border-radius: 40px;
+    background-color: #4caf50;
+    width: 300px;
+}
+
+.progress-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+}
+
+/****************************************/

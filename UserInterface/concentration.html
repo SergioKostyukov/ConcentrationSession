@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
-    <link rel="stylesheet" href="css/tasks.css">
+    <link rel="stylesheet" href="css/concentration.css">
+    <link rel="stylesheet" href="css/block.css">
 </head>
 
 <body>
@@ -76,11 +77,64 @@
 
         <div class="center-blocks">
             <div class="half-page">
-                <div class="block half-width">Timer</div>
-                <div class="block half-width">Goal</div>
+                <div class="block timer">
+                    <div class="timer-header">
+                        <button class="settings-button" id="settingsButton">Settings</button>
+                    </div>
+                    <div class="timer-control">
+                        <div class="timer-display" id="timerDisplay">00:00</div>
+                        <div class="timer-buttons">
+                            <button class="timer-button" id="increaseButton">+</button>
+                            <button class="timer-button" id="decreaseButton">-</button>
+                            <button class="timer-button" id="resetButton">Reset</button>
+                        </div>
+                    </div>
+                    <p class="break-info">Number of breaks: 0</p>
+                    <div class="break-toggle">
+                        <input type="checkbox" id="breakToggle" />
+                        <label for="breakToggle">Disable breaks</label>
+                    </div>
+                    <button class="start-button" id="startButton">Start Timer</button>
+                </div>
+                
+                <div class="block goals">
+                    <div class="goal-item">
+                        <div class="goal-label">Yesterday</div>
+                        <div class="goal-value" id="yesterdayValue">0 hours</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-label">Day goal</div>
+                        <div class="goal-value" id="dayGoalValue">5 hours</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-label">Series</div>
+                        <div class="goal-value" id="seriesValue">0</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" id="progressBar"></div>
+                        <div class="progress-label" id="progressLabel">Completed: 0%</div>
+                    </div>
+                </div>
+
+                <div class="overlay" id="overlay">
+                    <div class="modal">
+                        <div class="modal-content">
+                            <div class="timer-container">
+                                <div id="timer" class="circle-timer"></div>
+                                <div class="timer-buttons">
+                                    <button id="pauseResumeButton">Пауза</button>
+                                    <button id="resetButtonModal">Скинути</button>
+                                    <button id="exitButtonModal">Вийти</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="half-page">
-                <div class="block full-height">Tasks</div>
+                <div class="block tasks">
+                    Tasks
+                </div>
             </div>
         </div>
     </main>
@@ -88,6 +142,8 @@
     <script src="js/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
+    <script src="js/concentration.js"></script>
+
 
 </body>
 
