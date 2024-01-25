@@ -65,11 +65,11 @@ public class TaskService
         }
     }
 
-    public bool UpdatePin(int id, bool is_pin)
+    public bool UpdatePin(TaskPinUpdateDto request)
     {
         try
         {
-            UpdateTaskPin(id, is_pin);
+            UpdateTaskPin(request);
 
             logger.LogInfo($"Task pin status updated");
 
@@ -204,16 +204,16 @@ public class TaskService
         dbContext.ExecuteNonQuery(command, parameters);
     }
 
-    private static void UpdateTaskPin(int id, bool is_pin)
+    private static void UpdateTaskPin(TaskPinUpdateDto request)
     {
         var dbContext = new DataBaseContext();
 
-        var command = "UPDATE tasks SET name = @name, text = @text, notification_time = @notification_time, is_pin = @is_pin WHERE id = @id;";
+        var command = "UPDATE tasks SET is_pin = @is_pin WHERE id = @id;";
 
         var parameters = new Dictionary<string, object>
         {
-            { "@is_pin", !is_pin },
-            { "@id", id}
+            { "@is_pin", request.is_pin },
+            { "@id", request.id}
         };
 
         dbContext.ExecuteNonQuery(command, parameters);

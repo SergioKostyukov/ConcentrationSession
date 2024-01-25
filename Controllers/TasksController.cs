@@ -22,7 +22,7 @@ public class TasksController : ControllerBase
     // POST: api/Tasks/AddTask
     [Authorize]
     [HttpPost]
-    public IActionResult AddTask(TaskDataDto task)
+    public IActionResult AddTask([FromBody] TaskDataDto task)
     {
         if (!ModelState.IsValid)
         {
@@ -91,7 +91,7 @@ public class TasksController : ControllerBase
     // POST: api/Tasks/UpdateTask
     [AllowAnonymous]
     [HttpPatch]
-    public IActionResult UpdateTask(TaskUpdateDto request)
+    public IActionResult UpdateTask([FromBody] TaskUpdateDto request)
     {
         // Attempt to add a new task
         if (_tasksService.UpdateTask(request))
@@ -107,10 +107,10 @@ public class TasksController : ControllerBase
     // POST: api/Tasks/UpdateTaskPin
     [AllowAnonymous]
     [HttpPatch]
-    public IActionResult UpdateTaskPin(int id, bool is_pin)
+    public IActionResult UpdateTaskPin([FromBody] TaskPinUpdateDto request)
     {
         // Attempt to add a new task
-        if (_tasksService.UpdatePin(id, is_pin))
+        if (_tasksService.UpdatePin(request))
         {
             return Ok(new { message = "Task pin update successfully" });
         }

@@ -90,7 +90,7 @@
                         <p>Some text...</p>
                     </div>
                 </div>
-            
+
                 <div class="task-block">
                     <h3>Task name</h3>
                     <hr>
@@ -138,19 +138,22 @@
                         <img src="images/pin.png" alt="pin">
                     </button>
                     <hr>
-                    <div class="done-toggle" id="taskContentContainer">
-                        <input type="checkbox" id="breakToggle" />
-                        <p contenteditable="true">Task body</p>
-                        <button class="delete-toggle-button" onclick="deleteToggle('taskContentContainer')">✖</button>
+                    <div class="text-container">
+                        <div class="done-toggle" id="taskContentContainer">
+                            <input type="checkbox" id="breakToggle" />
+                            <p contenteditable="true">Task body</p>
+                            <button class="delete-toggle-button"
+                                onclick="deleteToggle('taskContentContainer')">✖</button>
+                        </div>
+                        <button class="add-content-button">Add line</button>
                     </div>
-                    <button class="add-content-button">Add line</button>
                     <button class="save-task-button">Save Changes</button>
                 </div>
             </div>
 
             <div class="modal" id="updateTask">
                 <div class="modal-block task-block" id="updateTaskBlock">
-                    
+
                 </div>
             </div>
         </div>

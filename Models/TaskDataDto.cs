@@ -19,3 +19,9 @@ public class TaskUpdateDto
     public DateTime notification_time { get; set; }
     public bool is_pin { get; set; }
 }
+
+public class TaskPinUpdateDto
+{
+    public int id { get; set; }
+    public bool is_pin { get; set; }
+}
