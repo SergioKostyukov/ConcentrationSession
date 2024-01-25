@@ -1,33 +1,26 @@
-var is_pin_ = false;
-
-function togglePin() {
-    const pinButton = document.getElementById("pinButton");
+function togglePin(pinID) {
+    const pinButton = document.getElementById(pinID);
     const isPinned = pinButton.classList.toggle("pinned"); // Додає або видаляє клас "pinned"
 
-    // Додаємо або видаляємо значення is_pin у залежності від isPinned
     const img = pinButton.querySelector('img');
     if (isPinned) {
         img.style.opacity = 1;
     } else {
         img.style.removeProperty('opacity');
     }
-    is_pin_ = isPinned;
-
-    // Опціонально виводьте у консоль значення is_pin для перевірки
-    console.log("is_pin:", isPinned);
 }
 
 function generateUniqueId() {
-    return 'toggle_' + Date.now().toString(36);
+    return 'toggle_' + Math.random().toString(36).substring(2, 11);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     //--------------------------------NEW TASK MODE--------------------------------
 
+    const modal = document.getElementById("newTask");
     const addTaskButton = document.querySelector(".add-task-button");
-    const modal = document.querySelector(".new-task-modal");
-    const addContentButton = document.querySelector('.add-content-button');
-    const saveTaskButton = document.querySelector(".save-task-button");
+    const addContentButton = modal.querySelector('.add-content-button');
+    const saveTaskButton = modal.querySelector(".save-task-button");
 
     // Розгортання шаблону для нового завдання при натисканні відповідної кнопки
     addTaskButton.addEventListener("click", function () {
@@ -42,7 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Додавання нового рядка-елемента до завдання
-    addContentButton.addEventListener('click', addNewContent);
+    addContentButton.addEventListener('click', function () {
+        addNewContent("newTask");
+    });
 
     // Власне зберення об'єкту до DB та головного меню
     saveTaskButton.addEventListener("click", function () {
@@ -66,89 +61,152 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Створюємо новий текстовий елемент завдання
-    function addNewContent() {
-        const newContentElement = document.createElement('div');
-        newContentElement.classList.add('done-toggle');
-        const uniqueId = generateUniqueId();
-        newContentElement.id = uniqueId;
-
-        newContentElement.innerHTML = `
-                <input type="checkbox" id="breakToggle" />
-                <p contenteditable="true"></p>
-                <button class="delete-toggle-button" onclick="deleteToggle('${uniqueId}')">✖</button>
-        `;
-
-        // Знаходимо всі елементи з класом "done-toggle"
-        const doneToggleElements = document.querySelectorAll('.new-task-modal .done-toggle');
-        const taskContentContainer = modal.querySelector("hr");
-
-        if (doneToggleElements.length > 0) {
-            // Отримуємо останній елемент з класом "done-toggle"
-            const lastDoneToggleElement = doneToggleElements[doneToggleElements.length - 1];
-
-            lastDoneToggleElement.insertAdjacentElement('afterend', newContentElement);
-        } else {
-            // Додаємо новий зміст до контейнера
-            taskContentContainer.insertAdjacentElement('afterend', newContentElement);
-        }
-
-        // Змінено наступні три рядки для переміщення фокусу
-        const newParagraph = newContentElement.querySelector('p');
-        newParagraph.contentEditable = true;
-        newParagraph.focus();
-    }
-
     //--------------------------------TASK UPDATE MODE--------------------------------
 
-    const taskBlocks = document.querySelectorAll(".tasks-panel .task-block");
-    const modal_update = document.querySelector(".modal_update");
+    const modal_update = document.getElementById("updateTask");
 
+    document.querySelector('.tasks-panel').addEventListener('click', function (event) {
+        const taskBlock = event.target.closest('.task-block');
+        if (taskBlock) {
+            // Передаємо дані в модальне вікно
+            fillUpdateModal(taskBlock);
 
+            // Активуємо модальне вікно
+            modal_update.classList.add('active');
+        }
+    });
+
+    modal_update.addEventListener("click", function (event) {
+        if (event.target === modal_update) {
+            modal_update.classList.remove("active");
+        }
+    });
 });
 
-/*
-document.addEventListener("DOMContentLoaded", function () {
-    const taskBlocks = document.querySelectorAll(".tasks-panel .task-block");
-    const modal = document.querySelector(".modal");
-    const titleInput = document.getElementById("title");
-    const contentInput = document.getElementById("content");
+// Функція для заповнення модального вікна з оновленням завдання
+function fillUpdateModal(taskBlock) {
+    const updateTaskBlock = document.getElementById('updateTaskBlock');
 
-    taskBlocks.forEach(taskBlock => {
-        taskBlock.addEventListener("click", function (event) {
-            event.stopPropagation(); // Зупинити розповсюдження події, щоб не скасовувати відображення модального вікна
-            showModal(taskBlock);
-        });
+    // Отримуємо дані про завдання з вибраного блоку
+    const title = taskBlock.querySelector("h3").textContent;
+    const contents = taskBlock.querySelectorAll(".done-toggle");
+
+    // Очищаємо вміст модального вікна перед оновленням
+    updateTaskBlock.innerHTML = '';
+
+    // Додаємо назву завдання
+    const taskTitle = document.createElement('h3');
+    taskTitle.textContent = title;
+    const task_id = taskBlock.id;
+    taskTitle.id = parseInt(task_id.replace('block', ''), 10);
+    taskTitle.contentEditable = true;
+    updateTaskBlock.appendChild(taskTitle);
+
+    // Додаємо розділювач
+    const divider = document.createElement('hr');
+    updateTaskBlock.appendChild(divider);
+
+    // Додаємо вміст завдання
+    contents.forEach(content => {
+        const doneToggleElement = document.createElement('div');
+        doneToggleElement.classList.add('done-toggle');
+        const uniqueId = generateUniqueId();
+        doneToggleElement.id = uniqueId;
+
+        // Копіюємо чекбокс
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'breakToggle';
+        checkbox.checked = content.querySelector("#breakToggle").checked;
+        doneToggleElement.appendChild(checkbox);
+
+        // Копіюємо рядок <p> і робимо його редагованим
+        const paragraph = document.createElement('p');
+        paragraph.contentEditable = true;
+        paragraph.textContent = content.querySelector("p").textContent;
+        doneToggleElement.appendChild(paragraph);
+
+        // Додаємо кнопку видалення
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-toggle-button');
+        deleteButton.textContent = '✖';
+        deleteButton.setAttribute('onclick', `deleteToggle('${uniqueId}')`);
+        doneToggleElement.appendChild(deleteButton);
+
+        // Додаємо doneToggleElement до модального вікна
+        updateTaskBlock.appendChild(doneToggleElement);
     });
 
-    modal.addEventListener("click", function () {
-        modal.style.display = "none"; // Приховуємо модальне вікно при кліку поза блоком
-    });
+    // Додаємо кнопку "pin"
+    const pinButton = document.createElement('button');
+    pinButton.classList.add('pin-button');
+    const existpinButton = taskBlock.querySelector(".pin-button");
+    const isPinned = existpinButton.classList.contains("pinned");
+    if (isPinned) {
+        pinButton.classList.add('pinned');
+    }
+    const pinImage = document.createElement('img');
+    pinImage.src = 'images/pin.png';
+    pinImage.alt = 'pin';
+    pinButton.setAttribute('onclick', `togglePin('pinButton')`);
+    pinButton.appendChild(pinImage);
+    updateTaskBlock.appendChild(pinButton);
 
-    function showModal(taskBlock) {
-        const taskId = taskBlock.dataset.id;
-        const title = taskBlock.dataset.title;
-        const content = taskBlock.dataset.content;
+    // Додаємо кнопку "Add line"
+    const addContentButton = document.createElement('button');
+    addContentButton.classList.add('add-content-button');
+    addContentButton.setAttribute('onclick', `addNewContent('updateTask')`);
+    addContentButton.textContent = 'Add line';
+    updateTaskBlock.appendChild(addContentButton);
 
-        // Заповнюємо поля вводу значеннями з task-block
-        titleInput.value = title;
-        contentInput.value = content;
+    // Додаємо кнопку "Save Changes"
+    const saveChangesButton = document.createElement('button');
+    saveChangesButton.classList.add('save-task-button');
+    saveChangesButton.setAttribute('onclick', `saveUpdate('updateTask', 'updateTask')`);
+    saveChangesButton.textContent = 'Save Changes';
+    updateTaskBlock.appendChild(saveChangesButton);
+}
 
-        modal.style.display = "flex"; // Показуємо модальне вікно
+function saveUpdate(modal_id, blockName){
+    const modal = document.getElementById(modal_id);
+
+    updateTask(blockName);
+
+    modal.classList.remove("active");
+}
+
+// Створюємо новий текстовий елемент завдання
+function addNewContent(modal_id) {
+    const modal = document.getElementById(modal_id);
+    const newContentElement = document.createElement('div');
+    newContentElement.classList.add('done-toggle');
+    const uniqueId = generateUniqueId();
+    newContentElement.id = uniqueId;
+
+    newContentElement.innerHTML = `
+            <input type="checkbox" id="breakToggle" />
+            <p contenteditable="true"></p>
+            <button class="delete-toggle-button" onclick="deleteToggle('${uniqueId}')">✖</button>
+    `;
+
+    // Знаходимо всі елементи з класом "done-toggle"
+    const doneToggleElements = modal.querySelectorAll('.done-toggle');
+
+    if (doneToggleElements.length > 0) {
+        // Отримуємо останній елемент з класом "done-toggle"
+        const lastDoneToggleElement = doneToggleElements[doneToggleElements.length - 1];
+
+        lastDoneToggleElement.insertAdjacentElement('afterend', newContentElement);
+    } else {
+        // Додаємо новий зміст до контейнера
+        const taskContentContainer = modal.querySelector("hr");
+        taskContentContainer.insertAdjacentElement('afterend', newContentElement);
     }
 
-    // Функція для збереження змін на сервері
-    window.saveChanges = function () {
-        const title = titleInput.value;
-        const content = contentInput.value;
-
-        // Ваш код для відправлення даних на сервер
-        console.log("New Title: ${title}, New Content: ${content}");
-
-        modal.style.display = "none"; // Приховуємо модальне вікно
-    };
-});
-*/
+    // Змінено наступні три рядки для переміщення фокусу
+    const newParagraph = newContentElement.querySelector('p');
+    newParagraph.contentEditable = true;
+}
 
 function addTask(blockName) {
     // Отримуємо основний блок
@@ -170,13 +228,16 @@ function addTask(blockName) {
         taskContentArray.push({ text, isDone });
     });
 
+    const pinButton = document.getElementById("pinButton");
+    const isPinned = pinButton.classList.contains("pinned");
+
     var taskData = {
         id: getUserId("jwtToken"),
         name: taskTitle,
         text: JSON.stringify(taskContentArray),
         is_archive: false,
         notification_time: new Date().toISOString(),
-        is_pin: is_pin_
+        is_pin: isPinned
     };
 
     // Fetch to send a POST request to the server
@@ -244,6 +305,7 @@ function displayTasks(tasks) {
     tasks.forEach(task => {
         const taskBlock = document.createElement('div');
         taskBlock.classList.add('task-block');
+        taskBlock.id = 'block' + task.id;
 
         // Додаємо назву завдання
         const taskTitle = document.createElement('h3');
@@ -257,11 +319,15 @@ function displayTasks(tasks) {
         // Додаємо кнопку "pin"
         const pinButton = document.createElement('button');
         pinButton.classList.add('pin-button');
+        if (task.is_pin) {
+            pinButton.classList.add('pinned');
+        }
         const pinImage = document.createElement('img');
         pinImage.src = 'images/pin.png';
         pinImage.alt = 'pin';
         pinButton.appendChild(pinImage);
         taskBlock.appendChild(pinButton);
+        pinButton.disabled = true;
 
         // Додаємо контейнер для тексту завдання
         const textContainer = document.createElement('div');
@@ -280,18 +346,19 @@ function displayTasks(tasks) {
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = 'breakToggle';
-                checkbox.checked = taskContent.isDone; // Встановлюємо стан чекбоксу
+                checkbox.checked = taskContent.isDone;
+                checkbox.disabled = true;
 
                 const paragraph = document.createElement('p');
-                paragraph.contentEditable = true;
+                paragraph.contentEditable = false;
                 paragraph.textContent = taskContent.text;
 
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('delete-toggle-button');
-                deleteButton.onclick = function () {
-                    deleteToggle(taskContent.uniqueId);
-                };
                 deleteButton.textContent = '×';
+                deleteButton.style.visibility = 'hidden';
+
+                // !!! додати ще кнопку для меню дій з блоком !!!
 
                 // Додаємо створені елементи до doneToggleElement
                 doneToggleElement.appendChild(checkbox);
@@ -310,16 +377,37 @@ function displayTasks(tasks) {
     });
 }
 
-getUserTasks();
+function updateTask(blockName) {
+    // Отримуємо основний блок
+    const taskBlock = document.getElementById(blockName);
 
-/*
-function updateTask() {
+    // Отримуємо дані з блоку
+    const taskId = parseInt(taskBlock.querySelector("h3").id);
+    const taskTitle = taskBlock.querySelector("h3").textContent;
+
+    // Отримуємо вміст елементів "done-toggle"
+    const doneToggleElements = taskBlock.querySelectorAll(".done-toggle");
+
+    // Створюємо масив для збереження тексту та статусу
+    const taskContentArray = [];
+
+    // Перебираємо елементи "done-toggle" та збираємо текст та статус
+    doneToggleElements.forEach(doneToggleElement => {
+        const text = doneToggleElement.querySelector("p").textContent;
+        const isDone = doneToggleElement.querySelector("#breakToggle").checked;
+        taskContentArray.push({ text, isDone });
+    });
+
+    const pinButton = taskBlock.querySelector(".pin-button");
+    const isPinned = pinButton.classList.contains("pinned");
+
     var userData = {
-        id: 1,
-        tag_name: userTag,
-        user_name: userName,
-        email: userEmail,
-        notifications: document.getElementById('newFieldSwitch').checked
+        id: taskId,
+        name: taskTitle,
+        text: JSON.stringify(taskContentArray),
+        is_archive: false,
+        notification_time: new Date().toISOString(),
+        is_pin: isPinned
     };
 
     fetch('https://localhost:7131/api/Tasks/UpdateTask', {
@@ -338,13 +426,10 @@ function updateTask() {
         })
         .then(data => {
             console.log(data.message);
-
-            // Update cookie`s token
-            setCookie("jwtToken", data.user_token, new Date(Date.now() + 3600 * 1000), "/");
-            console.log("Token was updated");
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
-*/
+
+getUserTasks();

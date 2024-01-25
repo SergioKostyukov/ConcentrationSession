@@ -50,7 +50,7 @@ public class TasksController : ControllerBase
 
         if (currentUserID != null)
         {
-            List<TaskData> tasks = _tasksService.GetNotArchivedTasks(int.Parse(currentUserID));
+            List<TaskDataDto> tasks = _tasksService.GetNotArchivedTasks(int.Parse(currentUserID));
             // Attempt to add a new task
             if (tasks != null)
             {

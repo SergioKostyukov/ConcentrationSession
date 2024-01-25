@@ -131,10 +131,10 @@
                 </div>
             </div>
 
-            <div class="new-task-modal">
-                <div class="modal-add task-block" id="newTask">
+            <div class="modal" id="newTask">
+                <div class="modal-block task-block" id="newTaskBlock">
                     <h3 contenteditable="true" id="taskTitle">Task name</h3>
-                    <button class="pin-button" onclick="togglePin()" id="pinButton">
+                    <button class="pin-button" onclick="togglePin('pinButton')" id="pinButton">
                         <img src="images/pin.png" alt="pin">
                     </button>
                     <hr>
@@ -145,6 +145,12 @@
                     </div>
                     <button class="add-content-button">Add line</button>
                     <button class="save-task-button">Save Changes</button>
+                </div>
+            </div>
+
+            <div class="modal" id="updateTask">
+                <div class="modal-block task-block" id="updateTaskBlock">
+                    
                 </div>
             </div>
         </div>

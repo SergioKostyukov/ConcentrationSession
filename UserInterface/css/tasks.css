@@ -59,9 +59,16 @@
     margin-top: 0px;
 }
 
-p {
-    font-size: 18px;
-    margin: 0px;
+h3 {
+    font-size: 20px;
+    margin: 20px 0px 10px 0px;
+}
+
+hr {
+    width: 99%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
 }
 
 /* Scrollbar styling */
@@ -84,63 +91,8 @@ p {
     background-color: transparent;
 }
 
-h3 {
-    font-size: 20px;
-    margin: 20px 0px 10px 0px;
-}
-
-hr {
-    width: 99%;
-    height: 1px;
-    background-color: #ccc;
-    margin: 10px 0;
-}
-
-/* Pin button styling*/
-.pin-button {
-    height: 40px;
-    width: 40px;
-    border-radius: 40px;
-    border: none;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    position: absolute;
-    padding: 8px;
-    background-color: transparent;
-}
-
-.pin-button img {
-    max-width: 100%;
-    max-height: 100%;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.modal-add:hover .pin-button img,
-.pin-button.pinned img {
-    opacity: 1;
-}
-
-.pin-button:active {
-    background-color: #878787;
-}
-
-.pin-button.pinned {
-    color: #fff;
-}
-
-.pin-button.pinned:hover {
-    filter: brightness(1);
-}
-
-.pin-button.pinned:active {
-    background-color: #272727;
-}
-
-/* Modal styling for new tasks */
-.new-task-modal {
+/* Modal styling */
+.modal {
     display: none;
     position: fixed;
     top: 50%;
@@ -151,13 +103,13 @@ hr {
     height: 100%;
 }
 
-.new-task-modal.active {
+.modal.active {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.modal-add {
+.modal-block {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -167,9 +119,14 @@ hr {
     text-align: left;
 }
 
-#taskTitle {
+.modal-block h3 {
     margin: 5px 0px;
     width: 100%;
+    outline: none;
+}
+
+.modal-block:hover {
+    background-color: #eee;
 }
 
 .done-toggle {
@@ -178,16 +135,10 @@ hr {
     justify-content: center;
 }
 
-.modal-add:hover {
-    background-color: #eee;
-}
-
-.done-toggle p[contenteditable="true"] {
+.done-toggle p {
+    font-size: 18px;
+    margin: 0px;
     width: calc(100% - 60px);
-    outline: none;
-}
-
-.modal-add h3[contenteditable="true"] {
     outline: none;
 }
 
@@ -254,4 +205,40 @@ input {
     opacity: 1;
     visibility: visible;
     font-size: 16px;
+}
+
+/* Pin button styling*/
+.pin-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border: none;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    position: absolute;
+    padding: 8px;
+    background-color: transparent;
+}
+
+.pin-button img {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-block:hover .pin-button img,
+.task-block:hover .pin-button img,
+.pin-button.pinned img {
+    opacity: 1;
+}
+
+.pin-button:active {
+    background-color: #878787;
+}
+
+.pin-button.pinned {
+    color: #fff;
 }

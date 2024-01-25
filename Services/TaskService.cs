@@ -34,7 +34,7 @@ public class TaskService
         }
     }
 
-    public List<TaskData>? GetNotArchivedTasks(int user_id)
+    public List<TaskDataDto>? GetNotArchivedTasks(int user_id)
     {
         var userTasks = FindNotArchivedTasks(user_id);
 
@@ -120,7 +120,7 @@ public class TaskService
         dbContext.ExecuteNonQuery(command, parameters);
     }
 
-    private static List<TaskData> FindNotArchivedTasks(int id)
+    private static List<TaskDataDto> FindNotArchivedTasks(int id)
     {
         var dbContext = new DataBaseContext();
 
@@ -130,15 +130,15 @@ public class TaskService
             { "@request", false }
         };
 
-        List<TaskData> tasksList = new();
+        List<TaskDataDto> tasksList = new();
 
         using (var reader = dbContext.ExecuteQuery(command, parameters))
         {
             while (reader.Read())
             {
-                TaskData task = new()
+                TaskDataDto task = new()
                 {
-                    user_id = (int)reader["user_id"],
+                    id = (int)reader["id"],
                     name = reader["name"].ToString(),
                     text = reader["text"].ToString(),
                     is_archive = (bool)reader["is_archive"],
