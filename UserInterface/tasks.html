@@ -74,15 +74,15 @@
             </div>
         </aside>
 
-        <div class="center-blocks">
+        <div class="center-blocks" id="centerBlocks">
             <div class="add-task-panel">
                 <button class="add-task-button">New task set</button>
             </div>
 
             <div class="tasks-panel">
-                <div class="task-block" data-id="1" data-title="Task name" data-content="Some text...">
+                <div class="task-block">
                     <h3>Task name</h3>
-                    <div class="divider"></div>
+                    <hr>
                     <button class="pin-button">
                         <img src="images/pin.png" alt="pin">
                     </button>
@@ -93,7 +93,7 @@
             
                 <div class="task-block">
                     <h3>Task name</h3>
-                    <div class="divider"></div>
+                    <hr>
                     <button class="pin-button">
                         <img src="images/pin.png" alt="pin">
                     </button>
@@ -102,7 +102,7 @@
 
                 <div class="task-block">
                     <h3>Task name</h3>
-                    <div class="divider"></div>
+                    <hr>
                     <button class="pin-button">
                         <img src="images/pin.png" alt="pin">
                     </button>
@@ -113,10 +113,13 @@
                     <p>Some text...</p>
                     <p>Some text...</p>
                     <p>Some text...</p>
+                    <p>Some text...</p>
+                    <p>Some text...</p>
+                    <p>Some text...</p>
                 </div>
                 <div class="task-block">
                     <h3>Task name</h3>
-                    <div class="divider"></div>
+                    <hr>
                     <button class="pin-button">
                         <img src="images/pin.png" alt="pin">
                     </button>
@@ -129,14 +132,18 @@
             </div>
 
             <div class="new-task-modal">
-                <div class="modal-content task-block">
+                <div class="modal-add task-block" id="newTask">
                     <h3 contenteditable="true" id="taskTitle">Task name</h3>
-                    <div class="divider"></div>
-                    <button class="pin-button">
+                    <button class="pin-button" onclick="togglePin()" id="pinButton">
                         <img src="images/pin.png" alt="pin">
                     </button>
-                    <h4 contenteditable="true" id="taskContent">Task body</h4>
-                    <button class="add-content-button">Add Content</button>
+                    <hr>
+                    <div class="done-toggle" id="taskContentContainer">
+                        <input type="checkbox" id="breakToggle" />
+                        <p contenteditable="true">Task body</p>
+                        <button class="delete-toggle-button" onclick="deleteToggle('taskContentContainer')">✖</button>
+                    </div>
+                    <button class="add-content-button">Add line</button>
                     <button class="save-task-button">Save Changes</button>
                 </div>
             </div>

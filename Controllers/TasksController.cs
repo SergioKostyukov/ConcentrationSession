@@ -48,16 +48,22 @@ public class TasksController : ControllerBase
         // Attempt to update the user
         var currentUserID = User.FindFirst("id")?.Value;
 
-        List<TaskData> tasks = _tasksService.GetNotArchivedTasks(int.Parse(currentUserID));
-
-        // Attempt to add a new task
-        if (tasks != null)
+        if (currentUserID != null)
         {
-            return Ok(new { message = "Task data get successful", tasksList = tasks });
+            List<TaskData> tasks = _tasksService.GetNotArchivedTasks(int.Parse(currentUserID));
+            // Attempt to add a new task
+            if (tasks != null)
+            {
+                return Ok(new { message = "Task data get successful", tasksList = tasks });
+            }
+            else
+            {
+                return Ok(new { message = "There are no tasks" });
+            }
         }
         else
         {
-            return Ok(new { message = "There are no tasks" });
+            return Ok(new { message = "User not authorized" });
         }
     }
 
