@@ -20,8 +20,8 @@ public class TaskUpdateDto
     public bool is_pin { get; set; }
 }
 
-public class TaskPinUpdateDto
+public class TaskStatusUpdateDto
 {
     public int id { get; set; }
-    public bool is_pin { get; set; }
+    public bool status { get; set; }
 }

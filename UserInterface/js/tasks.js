@@ -68,6 +68,35 @@ function addNewContent(modal_id) {
     // Змінено наступні три рядки для переміщення фокусу
     const newParagraph = newContentElement.querySelector('p');
     newParagraph.contentEditable = true;
+    newParagraph.focus();
+}
+
+function resetTaskBlock(modal_id){
+    const modal = document.getElementById(modal_id);
+
+    // Скинути значення в заголовку
+    const taskTitle = modal.querySelector('#taskTitle');
+    taskTitle.textContent = 'Task name';
+
+    // Скинути стан кнопки "pin"
+    const pinButton = modal.querySelector('#pinButton');
+    if(pinButton.classList.contains('pinned')){
+        togglePin(pinButton.id);
+    }
+
+    // Залишити тільки один done-toggle
+    const contentElements = modal.querySelectorAll('.done-toggle:not(:first-child)');
+    contentElements.forEach(element => {
+        element.remove();
+    });
+
+    // Зняти позначку "checked" у чекбокса першого елемента
+    const Checkbox = modal.querySelector('.done-toggle input[type="checkbox"]');
+    Checkbox.checked = false;
+
+    // Скинути значення в усіх рядках-елементах, окрім першого
+    const textContent = modal.querySelector('.done-toggle p');
+    textContent.textContent = 'Task body';
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -87,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("click", function (event) {
         if (event.target === modal) {
             modal.classList.remove("active");
+            resetTaskBlock("newTask");
         }
     });
 
@@ -101,10 +131,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Закрити модальне вікно
         modal.classList.remove("active");
+        resetTaskBlock("newTask");
     });
 
     // Обробник події натискання клавіші Enter у блоках <p>
-    document.addEventListener('keydown', function (event) {
+    modal.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             const activeElement = document.activeElement;
 
@@ -112,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (activeElement.tagName === 'P' && activeElement.isContentEditable) {
                 // Запускаємо функцію додавання нового блоку
                 event.preventDefault();
-                addNewContent();
+                addNewContent("newTask");
             }
         }
     });
@@ -142,6 +173,20 @@ document.addEventListener("DOMContentLoaded", function () {
             modal_update.classList.remove("active");
         }
     });
+
+    // Обробник події натискання клавіші Enter у блоках <p>
+    modal_update.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            const activeElement = document.activeElement;
+
+            // Перевіряємо, чи активний елемент - редагований блок <p>
+            if (activeElement.tagName === 'P' && activeElement.isContentEditable) {
+                // Запускаємо функцію додавання нового блоку
+                event.preventDefault();
+                addNewContent("updateTask");
+            }
+        }
+    });
 });
 
 // Функція для заповнення вікна для оновлення завдання
@@ -162,6 +207,22 @@ function fillUpdateModal(taskBlock) {
     taskTitle.id = task_id;
     taskTitle.contentEditable = true;
     updateTaskBlock.appendChild(taskTitle);
+
+    // Додаємо кнопку "pin"
+    const pinButton = document.createElement('button');
+    pinButton.classList.add('action-button', 'pin-button');
+    const existpinButton = taskBlock.querySelector(".pin-button");
+    const isPinned = existpinButton.classList.contains("pinned");
+    if (isPinned) {
+        pinButton.classList.add('pinned');
+    }
+    const pinImage = document.createElement('img');
+    pinImage.src = 'images/pin.png';
+    pinImage.alt = 'pin';
+    pinButton.id = 'updatePin' + task_id;
+    pinButton.setAttribute('onclick', `togglePin('${pinButton.id}')`);
+    pinButton.appendChild(pinImage);
+    updateTaskBlock.appendChild(pinButton);
 
     // Додаємо розділювач
     const divider = document.createElement('hr');
@@ -211,34 +272,57 @@ function fillUpdateModal(taskBlock) {
 
     updateTaskBlock.appendChild(textContainer);
 
-    // Додаємо кнопку "pin"
-    const pinButton = document.createElement('button');
-    pinButton.classList.add('pin-button');
-    const existpinButton = taskBlock.querySelector(".pin-button");
-    const isPinned = existpinButton.classList.contains("pinned");
-    if (isPinned) {
-        pinButton.classList.add('pinned');
-    }
-    const pinImage = document.createElement('img');
-    pinImage.src = 'images/pin.png';
-    pinImage.alt = 'pin';
-    pinButton.id = 'updatePin' + task_id;
-    pinButton.setAttribute('onclick', `togglePin('${pinButton.id}')`);
-    pinButton.appendChild(pinImage);
-    updateTaskBlock.appendChild(pinButton);
+    // Додаємо кнопку "notification"
+    const notificationButton = document.createElement('button');
+    notificationButton.classList.add('action-button', 'notification-button');
+    const notificationImage = document.createElement('img');
+    notificationImage.src = 'images/notification.png';
+    notificationImage.alt = 'notification';
+    notificationButton.setAttribute('onclick', `notificationTask('updateTask')`);
+    notificationButton.appendChild(notificationImage);
+    updateTaskBlock.appendChild(notificationButton);
 
+    // Додаємо кнопку "copy"
+    const copyButton = document.createElement('button');
+    copyButton.classList.add('action-button', 'copy-button');
+    const copyImage = document.createElement('img');
+    copyImage.src = 'images/copy.png';
+    copyImage.alt = 'copy';
+    copyButton.setAttribute('onclick', `copyTask('updateTask')`);
+    copyButton.appendChild(copyImage);
+    updateTaskBlock.appendChild(copyButton);
+
+    // Додаємо кнопку "delete"
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('action-button', 'delete-button');
+    const deleteImage = document.createElement('img');
+    deleteImage.src = 'images/delete.png';
+    deleteImage.alt = 'delete';
+    deleteButton.setAttribute('onclick', `deleteTask('updateTask')`);
+    deleteButton.appendChild(deleteImage);
+    updateTaskBlock.appendChild(deleteButton);
+
+    // Додаємо кнопку "archive"
+    const archiveButton = document.createElement('button');
+    archiveButton.classList.add('action-button', 'archive-button');
+    const archiveImage = document.createElement('img');
+    archiveImage.src = 'images/folder.png';
+    archiveImage.alt = 'archive';
+    archiveButton.setAttribute('onclick', `archiveTask('updateTask')`);
+    archiveButton.appendChild(archiveImage);
+    updateTaskBlock.appendChild(archiveButton);
 
     // Додаємо кнопку "Save Changes"
     const saveChangesButton = document.createElement('button');
     saveChangesButton.classList.add('save-task-button');
-    saveChangesButton.setAttribute('onclick', `saveUpdate('updateTask', 'updateTask')`);
+    saveChangesButton.setAttribute('onclick', `saveUpdate('updateTask')`);
     saveChangesButton.textContent = 'Save Changes';
     updateTaskBlock.appendChild(saveChangesButton);
 }
 
 // Функція при натисканні на кнопку збереження  
-function saveUpdate(modal_id, blockName) {
-    const modal = document.getElementById(modal_id);
+function saveUpdate(blockName) {
+    const modal = document.getElementById(blockName);
 
     updateTask(blockName);
 
@@ -271,7 +355,7 @@ function displayTasks(tasks) {
 
         // Додаємо кнопку "pin"
         const pinButton = document.createElement('button');
-        pinButton.classList.add('pin-button');
+        pinButton.classList.add('action-button', 'pin-button');
         if (task.is_pin) {
             pinButton.classList.add('pinned');
             pinnedTasks.push(taskBlock);
@@ -366,7 +450,7 @@ function addTask(blockName) {
     const isPinned = pinButton.classList.contains("pinned");
 
     var taskData = {
-        id: getUserId("jwtToken"),
+        user_id: getUserId("jwtToken"),
         name: taskTitle,
         text: JSON.stringify(taskContentArray),
         is_archive: false,
@@ -480,9 +564,9 @@ function updateTask(blockName) {
 
 // Функція-запит оновлення статусу закріплення завдання
 function updateTaskPin(pin) {
-    var pinData = {
+    var requestData = {
         id: parseInt(pin.id.replace('pin', ''), 10),
-        is_pin: pin.classList.contains("pinned")
+        status: pin.classList.contains("pinned")
     };
 
     fetch('https://localhost:7131/api/Tasks/UpdateTaskPin', {
@@ -491,7 +575,7 @@ function updateTaskPin(pin) {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
         },
-        body: JSON.stringify(pinData)
+        body: JSON.stringify(requestData)
     })
         .then(response => {
             if (!response.ok) {
@@ -506,6 +590,106 @@ function updateTaskPin(pin) {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
+}
+
+function copyTask(TaskName){
+    const taskBlock = document.getElementById(TaskName);
+    var requestData = {
+        id: parseInt(taskBlock.querySelector('h3').id),
+    };
+
+    console.log(requestData.id);
+
+    fetch('https://localhost:7131/api/Tasks/CopyTask', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.message);
+            getUserTasks();
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+function deleteTask(TaskName){
+    const taskBlock = document.getElementById(TaskName);
+    var requestData = {
+        id: parseInt(taskBlock.querySelector('h3').id),
+    };
+
+    console.log(requestData.id);
+
+    fetch('https://localhost:7131/api/Tasks/DeleteTask', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.message);
+            getUserTasks();
+            taskBlock.classList.remove("active");
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+function archiveTask(TaskName){
+    const taskBlock = document.getElementById(TaskName);
+    var requestData = {
+        id: parseInt(taskBlock.querySelector('h3').id),
+        status: true
+    };
+
+    console.log(requestData.id, requestData.status);
+
+    fetch('https://localhost:7131/api/Tasks/ArchiveTask', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.message);
+            getUserTasks();
+            taskBlock.classList.remove("active");
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+function notificationTask(TaskName){
+
 }
 
 getUserTasks();

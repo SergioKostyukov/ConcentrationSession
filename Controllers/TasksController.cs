@@ -22,7 +22,7 @@ public class TasksController : ControllerBase
     // POST: api/Tasks/AddTask
     [Authorize]
     [HttpPost]
-    public IActionResult AddTask([FromBody] TaskDataDto task)
+    public IActionResult AddTask([FromBody] TaskData task)
     {
         if (!ModelState.IsValid)
         {
@@ -107,7 +107,7 @@ public class TasksController : ControllerBase
     // POST: api/Tasks/UpdateTaskPin
     [AllowAnonymous]
     [HttpPatch]
-    public IActionResult UpdateTaskPin([FromBody] TaskPinUpdateDto request)
+    public IActionResult UpdateTaskPin([FromBody] TaskStatusUpdateDto request)
     {
         // Attempt to add a new task
         if (_tasksService.UpdatePin(request))
@@ -120,13 +120,45 @@ public class TasksController : ControllerBase
         }
     }
 
+    // POST: api/Tasks/CopyTask
+    [AllowAnonymous]
+    [HttpPost]
+    public IActionResult CopyTask([FromBody] TaskStatusUpdateDto request)
+    {
+        // Attempt to add a new task
+        if (_tasksService.CopyTask(request.id))
+        {
+            return Ok(new { message = "Task copy successfully" });
+        }
+        else
+        {
+            return BadRequest(new { message = "Task copy failed" });
+        }
+    }
+
+    // POST: api/Tasks/ArchiveTask
+    [AllowAnonymous]
+    [HttpPatch]
+    public IActionResult ArchiveTask([FromBody] TaskStatusUpdateDto request)
+    {
+        // Attempt to add a new task
+        if (_tasksService.ArchiveTask(request))
+        {
+            return Ok(new { message = "Task archive successfully" });
+        }
+        else
+        {
+            return BadRequest(new { message = "Task archive failed" });
+        }
+    }
+
     // POST: api/Tasks/DeleteTask
     [AllowAnonymous]
     [HttpDelete]
-    public IActionResult DeleteTask(int id)
+    public IActionResult DeleteTask([FromBody] TaskStatusUpdateDto request)
     {
         // Attempt to add a new task
-        if (_tasksService.DeleteTask(id))
+        if (_tasksService.DeleteTask(request.id))
         {
             return Ok(new { message = "Task deleted successfully" });
         }

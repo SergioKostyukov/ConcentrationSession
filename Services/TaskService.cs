@@ -15,7 +15,7 @@ public class TaskService
     }
 
     // Method to handle task adding
-    public bool CreateTask(TaskDataDto task)
+    public bool CreateTask(TaskData task)
     {
         logger.LogInfo($"Start created");
         try
@@ -65,11 +65,11 @@ public class TaskService
         }
     }
 
-    public bool UpdatePin(TaskPinUpdateDto request)
+    public bool UpdatePin(TaskStatusUpdateDto request)
     {
         try
         {
-            UpdateTaskPin(request);
+            UpdatePinDB(request);
 
             logger.LogInfo($"Task pin status updated");
 
@@ -82,13 +82,56 @@ public class TaskService
         }
     }
 
+    public bool CopyTask(int id)
+    {
+        try
+        {
+            logger.LogInfo($"Task copy started {id}");
+            TaskData task = FindTask(id);
+
+            logger.LogInfo($"Task finded");
+
+            SaveTaskToDB(task);
+
+            logger.LogInfo($"Task copy finish");
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error task copy: {ex.Message}");
+            return false;
+        }
+    }
+
+    public bool ArchiveTask(TaskStatusUpdateDto request)
+    {
+        try
+        {
+            logger.LogInfo($"Task archive started {request.id} {request.status}");
+
+            ArchiveTaskDB(request);
+
+            logger.LogInfo($"Task archived");
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error task archive: {ex.Message}");
+            return false;
+        }
+    }
+
     public bool DeleteTask(int id)
     {
         try
         {
+            logger.LogInfo($"Task delete started {id}");
+
             DeleteTaskFromDB(id);
 
-            logger.LogInfo($"Task delated");
+            logger.LogInfo($"Task deleted");
 
             return true;
         }
@@ -100,7 +143,7 @@ public class TaskService
     }
 
     // Method to save task data to the DataBase
-    private static void SaveTaskToDB(TaskDataDto task)
+    private static void SaveTaskToDB(TaskData task)
     {
         var dbContext = new DataBaseContext();
 
@@ -109,7 +152,7 @@ public class TaskService
 
         var parameters = new Dictionary<string, object>
         {
-            { "@user_id", task.id },
+            { "@user_id", task.user_id },
             { "@name", task.name },
             { "@text", task.text },
             { "@is_archive", task.is_archive },
@@ -186,6 +229,38 @@ public class TaskService
         }
     }
 
+    private TaskData FindTask(int id)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "SELECT * FROM tasks WHERE id = @id";
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", id}
+        };
+
+        using var reader = dbContext.ExecuteQuery(command, parameters);
+        logger.LogInfo($"{reader}");
+        if (reader.Read())
+        {
+            TaskData task = new()
+            {
+                user_id = (int)reader["user_id"],
+                name = reader["name"].ToString(),
+                text = reader["text"].ToString(),
+                is_archive = (bool)reader["is_archive"],
+                notification_time = (DateTime)reader["notification_time"],
+                is_pin = (bool)reader["is_pin"]
+            };
+        return task;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
     private static void UpdateTaskData(TaskUpdateDto request)
     {
         var dbContext = new DataBaseContext();
@@ -204,7 +279,7 @@ public class TaskService
         dbContext.ExecuteNonQuery(command, parameters);
     }
 
-    private static void UpdateTaskPin(TaskPinUpdateDto request)
+    private static void UpdatePinDB(TaskStatusUpdateDto request)
     {
         var dbContext = new DataBaseContext();
 
@@ -212,7 +287,22 @@ public class TaskService
 
         var parameters = new Dictionary<string, object>
         {
-            { "@is_pin", request.is_pin },
+            { "@is_pin", request.status },
+            { "@id", request.id}
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
+    }
+
+    private static void ArchiveTaskDB(TaskStatusUpdateDto request)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "UPDATE tasks SET is_archive = @is_archive WHERE id = @id;";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@is_archive", request.status },
             { "@id", request.id}
         };
 
