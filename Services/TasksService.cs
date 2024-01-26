@@ -4,12 +4,12 @@ using PowerOfControl.Data;
 using PowerOfControl.Models;
 
 namespace PowerOfControl.Services;
-public class TaskService
+public class TasksService
 {
     private static readonly string LogFilePath = "./Data/tasks_log.txt";
     private readonly Logger logger;
 
-    public TaskService()
+    public TasksService()
     {
         logger = new Logger(LogFilePath);
     }
@@ -41,7 +41,7 @@ public class TaskService
         return userTasks;
     }
 
-    public List<TaskData>? GetArchivedTasks(int user_id)
+    public List<TaskDataDto>? GetArchivedTasks(int user_id)
     {
         var userTasks = FindArchivedTasks(user_id);
 
@@ -196,7 +196,7 @@ public class TaskService
         }
     }
 
-    private static List<TaskData> FindArchivedTasks(int id)
+    private static List<TaskDataDto> FindArchivedTasks(int id)
     {
         var dbContext = new DataBaseContext();
 
@@ -206,15 +206,15 @@ public class TaskService
             { "@request", true }
         };
 
-        List<TaskData> tasksList = new();
+        List<TaskDataDto> tasksList = new();
 
         using (var reader = dbContext.ExecuteQuery(command, parameters))
         {
             while (reader.Read())
             {
-                TaskData task = new()
+                TaskDataDto task = new()
                 {
-                    user_id = (int)reader["user_id"],
+                    id = (int)reader["id"],
                     name = reader["name"].ToString(),
                     text = reader["text"].ToString(),
                     is_archive = (bool)reader["is_archive"],

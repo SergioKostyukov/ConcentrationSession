@@ -69,7 +69,7 @@ function sendUserData(userName, userTag, userEmail) {
             console.log(data.message);
 
             // Update cookie`s token
-            setCookie("jwtToken", data.user_token, new Date(Date.now() + 3600 * 1000), "/");
+            setCookie("jwtToken", data.user_token, new Date(Date.now() + 12 * 3600 * 1000), "/");
             console.log("Token was updated");
         })
         .catch(error => {

@@ -10,19 +10,19 @@ namespace PowerOfControl.Controllers;
 [Route("api/[controller]/[action]")]
 [ApiController]
 [Authorize]
-public class TasksController : ControllerBase
+public class NotesController : ControllerBase
 {
-    private readonly TasksService _notesService;
+    private readonly NotesService _notesService;
 
-    public TasksController(TasksService tasksService)
+    public NotesController(NotesService notesService)
     {
-        _notesService = tasksService;
+        _notesService = notesService;
     }
 
-    // POST: api/Tasks/AddTask
+    // POST: api/Notes/AddNote
     [Authorize]
     [HttpPost]
-    public IActionResult AddTask([FromBody] TaskData task)
+    public IActionResult AddNote([FromBody] NoteData task)
     {
         if (!ModelState.IsValid)
         {
@@ -30,9 +30,9 @@ public class TasksController : ControllerBase
         }
 
         // Attempt to add a new task
-        if (_notesService.CreateTask(task))
+        if (_notesService.CreateNote(task))
         {
-            return Ok(new { message = "Task successfully added" });
+            return Ok(new { message = "Note successfully added" });
         }
         else
         {
@@ -40,20 +40,20 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/GetNotArchivedTasks
+    // POST: api/Notes/GetNotArchivedNotes
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult GetNotArchivedTasks()
+    public IActionResult GetNotArchivedNotes()
     {
         var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<TaskDataDto> tasks = _notesService.GetNotArchivedTasks(int.Parse(currentUserID));
+            List<NoteDataDto> tasks = _notesService.GetNotArchivedNotes(int.Parse(currentUserID));
             // Attempt to add a new task
             if (tasks != null)
             {
-                return Ok(new { message = "Task data get successful", tasksList = tasks });
+                return Ok(new { message = "Note data get successful", tasksList = tasks });
             }
             else
             {
@@ -66,20 +66,20 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/GetArchivedTasks
+    // POST: api/Notes/GetArchivedNotes
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult GetArchivedTasks()
+    public IActionResult GetArchivedNotes()
     {
         var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<TaskDataDto> tasks = _notesService.GetArchivedTasks(int.Parse(currentUserID));
+            List<NoteDataDto> tasks = _notesService.GetArchivedNotes(int.Parse(currentUserID));
             // Attempt to add a new task
             if (tasks != null)
             {
-                return Ok(new { message = "Task data get successful", tasksList = tasks });
+                return Ok(new { message = "Note data get successful", tasksList = tasks });
             }
             else
             {
@@ -92,83 +92,84 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/UpdateTask
+    // POST: api/Notes/UpdateNote
     [AllowAnonymous]
     [HttpPatch]
-    public IActionResult UpdateTask([FromBody] TaskUpdateDto request)
+    public IActionResult UpdateNote([FromBody] NoteUpdateDto request)
     {
         // Attempt to add a new task
-        if (_notesService.UpdateTask(request))
+        if (_notesService.UpdateNote(request))
         {
-            return Ok(new { message = "Task update successfully" });
+            return Ok(new { message = "Note update successfully" });
         }
         else
         {
-            return BadRequest(new { message = "Task update failed" });
+            return BadRequest(new { message = "Note update failed" });
         }
     }
 
-    // POST: api/Tasks/UpdateTaskPin
+    // POST: api/Notes/UpdateNotePin
     [AllowAnonymous]
     [HttpPatch]
-    public IActionResult UpdateTaskPin([FromBody] TaskStatusUpdateDto request)
+    public IActionResult UpdateNotePin([FromBody] NoteStatusUpdateDto request)
     {
         // Attempt to add a new task
         if (_notesService.UpdatePin(request))
         {
-            return Ok(new { message = "Task pin update successfully" });
+            return Ok(new { message = "Note pin update successfully" });
         }
         else
         {
-            return BadRequest(new { message = "Task pin update failed" });
+            return BadRequest(new { message = "Note pin update failed" });
         }
     }
 
-    // POST: api/Tasks/CopyTask
+    // POST: api/Notes/CopyNote
     [AllowAnonymous]
     [HttpPost]
-    public IActionResult CopyTask([FromBody] TaskStatusUpdateDto request)
+    public IActionResult CopyNote([FromBody] NoteStatusUpdateDto request)
     {
         // Attempt to add a new task
-        if (_notesService.CopyTask(request.id))
+        if (_notesService.CopyNote(request.id))
         {
-            return Ok(new { message = "Task copy successfully" });
+            return Ok(new { message = "Note copy successfully" });
         }
         else
         {
-            return BadRequest(new { message = "Task copy failed" });
+            return BadRequest(new { message = "Note copy failed" });
         }
     }
 
-    // POST: api/Tasks/ArchiveTask
+    // POST: api/Notes/ArchiveNote
     [AllowAnonymous]
     [HttpPatch]
-    public IActionResult ArchiveTask([FromBody] TaskStatusUpdateDto request)
+    public IActionResult ArchiveNote([FromBody] NoteStatusUpdateDto request)
     {
         // Attempt to add a new task
-        if (_notesService.ArchiveTask(request))
+        if (_notesService.ArchiveNote(request))
         {
-            return Ok(new { message = "Task archive successfully" });
+            return Ok(new { message = "Note archive successfully" });
         }
         else
         {
-            return BadRequest(new { message = "Task archive failed" });
+            return BadRequest(new { message = "Note archive failed" });
         }
     }
 
-    // POST: api/Tasks/DeleteTask
+    // POST: api/Notes/DeleteNote
     [AllowAnonymous]
     [HttpDelete]
-    public IActionResult DeleteTask([FromBody] TaskStatusUpdateDto request)
+    public IActionResult DeleteNote([FromBody] NoteStatusUpdateDto request)
     {
         // Attempt to add a new task
-        if (_notesService.DeleteTask(request.id))
+        if (_notesService.DeleteNote(request.id))
         {
-            return Ok(new { message = "Task deleted successfully" });
+            return Ok(new { message = "Note deleted successfully" });
         }
         else
         {
-            return BadRequest(new { message = "Task delete failed" });
+            return BadRequest(new { message = "Note delete failed" });
         }
     }
 }
+

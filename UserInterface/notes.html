@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
+    <link rel="stylesheet" href="css/tasks.css">
 </head>
 
 <body>
@@ -24,7 +25,7 @@
         <nav class="user-account">
             <button class="profile-button" onclick="toggleUserMenu()">
                 <img src="images/avatar.png" alt="Avatar" class="user-avatar">
-                <h2>User</h2> 
+                <h2>User</h2>
             </button>
             <div class="user-menu" id="userMenu">
                 <div id="userInfo" class="user-info"></div>
@@ -73,14 +74,46 @@
             </div>
         </aside>
 
-        <section class="center-blocks">
-            
-        </section>
+        <div class="center-blocks" id="centerBlocks">
+            <div class="add-task-panel">
+                <button class="add-task-button">New note</button>
+            </div>
+
+            <div class="tasks-panel">
+                
+            </div>
+
+            <div class="modal" id="newTask">
+                <div class="modal-block task-block" id="newTaskBlock">
+                    <h3 contenteditable="true" id="taskTitle">Note name</h3>
+                    <button class="action-button pin-button" onclick="togglePin('pinButton')" id="pinButton">
+                        <img src="images/pin.png" alt="pin">
+                    </button>
+                    <hr>
+                    <div class="text-container">
+                        <div class="done-toggle" id="taskContentContainer">
+                            <p contenteditable="true">Note body</p>
+                        </div>
+                    </div>
+                    <button class="action-button notification-button" onclick="notificationTask('newTaskBlock')" id="notificationButton" title="Notification">
+                        <img src="images/notification.png" alt="notification">
+                    </button>
+                    <button class="save-task-button">Save Changes</button>
+                </div>
+            </div>
+
+            <div class="modal" id="updateTask">
+                <div class="modal-block task-block" id="updateTaskBlock">
+
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="js/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
+    <script src="js/notes.js"></script>
 
 </body>
 

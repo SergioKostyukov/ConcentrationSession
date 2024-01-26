@@ -41,7 +41,7 @@ function login() {
         return response.json();
     }).then(data => {
         // Set cookie with token
-        setCookie("jwtToken", data.user_token, new Date(Date.now() + 3600 * 1000), "/");
+        setCookie("jwtToken", data.user_token, new Date(Date.now() + 12 * 3600 * 1000), "/");
 
         // Display successful login message and redirect to index page
         alert(data.message + '. Redirecting to index page.');
