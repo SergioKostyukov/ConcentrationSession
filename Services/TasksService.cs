@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
-using PowerOfControl.Data;
+﻿using PowerOfControl.Data;
 using PowerOfControl.Models;
 
 namespace PowerOfControl.Services;
@@ -14,7 +12,6 @@ public class TasksService
         logger = new Logger(LogFilePath);
     }
 
-    // Method to handle task adding
     public bool CreateTask(TaskData task)
     {
         logger.LogInfo($"Start created");
@@ -142,7 +139,6 @@ public class TasksService
         }
     }
 
-    // Method to save task data to the DataBase
     private static void SaveTaskToDB(TaskData task)
     {
         var dbContext = new DataBaseContext();
@@ -209,7 +205,6 @@ public class TasksService
         List<TaskDataDto> tasksList = new();
 
         using (var reader = dbContext.ExecuteQuery(command, parameters))
-        {
             while (reader.Read())
             {
                 TaskDataDto task = new()
@@ -225,8 +220,7 @@ public class TasksService
                 tasksList.Add(task);
             }
 
-            return tasksList;
-        }
+        return tasksList;
     }
 
     private TaskData FindTask(int id)
@@ -252,7 +246,7 @@ public class TasksService
                 notification_time = (DateTime)reader["notification_time"],
                 is_pin = (bool)reader["is_pin"]
             };
-        return task;
+            return task;
         }
         else
         {
@@ -323,4 +317,3 @@ public class TasksService
         dbContext.ExecuteNonQuery(command, parameters);
     }
 }
-

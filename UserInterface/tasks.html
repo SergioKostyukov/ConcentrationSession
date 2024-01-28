@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Power Of Control</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
-    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/base_styles/base.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
     <link rel="stylesheet" href="css/tasks.css">
@@ -80,55 +80,7 @@
             </div>
 
             <div class="tasks-panel">
-                <div class="task-block">
-                    <h3>Task name</h3>
-                    <hr>
-                    <button class="action-button pin-button">
-                        <img src="images/pin.png" alt="pin">
-                    </button>
-                    <div class="text-container">
-                        <p>Some text...</p>
-                    </div>
-                </div>
-
-                <div class="task-block">
-                    <h3>Task name</h3>
-                    <hr>
-                    <button class="action-button pin-button">
-                        <img src="images/pin.png" alt="pin">
-                    </button>
-                    <p>Some text...</p>
-                </div>
-
-                <div class="task-block">
-                    <h3>Task name</h3>
-                    <hr>
-                    <button class="action-button pin-button">
-                        <img src="images/pin.png" alt="pin">
-                    </button>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                    <p>Some text...</p>
-                </div>
-                <div class="task-block">
-                    <h3>Task name</h3>
-                    <hr>
-                    <button class="action-button pin-button">
-                        <img src="images/pin.png" alt="pin">
-                    </button>
-                    <div class="text-container">
-                        <p>Some text...</p>
-                        <p>Some text...</p>
-                        <p>Some text...</p>
-                    </div>
-                </div>
+                
             </div>
 
             <div class="modal" id="newTask">
@@ -147,7 +99,7 @@
                         </div>
                         <button class="add-content-button">Add line</button>
                     </div>
-                    <button class="action-button notification-button" onclick="notificationTask('newTaskBlock')" id="notificationButton" title="Notification">
+                    <button class="action-button first-button" onclick="notificationTask('newTaskBlock')" id="notificationButton" title="Notification">
                         <img src="images/notification.png" alt="notification">
                     </button>
                     <button class="save-task-button">Save Changes</button>
@@ -162,10 +114,12 @@
         </div>
     </main>
 
-    <script src="js/cookies.js"></script>
+    <script src="js/account/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
-    <script src="js/tasks.js"></script>
+    <script src="js/tasks_notes/tasks_requests.js"></script>
+    <script src="js/tasks_notes/common.js"></script>
+    <script src="js/tasks_notes/tasks.js"></script>
 
 </body>
 

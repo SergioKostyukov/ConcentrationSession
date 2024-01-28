@@ -59,11 +59,6 @@
     margin-top: 0px;
 }
 
-h3 {
-    font-size: 20px;
-    margin: 20px 0px 10px 0px;
-}
-
 hr {
     width: 99%;
     height: 1px;
@@ -75,6 +70,14 @@ input {
     width: 15px;
     height: 15px;
     margin: 0 10px 0 0;
+}
+
+
+p {
+    font-size: 18px;
+    margin: 0px;
+    width: calc(100% - 60px);
+    outline: none;
 }
 
 /* Scrollbar styling */
@@ -128,8 +131,9 @@ input {
 }
 
 .modal-block h3 {
+    font-size: 20px;
+    width: calc(100% - 25px);
     margin: 5px 0px;
-    width: 100%;
     outline: none;
 }
 
@@ -145,13 +149,6 @@ input {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.done-toggle p {
-    font-size: 18px;
-    margin: 0px;
-    width: calc(100% - 60px);
-    outline: none;
 }
 
 /* Buttons */
@@ -215,7 +212,7 @@ input {
     font-size: 16px;
 }
 
-/* Pin button styling*/
+/* Action buttons styling*/
 .action-button {
     height: 45px;
     width: 45px;
@@ -235,22 +232,22 @@ input {
     padding: 8px;
 }
 
-.action-button.notification-button {
+.action-button.first-button {
     left: 10px;
     bottom: 5px;
 }
 
-.action-button.copy-button {
+.action-button.second-button {
     left: 55px;
     bottom: 5px;
 }
 
-.action-button.delete-button {
+.action-button.third-button {
     left: 100px;
     bottom: 5px;
 }
 
-.action-button.archive-button {
+.action-button.fourth-button {
     left: 145px;
     bottom: 5px;
 }

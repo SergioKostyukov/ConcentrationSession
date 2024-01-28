@@ -1,114 +1,64 @@
-function unArchiveTask(TaskId) {
-    var requestData = {
-        id: TaskId,
-        status: false
-    };
+// Function to fill the common part of the blocks
+function fillObject(object, type) {
+    const objectBlock = document.createElement('div');
+    objectBlock.classList.add('task-block');
+    objectBlock.id = 'block' + object.id;
 
-    fetch('https://localhost:7131/api/Tasks/ArchiveTask', {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
-        },
-        body: JSON.stringify(requestData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data.message);
-            getArchivedTasks();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+    // Add the task name
+    const objectTitle = document.createElement('h3');
+    objectTitle.textContent = object.name;
+    objectBlock.appendChild(objectTitle);
+
+    // Add the "archive" button
+    const archiveButton = document.createElement('button');
+    archiveButton.classList.add('action-button', 'archive-button');
+    const archiveImage = document.createElement('img');
+    archiveImage.src = 'images/folder.png';
+    archiveImage.alt = 'archive';
+    archiveButton.setAttribute('onclick', `unArchive${type}(${object.id})`);
+    archiveButton.appendChild(archiveImage);
+    objectBlock.appendChild(archiveButton);
+
+    // Add the "delete" button
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('action-button', 'delete-button');
+    const deleteImage = document.createElement('img');
+    deleteImage.src = 'images/delete.png';
+    deleteImage.alt = 'delete';
+    deleteButton.setAttribute('onclick', `delete${type}(${object.id})`);
+    deleteButton.appendChild(deleteImage);
+    objectBlock.appendChild(deleteButton);
+
+    // Add a separator
+    const divider = document.createElement('hr');
+    objectBlock.appendChild(divider);
+
+    return objectBlock;
 }
 
-function deleteTask(TaskId) {
-    var requestData = {
-        id: TaskId
-    };
-
-    fetch('https://localhost:7131/api/Tasks/DeleteTask', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
-        },
-        body: JSON.stringify(requestData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data.message);
-            getArchivedTasks();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-// Функція для відображення завдань на сторінці
+// Function to display tasks on the page
 function displayTasks(tasks) {
     const archivePanel = document.getElementById('tasksArchive');
 
-    // Очищаємо панель завдань перед додаванням нових
+    // Clear the tasks panel before adding new ones
     archivePanel.innerHTML = '';
 
     const title = document.createElement('h1');
     title.textContent = 'Archived Tasks';
     archivePanel.appendChild(title);
 
-    // Перебираємо кожне завдання і створюємо відповідний HTML-блок
+    // Iterate through each task and create the corresponding HTML block
     tasks.forEach(task => {
-        const taskBlock = document.createElement('div');
-        taskBlock.classList.add('task-block');
-        taskBlock.id = 'block' + task.id;
+        const taskBlock = fillObject(task, 'Task');
 
-        // Додаємо назву завдання
-        const taskTitle = document.createElement('h3');
-        taskTitle.textContent = task.name;
-        taskBlock.appendChild(taskTitle);
-
-        // Додаємо кнопку "archive"
-        const archiveButton = document.createElement('button');
-        archiveButton.classList.add('action-button', 'archive-button');
-        const archiveImage = document.createElement('img');
-        archiveImage.src = 'images/folder.png';
-        archiveImage.alt = 'archive';
-        archiveButton.setAttribute('onclick', `unArchiveTask(${task.id})`);
-        archiveButton.appendChild(archiveImage);
-        taskBlock.appendChild(archiveButton);
-
-        // Додаємо кнопку "delete"
-        const deleteButton = document.createElement('button');
-        deleteButton.classList.add('action-button', 'delete-button');
-        const deleteImage = document.createElement('img');
-        deleteImage.src = 'images/delete.png';
-        deleteImage.alt = 'delete';
-        deleteButton.setAttribute('onclick', `deleteTask(${task.id})`);
-        deleteButton.appendChild(deleteImage);
-        taskBlock.appendChild(deleteButton);
-
-        // Додаємо розділювач
-        const divider = document.createElement('hr');
-        taskBlock.appendChild(divider);
-
-        // Додаємо контейнер для тексту завдання
+        // Add a container for the task text
         const textContainer = document.createElement('div');
         textContainer.classList.add('text-container');
 
         if (task.text) {
             const taskContentArray = JSON.parse(task.text);
 
-            // Перебираємо елементи масиву та створюємо відповідні HTML-елементи
+            // Iterate through the array elements and create corresponding HTML elements
             taskContentArray.forEach(taskContent => {
                 const doneToggleElement = document.createElement('div');
                 doneToggleElement.classList.add('done-toggle');
@@ -135,9 +85,130 @@ function displayTasks(tasks) {
     });
 }
 
-// Функція-запит отримання списку заархівованих задач користувача
-function getArchivedTasks() {
-    // Ваш API-запит для отримання списку завдань
+// Function to display notes on the page
+function displayNotes(notes) {
+    const archivePanel = document.getElementById('notesArchive');
+
+    // Clear the notes panel before adding new ones
+    archivePanel.innerHTML = '';
+
+    const title = document.createElement('h1');
+    title.textContent = 'Archived Notes';
+    archivePanel.appendChild(title);
+
+    // Iterate through each note and create the corresponding HTML block
+    notes.forEach(note => {
+        const noteBlock = fillObject(note, 'Note');
+
+        // Add a container for the note text
+        const textContainer = document.createElement('div');
+        textContainer.classList.add('text-container');
+
+        if (note.text) {
+            const paragraph = document.createElement('p');
+            paragraph.contentEditable = false;
+            paragraph.textContent = note.text;
+
+            textContainer.appendChild(paragraph);
+        }
+
+        noteBlock.appendChild(textContainer);
+
+        archivePanel.appendChild(noteBlock);
+    });
+}
+
+// ------------------------- Sending Requests -------------------------
+
+// Function to send a request to unarchive a task
+async function unArchiveTask(TaskId) {
+    var requestData = {
+        id: TaskId,
+        status: false
+    };
+
+    try {
+        await serverRequest('Tasks/ArchiveTask', 'PATCH', requestData);
+    } catch (error) {
+        console.error('Error unarchiving task:', error);
+    }
+
+    getArchivedTasks();
+}
+
+// Function to send a request to delete a task
+async function deleteTask(TaskId) {
+    var requestData = {
+        id: TaskId
+    };
+
+    try {
+        await serverRequest('Tasks/DeleteTask', 'DELETE', requestData);
+    } catch (error) {
+        console.error('Error deleting task:', error);
+    }
+
+    getArchivedTasks();
+}
+
+// Function to send a request to unarchive a note
+async function unArchiveNote(TaskId) {
+    var requestData = {
+        id: TaskId,
+        status: false
+    };
+
+    try {
+        await serverRequest('Notes/ArchiveNote', 'PATCH', requestData);
+    } catch (error) {
+        console.error('Error unarchiving note:', error);
+    }
+
+    getArchivedNotes();
+}
+
+// Function to send a request to delete a note
+async function deleteNote(TaskId) {
+    var requestData = {
+        id: TaskId
+    };
+
+    try {
+        await serverRequest('Notes/DeleteNote', 'DELETE', requestData);
+    } catch (error) {
+        console.error('Error deleting note:', error);
+    }
+
+    getArchivedNotes();
+}
+
+// Template function for sending a request (without data on return)
+async function serverRequest(path, type, requestObject) {
+    try {
+        const response = await fetch('https://localhost:7131/api/' + path, {
+            method: type,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+            },
+            body: JSON.stringify(requestObject)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data.message);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error;
+    }
+}
+
+// Function to send a request to get the list of archived tasks for the user
+async function getArchivedTasks() {
+    // Your API request to get the list of tasks
     fetch('https://localhost:7131/api/Tasks/GetArchivedTasks', {
         method: 'GET',
         headers: {
@@ -159,136 +230,9 @@ function getArchivedTasks() {
         });
 }
 
-function unArchiveNote(TaskId) {
-    var requestData = {
-        id: TaskId,
-        status: false
-    };
-
-    fetch('https://localhost:7131/api/Notes/ArchiveNote', {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
-        },
-        body: JSON.stringify(requestData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data.message);
-            getArchivedNotes();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-function deleteNote(TaskId) {
-    var requestData = {
-        id: TaskId
-    };
-
-    fetch('https://localhost:7131/api/Notes/DeleteNote', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
-        },
-        body: JSON.stringify(requestData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data.message);
-            getArchivedNotes();
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-// Функція для відображення завдань на сторінці
-function displayNotes(tasks) {
-    const archivePanel = document.getElementById('notesArchive');
-
-    // Очищаємо панель завдань перед додаванням нових
-    archivePanel.innerHTML = '';
-
-    const title = document.createElement('h1');
-    title.textContent = 'Archived Notes';
-    archivePanel.appendChild(title);
-
-    // Перебираємо кожне завдання і створюємо відповідний HTML-блок
-    tasks.forEach(task => {
-        const taskBlock = document.createElement('div');
-        taskBlock.classList.add('task-block');
-        taskBlock.id = 'block' + task.id;
-
-        // Додаємо назву завдання
-        const taskTitle = document.createElement('h3');
-        taskTitle.textContent = task.name;
-        taskBlock.appendChild(taskTitle);
-
-        // Додаємо кнопку "archive"
-        const archiveButton = document.createElement('button');
-        archiveButton.classList.add('action-button', 'archive-button');
-        const archiveImage = document.createElement('img');
-        archiveImage.src = 'images/folder.png';
-        archiveImage.alt = 'archive';
-        archiveButton.setAttribute('onclick', `unArchiveNote(${task.id})`);
-        archiveButton.appendChild(archiveImage);
-        taskBlock.appendChild(archiveButton);
-
-        // Додаємо кнопку "delete"
-        const deleteButton = document.createElement('button');
-        deleteButton.classList.add('action-button', 'delete-button');
-        const deleteImage = document.createElement('img');
-        deleteImage.src = 'images/delete.png';
-        deleteImage.alt = 'delete';
-        deleteButton.setAttribute('onclick', `deleteNote(${task.id})`);
-        deleteButton.appendChild(deleteImage);
-        taskBlock.appendChild(deleteButton);
-
-        // Додаємо розділювач
-        const divider = document.createElement('hr');
-        taskBlock.appendChild(divider);
-
-        // Додаємо контейнер для тексту завдання
-        const textContainer = document.createElement('div');
-        textContainer.classList.add('text-container');
-
-        if (task.text) {
-            const doneToggleElement = document.createElement('div');
-            doneToggleElement.classList.add('done-toggle');
-
-            const paragraph = document.createElement('p');
-            paragraph.contentEditable = false;
-            paragraph.textContent = task.text;
-
-            doneToggleElement.appendChild(paragraph);
-
-            textContainer.appendChild(doneToggleElement);
-
-        }
-
-        taskBlock.appendChild(textContainer);
-
-        archivePanel.appendChild(taskBlock);
-    });
-}
-
-// Функція-запит отримання списку заархівованих задач користувача
-function getArchivedNotes() {
-    // Ваш API-запит для отримання списку завдань
+// Function to send a request to get the list of archived notes for the user
+async function getArchivedNotes() {
+    // Your API request to get the list of notes
     fetch('https://localhost:7131/api/Notes/GetArchivedNotes', {
         method: 'GET',
         headers: {
@@ -303,16 +247,12 @@ function getArchivedNotes() {
             return response.json();
         })
         .then(data => {
-            displayNotes(data.tasksList);
+            displayNotes(data.notesList);
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
 
-function getElements(){
-    getArchivedTasks();
-    getArchivedNotes();
-}
-
-getElements();
+getArchivedTasks();
+getArchivedNotes();

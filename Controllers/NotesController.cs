@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PowerOfControl.Models;
 using PowerOfControl.Services;
@@ -22,21 +21,21 @@ public class NotesController : ControllerBase
     // POST: api/Notes/AddNote
     [Authorize]
     [HttpPost]
-    public IActionResult AddNote([FromBody] NoteData task)
+    public IActionResult AddNote([FromBody] NoteData note)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        // Attempt to add a new task
-        if (_notesService.CreateNote(task))
+        // Attempt to add a new note
+        if (_notesService.CreateNote(note))
         {
             return Ok(new { message = "Note successfully added" });
         }
         else
         {
-            return BadRequest(new { message = "Error adding task" });
+            return BadRequest(new { message = "Error adding note" });
         }
     }
 
@@ -50,14 +49,14 @@ public class NotesController : ControllerBase
         if (currentUserID != null)
         {
             List<NoteDataDto> tasks = _notesService.GetNotArchivedNotes(int.Parse(currentUserID));
-            // Attempt to add a new task
+            // Attempt to add a new note
             if (tasks != null)
             {
-                return Ok(new { message = "Note data get successful", tasksList = tasks });
+                return Ok(new { message = "Note data get successful", notesList = tasks });
             }
             else
             {
-                return Ok(new { message = "There are no tasks" });
+                return Ok(new { message = "There are no notes" });
             }
         }
         else
@@ -76,14 +75,14 @@ public class NotesController : ControllerBase
         if (currentUserID != null)
         {
             List<NoteDataDto> tasks = _notesService.GetArchivedNotes(int.Parse(currentUserID));
-            // Attempt to add a new task
+            // Attempt to add a new note
             if (tasks != null)
             {
-                return Ok(new { message = "Note data get successful", tasksList = tasks });
+                return Ok(new { message = "Note data get successful", notesList = tasks });
             }
             else
             {
-                return Ok(new { message = "There are no tasks" });
+                return Ok(new { message = "There are no notes" });
             }
         }
         else
@@ -97,7 +96,7 @@ public class NotesController : ControllerBase
     [HttpPatch]
     public IActionResult UpdateNote([FromBody] NoteUpdateDto request)
     {
-        // Attempt to add a new task
+        // Attempt to add a new note
         if (_notesService.UpdateNote(request))
         {
             return Ok(new { message = "Note update successfully" });
@@ -113,7 +112,7 @@ public class NotesController : ControllerBase
     [HttpPatch]
     public IActionResult UpdateNotePin([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new task
+        // Attempt to add a new note
         if (_notesService.UpdatePin(request))
         {
             return Ok(new { message = "Note pin update successfully" });
@@ -129,7 +128,7 @@ public class NotesController : ControllerBase
     [HttpPost]
     public IActionResult CopyNote([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new task
+        // Attempt to add a new note
         if (_notesService.CopyNote(request.id))
         {
             return Ok(new { message = "Note copy successfully" });
@@ -145,7 +144,7 @@ public class NotesController : ControllerBase
     [HttpPatch]
     public IActionResult ArchiveNote([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new task
+        // Attempt to add a new note
         if (_notesService.ArchiveNote(request))
         {
             return Ok(new { message = "Note archive successfully" });
@@ -161,7 +160,7 @@ public class NotesController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteNote([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new task
+        // Attempt to add a new note
         if (_notesService.DeleteNote(request.id))
         {
             return Ok(new { message = "Note deleted successfully" });

@@ -1,7 +1,4 @@
-﻿1. The basic functionality for the Tasks page has been implemented
-	1.1 Task panel - pin elements are shown first
-	1.2 Task panel element - elements cannot be changed (only pin/unpin) in this state, but display the main block information
-	1.3 New Task mode - creates a new block in edit mode 
-	1.4 Update task mode - shows existing block in edit mode
-2. Fully connected client part with server methods for task service
-3. Changed blocks view on the tasks page
+﻿1. General fixes in tasks/notes architecture
+2. Notes page mvp functional provided
+3. Archive page mvp functional provided
+4. Cleaned and optimized server files

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
-using PowerOfControl.Data;
+﻿using PowerOfControl.Data;
 using PowerOfControl.Models;
 
 namespace PowerOfControl.Services;
@@ -14,21 +12,20 @@ public class NotesService
         logger = new Logger(LogFilePath);
     }
 
-    // Method to handle task adding
-    public bool CreateNote(NoteData task)
+    public bool CreateNote(NoteData note)
     {
         logger.LogInfo($"Start created");
         try
         {
-            SaveNoteToDB(task);
+            SaveNoteToDB(note);
 
-            logger.LogInfo($"New task created");
+            logger.LogInfo($"New note created");
 
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Error adding task: {ex.Message}");
+            logger.LogError($"Error adding note: {ex.Message}");
             return false;
         }
     }
@@ -59,7 +56,7 @@ public class NotesService
         }
         catch (Exception ex)
         {
-            logger.LogError($"Error task data update: {ex.Message}");
+            logger.LogError($"Error note data update: {ex.Message}");
             return false;
         }
     }
@@ -76,7 +73,7 @@ public class NotesService
         }
         catch (Exception ex)
         {
-            logger.LogError($"Error task pin status update: {ex.Message}");
+            logger.LogError($"Error note pin status update: {ex.Message}");
             return false;
         }
     }
@@ -86,11 +83,11 @@ public class NotesService
         try
         {
             logger.LogInfo($"Note copy started {id}");
-            NoteData task = FindNote(id);
+            NoteData note = FindNote(id);
 
             logger.LogInfo($"Note finded");
 
-            SaveNoteToDB(task);
+            SaveNoteToDB(note);
 
             logger.LogInfo($"Note copy finish");
 
@@ -98,7 +95,7 @@ public class NotesService
         }
         catch (Exception ex)
         {
-            logger.LogError($"Error task copy: {ex.Message}");
+            logger.LogError($"Error note copy: {ex.Message}");
             return false;
         }
     }
@@ -117,7 +114,7 @@ public class NotesService
         }
         catch (Exception ex)
         {
-            logger.LogError($"Error task archive: {ex.Message}");
+            logger.LogError($"Error note archive: {ex.Message}");
             return false;
         }
     }
@@ -136,13 +133,12 @@ public class NotesService
         }
         catch (Exception ex)
         {
-            logger.LogError($"Error task delete: {ex.Message}");
+            logger.LogError($"Error note delete: {ex.Message}");
             return false;
         }
     }
 
-    // Method to save task data to the DataBase
-    private static void SaveNoteToDB(NoteData task)
+    private static void SaveNoteToDB(NoteData note)
     {
         var dbContext = new DataBaseContext();
 
@@ -151,11 +147,11 @@ public class NotesService
 
         var parameters = new Dictionary<string, object>
         {
-            { "@user_id", task.user_id },
-            { "@name", task.name },
-            { "@text", task.text },
-            { "@is_archive", task.is_archive },
-            { "@is_pin", task.is_pin }
+            { "@user_id", note.user_id },
+            { "@name", note.name },
+            { "@text", note.text },
+            { "@is_archive", note.is_archive },
+            { "@is_pin", note.is_pin }
         };
 
         dbContext.ExecuteNonQuery(command, parameters);
@@ -171,13 +167,13 @@ public class NotesService
             { "@request", false }
         };
 
-        List<NoteDataDto> tasksList = new();
+        List<NoteDataDto> notesList = new();
 
         using (var reader = dbContext.ExecuteQuery(command, parameters))
         {
             while (reader.Read())
             {
-                NoteDataDto task = new()
+                NoteDataDto note = new()
                 {
                     id = (int)reader["id"],
                     name = reader["name"].ToString(),
@@ -186,10 +182,10 @@ public class NotesService
                     is_pin = (bool)reader["is_pin"]
                 };
 
-                tasksList.Add(task);
+                notesList.Add(note);
             }
 
-            return tasksList;
+            return notesList;
         }
     }
 
@@ -203,26 +199,24 @@ public class NotesService
             { "@request", true }
         };
 
-        List<NoteDataDto> tasksList = new();
+        List<NoteDataDto> notesList = new();
 
         using (var reader = dbContext.ExecuteQuery(command, parameters))
+        while (reader.Read())
         {
-            while (reader.Read())
+            NoteDataDto note = new()
             {
-                NoteDataDto task = new()
-                {
-                    id = (int)reader["id"],
-                    name = reader["name"].ToString(),
-                    text = reader["text"].ToString(),
-                    is_archive = (bool)reader["is_archive"],
-                    is_pin = (bool)reader["is_pin"]
-                };
+                id = (int)reader["id"],
+                name = reader["name"].ToString(),
+                text = reader["text"].ToString(),
+                is_archive = (bool)reader["is_archive"],
+                is_pin = (bool)reader["is_pin"]
+            };
 
-                tasksList.Add(task);
-            }
-
-            return tasksList;
+            notesList.Add(note);
         }
+
+        return notesList;
     }
 
     private NoteData FindNote(int id)
@@ -239,7 +233,7 @@ public class NotesService
         logger.LogInfo($"{reader}");
         if (reader.Read())
         {
-            NoteData task = new()
+            NoteData note = new()
             {
                 user_id = (int)reader["user_id"],
                 name = reader["name"].ToString(),
@@ -247,7 +241,7 @@ public class NotesService
                 is_archive = (bool)reader["is_archive"],
                 is_pin = (bool)reader["is_pin"]
             };
-            return task;
+            return note;
         }
         else
         {
