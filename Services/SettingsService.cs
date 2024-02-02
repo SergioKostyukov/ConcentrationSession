@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using PowerOfControl.Data;
+﻿using PowerOfControl.Data;
 using PowerOfControl.Models;
 
 namespace PowerOfControl.Services;
@@ -49,17 +48,39 @@ public class SettingsService
 
     public bool UpdateSessionParams(SettingsSessionDto request)
     {
-        return false;
+        try
+        {
+            logger.LogInfo($"{request.user_id}, {request.work_time}");
+            UpdateSessionSettings(request);
+
+            logger.LogInfo("Session settings updated successful");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Update session settings error: {ex.Message}");
+            return false;
+        }
     }
 
     public bool UpdateGoalParams(SettingsGoalDto request)
     {
-        return false;
+        try
+        {
+            UpdateGoalSettings(request);
+
+            logger.LogInfo($"Goal settings updated successful");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Update goal settings error: {ex.Message}");
+            return false;
+        }
     }
 
     // ---------------- DATABASE methods ----------------
 
-    // 
     private void SetDefault(int user_id)
     {
         var dbContext = new DataBaseContext();
@@ -101,5 +122,41 @@ public class SettingsService
         }
 
         return null;
+    }
+
+    private void UpdateGoalSettings(SettingsGoalDto request)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "UPDATE settings SET day_goal = @day_goal, reset_time = @reset_time," +
+            " is_weekend = @is_weekend WHERE user_id = @user_id;";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@user_id", request.user_id},
+            { "@day_goal", request.day_goal },
+            { "@reset_time", request.reset_time },
+            { "@is_weekend", request.is_weekend }
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
+    }
+
+    private void UpdateSessionSettings(SettingsSessionDto request)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "UPDATE settings SET work_time = @work_time, break_time = @break_time," +
+            " is_notification_sound = @is_notification_sound WHERE user_id = @user_id;";
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "@user_id", request.user_id},
+            { "@work_time", request.work_time },
+            { "@break_time", request.break_time },
+            { "@is_notification_sound", request.is_notification_sound }
+        };
+
+        dbContext.ExecuteNonQuery(command, parameters);
     }
 }
