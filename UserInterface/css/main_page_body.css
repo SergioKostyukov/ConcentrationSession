@@ -1,3 +1,7 @@
+.center-blocks {
+    margin-top: 30px;
+}
+
 .block {
     width: calc(33.33% - 126px/3);
     min-width: 300px;

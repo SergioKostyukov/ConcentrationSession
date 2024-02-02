@@ -20,6 +20,7 @@ public class Startup
         services.AddScoped<AccountService>();
         services.AddScoped<TasksService>();
         services.AddScoped<NotesService>();
+        services.AddScoped<SettingsService>();
 
         services.AddCors(options =>
         {

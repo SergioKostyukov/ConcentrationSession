@@ -69,11 +69,11 @@ public class AccountController : ControllerBase
     public IActionResult Login(UserLoginDto user)
     {
         // Attempt to log in the user
-        var userToken = _authService.LoginUser(user);
+        var loginResponse = _authService.LoginUser(user);
 
-        if (userToken != "")
+        if (loginResponse.Token != "")
         {
-            return Ok(new { message = "User login successfully", user_token = userToken });
+            return Ok(new { message = "User login successfully", user_token = loginResponse.Token, settings = loginResponse.Settings });
         }
         else
         {

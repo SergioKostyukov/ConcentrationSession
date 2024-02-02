@@ -14,10 +14,8 @@ public class TasksService
 
     public bool CreateTask(TaskData task)
     {
-        logger.LogInfo($"Start created");
         try
         {
-
             SaveTaskToDB(task);
 
             logger.LogInfo($"New task created");

@@ -39,8 +39,8 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/GetNotArchivedNotes
-    [AllowAnonymous]
+    // GET: api/Notes/GetNotArchivedNotes
+    [Authorize]
     [HttpGet]
     public IActionResult GetNotArchivedNotes()
     {
@@ -65,8 +65,8 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/GetArchivedNotes
-    [AllowAnonymous]
+    // GET: api/Notes/GetArchivedNotes
+    [Authorize]
     [HttpGet]
     public IActionResult GetArchivedNotes()
     {
@@ -91,8 +91,8 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/UpdateNote
-    [AllowAnonymous]
+    // PATCH: api/Notes/UpdateNote
+    [Authorize]
     [HttpPatch]
     public IActionResult UpdateNote([FromBody] NoteUpdateDto request)
     {
@@ -107,8 +107,8 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/UpdateNotePin
-    [AllowAnonymous]
+    // PATCH: api/Notes/UpdateNotePin
+    [Authorize]
     [HttpPatch]
     public IActionResult UpdateNotePin([FromBody] NoteStatusUpdateDto request)
     {
@@ -124,7 +124,7 @@ public class NotesController : ControllerBase
     }
 
     // POST: api/Notes/CopyNote
-    [AllowAnonymous]
+    [Authorize]
     [HttpPost]
     public IActionResult CopyNote([FromBody] NoteStatusUpdateDto request)
     {
@@ -139,8 +139,8 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/ArchiveNote
-    [AllowAnonymous]
+    // PATCH: api/Notes/ArchiveNote
+    [Authorize]
     [HttpPatch]
     public IActionResult ArchiveNote([FromBody] NoteStatusUpdateDto request)
     {
@@ -155,8 +155,8 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/DeleteNote
-    [AllowAnonymous]
+    // DELETE: api/Notes/DeleteNote
+    [Authorize]
     [HttpDelete]
     public IActionResult DeleteNote([FromBody] NoteStatusUpdateDto request)
     {

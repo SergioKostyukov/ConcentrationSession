@@ -40,7 +40,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/GetNotArchivedTasks
-    [AllowAnonymous]
+    [Authorize]
     [HttpGet]
     public IActionResult GetNotArchivedTasks()
     {
@@ -66,7 +66,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/GetArchivedTasks
-    [AllowAnonymous]
+    [Authorize]
     [HttpGet]
     public IActionResult GetArchivedTasks()
     {
@@ -92,7 +92,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/UpdateTask
-    [AllowAnonymous]
+    [Authorize]
     [HttpPatch]
     public IActionResult UpdateTask([FromBody] TaskUpdateDto request)
     {
@@ -108,7 +108,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/UpdateTaskPin
-    [AllowAnonymous]
+    [Authorize]
     [HttpPatch]
     public IActionResult UpdateTaskPin([FromBody] TaskStatusUpdateDto request)
     {
@@ -124,7 +124,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/CopyTask
-    [AllowAnonymous]
+    [Authorize]
     [HttpPost]
     public IActionResult CopyTask([FromBody] TaskStatusUpdateDto request)
     {
@@ -140,7 +140,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/ArchiveTask
-    [AllowAnonymous]
+    [Authorize]
     [HttpPatch]
     public IActionResult ArchiveTask([FromBody] TaskStatusUpdateDto request)
     {
@@ -156,7 +156,7 @@ public class TasksController : ControllerBase
     }
 
     // POST: api/Tasks/DeleteTask
-    [AllowAnonymous]
+    [Authorize]
     [HttpDelete]
     public IActionResult DeleteTask([FromBody] TaskStatusUpdateDto request)
     {

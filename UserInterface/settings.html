@@ -7,6 +7,9 @@
     <title>Power Of Control</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/base_styles/base.css">
+    <link rel="stylesheet" href="css/base_styles/block.css">
+    <link rel="stylesheet" href="css/base_styles/slider.css">
+    <link rel="stylesheet" href="css/settings.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
 </head>
@@ -24,7 +27,7 @@
         <nav class="user-account">
             <button class="profile-button" onclick="toggleUserMenu()">
                 <img src="images/avatar.png" alt="Avatar" class="user-avatar">
-                <h2>User</h2> 
+                <h2>User</h2>
             </button>
             <div class="user-menu" id="userMenu">
                 <div id="userInfo" class="user-info"></div>
@@ -73,14 +76,135 @@
             </div>
         </aside>
 
-        <section class="center-blocks">
-            
-        </section>
+        <div class="center-blocks">
+            <div class="block" id="sessionSettings">
+                <h1>
+                    Session params
+                </h1>
+                <hr>
+
+                <div class="select-block">
+                    <label for="workPeriod">Work Period</label>
+                    <select id="workPeriod" disabled>
+                        <option value="30">30 minutes</option>
+                        <option value="35">35 minutes</option>
+                        <option value="40">40 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="50">50 minutes</option>
+                        <option value="55">55 minutes</option>
+                        <option value="60">60 minutes</option>
+                    </select>
+                </div>
+
+                <div class="select-block">
+                    <label for="breakPeriod">Break Period</label>
+                    <select id="breakPeriod" disabled>
+                        <option value="5">5 minutes</option>
+                        <option value="10">10 minutes</option>
+                        <option value="15">15 minutes</option>
+                    </select>
+                </div>
+
+                <div class="select-block">
+                    <h2>Sound</h2>
+                    <label class="switch">
+                        <input type="checkbox" id="soundSwitch" disabled>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="update-button" id="sessionSettingsUpdate"
+                    onclick="enableEditMode('sessionSettings')">Want to
+                    change</button>
+            </div>
+
+            <div class="block" id="goalsSettings">
+                <h1>
+                    Day goal params
+                </h1>
+                <hr>
+
+                <div class="select-block">
+                    <label for="dayGoal">Day Goal</label>
+                    <select id="dayGoal" disabled>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="90">1 hour 30 minutes</option>
+                        <option value="120">2 hour</option>
+                        <option value="150">2 hour 30 minutes</option>
+                        <option value="180">3 hour</option>
+                        <option value="210">3 hour 60 minutes</option>
+                        <option value="240">4 hour</option>
+                        <option value="300">5 hour</option>
+                        <option value="360">6 hour</option>
+                        <option value="420">7 hour</option>
+                        <option value="480">8 hour</option>
+                    </select>
+                </div>
+
+                <div class="select-block">
+                    <label for="resetTime">Reset Time</label>
+                    <select id="resetTime" disabled>
+                        <option value="00:00:00">12 pm</option>
+                        <option value="01:00:00">1 am</option>
+                        <option value="02:00:00">2 am</option>
+                        <option value="03:00:00">3 am</option>
+                        <option value="04:00:00">4 am</option>
+                    </select>
+                </div>
+
+                <div class="select-block">
+                    <h2>Weekends</h2>
+                    <label class="switch">
+                        <input type="checkbox" id="weekendsSwitch" disabled>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="update-button" id="goalsSettingsUpdate" onclick="enableEditMode('goalsSettings')">Want to
+                    change</button>
+            </div>
+
+            <div class="block" id="otherSettings">
+                <h1>
+                    Other
+                </h1>
+                <hr>
+
+                <div class="select-block">
+                    <h2>Theme color</h2>
+                    <label class="switch">
+                        <input type="checkbox" id="newFieldSwitch">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="select-block">
+                    <h2>Ignore habits statistic</h2>
+                    <label class="switch">
+                        <input type="checkbox" id="newFieldSwitch">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="select-block">
+                    <h2>Block other sites</h2>
+                    <label class="switch">
+                        <input type="checkbox" id="newFieldSwitch">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button class="update-button" id="settingsUpdate" onclick="">Want to
+                    change</button>
+            </div>
+        </div>
     </main>
 
     <script src="js/account/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
+    <script src="js/settings.js"></script>
 
 </body>
 

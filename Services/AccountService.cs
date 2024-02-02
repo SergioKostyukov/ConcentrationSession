@@ -9,10 +9,12 @@ public class AccountService
     private static readonly string LogFilePath = "./Data/account_log.txt";
     private readonly JwtSettings jwtSettings;
     private readonly Logger logger;
+    private readonly SettingsService settingsService;
 
-    public AccountService(JwtSettings jwtSettings)
+    public AccountService(JwtSettings jwtSettings, SettingsService settingsService)
     {
         this.jwtSettings = jwtSettings;
+        this.settingsService = settingsService;
         logger = new Logger(LogFilePath);
     }
 
@@ -38,6 +40,9 @@ public class AccountService
 
             logger.LogInfo($"New user authorized");
 
+            var currUser = FindUser(user.tag_name);
+            settingsService.SetDefaultSettings(currUser.id);
+
             return true;
         }
         catch (Exception ex)
@@ -48,7 +53,7 @@ public class AccountService
     }
 
     // Method to handle user login
-    public string? LoginUser(UserLoginDto request)
+    public LoginResponse LoginUser(UserLoginDto request)
     {
         try
         {
@@ -68,7 +73,9 @@ public class AccountService
 
                 logger.LogInfo($"Login successful");
 
-                return token;
+                var settings = settingsService.GetSettings(storedUser.id);
+
+                return new LoginResponse { Token = token, Settings = settings};
             }
             else
             {
@@ -78,7 +85,7 @@ public class AccountService
         catch (Exception ex)
         {
             logger.LogError($"Login error: {ex.Message}");
-            return "";
+            return new LoginResponse { Token = "", Settings = null }; ;
         }
     }
 

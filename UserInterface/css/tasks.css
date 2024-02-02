@@ -54,6 +54,11 @@
     background-color: #e5e5e5;
 }
 
+.task-block h3 {
+    margin: 20px 0px 10px 0px;
+    font-size: 20px;
+}
+
 .text-container {
     max-height: calc(100% - 84px);
     margin-top: 0px;
