@@ -51,7 +51,7 @@ function enableEditMode(blockId) {
     });
 
     var updateButton = document.getElementById(`${blockId}Update`);
-    updateButton.innerHTML = "Save Changes";
+    updateButton.innerHTML = "Save changes";
     updateButton.onclick = function () {
         saveChanges(blockId);
     };

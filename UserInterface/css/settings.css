@@ -23,10 +23,6 @@
     margin: 0px;
 }
 
-.block .select-block {
-    margin: 10px 0px;
-}
-
 .block label {
     display: block;
     font-weight: bold;
@@ -34,9 +30,34 @@
     margin-top: 5px;
 }
 
+.block .select-block {
+    margin: 10px 0px;
+    position: relative;
+}
+
 .block select {
     padding: 8px;
     margin-top: 5px;
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 40%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.block select:hover {
+    border-color: #999; 
+}
+
+.block select option:last-child {
+    border-bottom: none;
+}
+
+.block select option:checked {
+    background-color: #555;
+    color: #fff;
 }
 
 /* Buttons */
@@ -56,5 +77,5 @@
 
 .block .update-button:hover {
     background-color: #555;
-    border: 2px solid #555;
+    border: 1px solid #555;
 }
