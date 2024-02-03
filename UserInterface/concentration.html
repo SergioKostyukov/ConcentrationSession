@@ -7,10 +7,14 @@
     <title>Power Of Control</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/base_styles/base.css">
+    <link rel="stylesheet" href="css/base_styles/block.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
-    <link rel="stylesheet" href="css/concentration.css">
-    <link rel="stylesheet" href="css/base_styles/block.css">
+    <link rel="stylesheet" href="css/concentration/concentration.css">
+    <link rel="stylesheet" href="css/concentration/timer.css">
+    <link rel="stylesheet" href="css/concentration/timer_active.css">
+    <link rel="stylesheet" href="css/concentration/goal.css">
+    <link rel="stylesheet" href="css/concentration/tasks.css">
 </head>
 
 <body>
@@ -76,11 +80,13 @@
         </aside>
 
         <div class="center-blocks">
-            <div class="half-page">
+            <div class="first-column">
                 <div class="block timer">
-                    <div class="timer-header">
-                        <button class="settings-button" id="settingsButton">Settings</button>
-                    </div>
+
+                    <button href="settings.html" class="settings-button" id="settingsButton">
+                        <img src="images/settings.png" alt="Settings">
+                    </button>
+
                     <div class="timer-control">
                         <div class="timer-display" id="timerDisplay">00:00</div>
                         <div class="timer-buttons">
@@ -96,23 +102,24 @@
                     </div>
                     <button class="start-button" id="startButton">Start Timer</button>
                 </div>
-                
+
                 <div class="block goals">
                     <div class="goal-item">
                         <div class="goal-label">Yesterday</div>
                         <div class="goal-value" id="yesterdayValue">0 hours</div>
                     </div>
-                    <div class="goal-item">
-                        <div class="goal-label">Day goal</div>
-                        <div class="goal-value" id="dayGoalValue">5 hours</div>
+
+                    <div class="goal-item central-block">
+                        <div class="goal-label">Ціль на день:</div>
+                        <div class="goal-value" id="dayGoalValue">x годин</div>
+                        <div class="goal-label">Виконано:</div>
+                        <div class="goal-value" id="completeValue">y годин</div>
+                        <div class="progress-bar" id="progressBar"></div>
                     </div>
+
                     <div class="goal-item">
                         <div class="goal-label">Series</div>
                         <div class="goal-value" id="seriesValue">0</div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress" id="progressBar"></div>
-                        <div class="progress-label" id="progressLabel">Completed: 0%</div>
                     </div>
                 </div>
 
@@ -131,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            <div class="half-page">
+            <div class="second-column">
                 <div class="block tasks">
                     Tasks
                 </div>
@@ -142,9 +149,11 @@
     <script src="js/account/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
+    <script src="js/concentration/timer.js"></script>
+    <script src="js/concentration/timer_active.js"></script>
+    <script src="js/concentration/goal.js"></script>
+    <script src="js/concentration/tasks.js"></script>
     <script src="js/concentration/concentration.js"></script>
-
-
 </body>
 
 </html>

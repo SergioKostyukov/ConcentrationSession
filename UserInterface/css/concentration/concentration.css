@@ -1,0 +1,16 @@
+.center-blocks .first-column {
+    width: calc(40% - 40px);
+    height: 100%;
+    padding: 0px 20px;
+}
+
+.center-blocks .second-column {
+    width: calc(60% - 40px);
+    height: 100%;
+    padding: 0px 20px;
+}
+
+.block {
+    margin: 0px 0px 20px 0px;
+    align-items: center;
+}
