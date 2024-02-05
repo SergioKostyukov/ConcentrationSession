@@ -1,6 +1,26 @@
 let timerValue = Number(sessionStorage.getItem('timerValue')) || 40;
 let disableBreaks = sessionStorage.getItem('disableBreaks') === 'true' || false;
 
+document.getElementById("breakToggle").checked = disableBreaks;
+
+function updateTimerDisplay() {
+    document.getElementById("timerDisplay").innerText = formatTime(timerValue);
+    sessionStorage.setItem('timerValue', timerValue);
+    updateBreaksNumber();
+}
+
+function updateBreaksNumber(){
+    var numberBreksElement = document.getElementById('numberBreks');
+
+    if(!disableBreaks){
+        let work_time = parseFloat(localStorage.getItem('work_time'));
+        let break_time = parseFloat(localStorage.getItem('break_time'));
+        numberBreksElement.textContent = "Number of breaks: " + Math.floor(timerValue / (work_time + break_time));
+    }else{
+        numberBreksElement.textContent = "Number of breaks: 0";
+    }
+}
+
 document.getElementById("increaseButton").addEventListener("click", function () {
     increaseTimer();
 });
@@ -13,15 +33,10 @@ document.getElementById("resetButton").addEventListener("click", function () {
     resetTimer();
 });
 
-document.getElementById("settingsButton").addEventListener("click", function () {
-    window.location.href = "settings.html";
-});
-
-document.getElementById("breakToggle").checked = disableBreaks;
-
 document.getElementById("breakToggle").addEventListener("change", function () {
     disableBreaks = this.checked;
     sessionStorage.setItem('disableBreaks', disableBreaks);
+    updateBreaksNumber();
 });
 
 function increaseTimer() {
@@ -40,11 +55,6 @@ function decreaseTimer() {
 function resetTimer() {
     timerValue = 40;
     updateTimerDisplay();
-}
-
-function updateTimerDisplay() {
-    document.getElementById("timerDisplay").innerText = formatTime(timerValue);
-    sessionStorage.setItem('timerValue', timerValue);
 }
 
 function formatTime(seconds) {

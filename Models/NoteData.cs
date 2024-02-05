@@ -33,3 +33,15 @@ public class NoteStatusUpdateDto
     public int id { get; set; }
     public bool status { get; set; }
 }
+
+public class NoteTitleDto
+{
+    public int id { get; set; }
+    public string name { get; set; }
+}
+
+public class NoteViewDto
+{
+    public string name { get; set; }
+    public string text { get; set; }
+}

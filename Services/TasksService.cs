@@ -12,6 +12,7 @@ public class TasksService
         logger = new Logger(LogFilePath);
     }
 
+    // Middleware
     public bool CreateTask(TaskData task)
     {
         try
@@ -41,6 +42,30 @@ public class TasksService
         var userTasks = FindArchivedTasks(user_id);
 
         return userTasks;
+    }
+
+    public List<TaskTitleDto>? GetTitlesOfNotArchivedTasks(int user_id)
+    {
+        var userTasksTitles = FindTitlesOfNotArchivedTasks(user_id);
+
+        return userTasksTitles;
+    }
+
+    public TaskViewDto? GetTaskById(int id)
+    {
+        try
+        {
+            TaskViewDto task = FindTaskView(id);
+
+            logger.LogInfo($"Task data finded");
+
+            return task;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error task data update: {ex.Message}");
+            return null;
+        }
     }
 
     public bool UpdateTask(TaskUpdateDto request)
@@ -137,6 +162,7 @@ public class TasksService
         }
     }
 
+    // Action functions
     private static void SaveTaskToDB(TaskData task)
     {
         var dbContext = new DataBaseContext();
@@ -221,6 +247,35 @@ public class TasksService
         return tasksList;
     }
 
+    private static List<TaskTitleDto> FindTitlesOfNotArchivedTasks(int user_id)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "SELECT id, name FROM tasks WHERE user_id = @user_id AND is_archive = @request";
+        var parameters = new Dictionary<string, object> {
+            { "@user_id", user_id},
+            { "@request", false }
+        };
+
+        List<TaskTitleDto> tasksList = new();
+
+        using (var reader = dbContext.ExecuteQuery(command, parameters))
+        {
+            while (reader.Read())
+            {
+                TaskTitleDto task = new()
+                {
+                    id = (int)reader["id"],
+                    name = reader["name"].ToString()
+                };
+
+                tasksList.Add(task);
+            }
+
+            return tasksList;
+        }
+    }
+
     private TaskData FindTask(int id)
     {
         var dbContext = new DataBaseContext();
@@ -232,7 +287,6 @@ public class TasksService
         };
 
         using var reader = dbContext.ExecuteQuery(command, parameters);
-        logger.LogInfo($"{reader}");
         if (reader.Read())
         {
             TaskData task = new()
@@ -243,6 +297,33 @@ public class TasksService
                 is_archive = (bool)reader["is_archive"],
                 notification_time = (DateTime)reader["notification_time"],
                 is_pin = (bool)reader["is_pin"]
+            };
+            return task;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    private TaskViewDto FindTaskView(int id)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "SELECT name, text FROM tasks WHERE id = @id";
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", id}
+        };
+
+        using var reader = dbContext.ExecuteQuery(command, parameters);
+        if (reader.Read())
+        {
+            TaskViewDto task = new()
+            {
+                name = reader["name"].ToString(),
+                text = reader["text"].ToString()
             };
             return task;
         }

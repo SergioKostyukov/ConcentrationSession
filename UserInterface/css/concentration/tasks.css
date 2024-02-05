@@ -1,3 +1,243 @@
-.block.tasks {
+.block.select {
     height: calc(100% - 2px);
+    flex-wrap: wrap;
+}
+
+.block-item {
+    width: 100%;
+    padding: 5px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 22px;
+    height: 20px;
+    margin: 5px 0px;
+}
+
+.half-line {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+}
+/* ------------------------ SELECT ITEM BLOCK ------------------------ */
+.select-item {
+    height: calc(25% - 90px);
+}
+
+/* ------------------------ TASKS SETS BLOCK ------------------------ */
+.task-sets {
+    height: 35%;
+    gap: 15px;
+    overflow-y: auto;
+    
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.task-title-block {
+    height: calc(33.33% - 30px/3);
+    width: calc(20% - 60px/5);
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.task-title-block:hover {
+    background-color: #e5e5e5;
+}
+
+/* ------------------------ NOTES/HABITS BLOCKS ------------------------ */
+.notes-habits {
+    height: 40%;
+}
+
+/* ------------------------ NOTES BLOCK ------------------------ */
+.notes-habits .note-sets {
+    width: 50%;
+    height: 100%;
+
+    gap: 15px;
+    overflow-y: auto;
+    
+    display: flex;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.note-title-block {
+    height: calc(33.33% - 30px/3);
+    width: calc(33.33% - 30px/3);
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.note-title-block:hover {
+    background-color: #e5e5e5;
+}
+
+/* ------------------------ HABITS BLOCK ------------------------ */
+.notes-habits .habits-item {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ------------------------ Modal styling ------------------------ */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+}
+
+.modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-block {
+    width: 20%;
+    min-width: 300px;
+    max-height: 700px;
+    padding: 20px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 30px;
+    
+    text-align: left;
+    text-decoration: none;
+    color: #000;
+    overflow: hidden;
+}
+
+.modal-block h3 {
+    font-size: 20px;
+    width: calc(100% - 25px);
+    margin: 5px 0px;
+    outline: none;
+}
+
+.modal-block .text-container {
+    max-height: calc(100% - 84px);
+    margin-top: 0px;
+    overflow-y: auto;
+}
+
+.modal-block .text-container .done-toggle {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.modal-block .text-container .done-toggle input {
+    width: 15px;
+    height: 15px;
+    margin: 5px 10px 0 0;
+}
+
+.modal-block .text-container .done-toggle p {
+    font-size: 18px;
+    margin: 3px 0 0 0;;
+    width: calc(100% - 25px);
+    outline: none;
+}
+
+.modal-block .text-container p {
+    font-size: 18px;
+    margin: 3px 0 0 0;
+    outline: none;
+}
+
+/* Action button styling*/
+.action-button {
+    height: 40px;
+    width: 40px;
+    top: 10px;
+    right: 10px;
+    padding: 6px;
+
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    background-color: transparent;
+}
+
+.action-button:hover {
+    background-color: #ddd;
+}
+
+.action-button:active {
+    background-color: #ccc;
+}
+
+.action-button img {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-block:hover .action-button img {
+    opacity: 1;
+}
+
+.action-button.pinned {
+    color: transparent;
+}
+
+/* ------------------------ Scrollbar styling ------------------------ */
+.task-sets::-webkit-scrollbar,
+.note-sets::-webkit-scrollbar {
+    width: 12px;
+}
+
+.task-sets::-webkit-scrollbar-thumb,
+.note-sets::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 6px;
+    border: 3px solid #fff;
+}
+
+.task-sets::-webkit-scrollbar-track,
+.note-sets::-webkit-scrollbar-track {
+    background-color: #eee;
+    border-radius: 6px;
+}
+
+.task-sets:not(:hover)::-webkit-scrollbar-thumb,
+.note-sets:not(:hover)::-webkit-scrollbar-thumb {
+    background-color: transparent;
 }

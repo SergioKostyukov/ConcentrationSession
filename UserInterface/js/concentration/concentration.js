@@ -1,1 +1,6 @@
 updateTimerDisplay();
+
+updateGoalBlock();
+
+getTitlesOfTasks();
+getTitlesOfNotes();

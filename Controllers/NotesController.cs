@@ -48,11 +48,11 @@ public class NotesController : ControllerBase
 
         if (currentUserID != null)
         {
-            List<NoteDataDto> tasks = _notesService.GetNotArchivedNotes(int.Parse(currentUserID));
+            List<NoteDataDto> notes = _notesService.GetNotArchivedNotes(int.Parse(currentUserID));
             // Attempt to add a new note
-            if (tasks != null)
+            if (notes != null)
             {
-                return Ok(new { message = "Note data get successful", notesList = tasks });
+                return Ok(new { message = "Note data get successful", notesList = notes });
             }
             else
             {
@@ -74,15 +74,65 @@ public class NotesController : ControllerBase
 
         if (currentUserID != null)
         {
-            List<NoteDataDto> tasks = _notesService.GetArchivedNotes(int.Parse(currentUserID));
+            List<NoteDataDto> notes = _notesService.GetArchivedNotes(int.Parse(currentUserID));
             // Attempt to add a new note
-            if (tasks != null)
+            if (notes != null)
             {
-                return Ok(new { message = "Note data get successful", notesList = tasks });
+                return Ok(new { message = "Note data get successful", notesList = notes });
             }
             else
             {
                 return Ok(new { message = "There are no notes" });
+            }
+        }
+        else
+        {
+            return Ok(new { message = "User not authorized" });
+        }
+    }
+
+    // GET: api/Notes/GetTitlesOfNotArchivedNotes
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetTitlesOfNotArchivedNotes()
+    {
+        var currentUserID = User.FindFirst("id")?.Value;
+
+        if (currentUserID != null)
+        {
+            List<NoteTitleDto> notesTitles = _notesService.GetTitlesOfNotArchivedNotes(int.Parse(currentUserID));
+            if (notesTitles != null)
+            {
+                return Ok(new { message = "Notes titles get successful", notesList = notesTitles });
+            }
+            else
+            {
+                return Ok(new { message = "There are no notes" });
+            }
+        }
+        else
+        {
+            return Ok(new { message = "User not authorized" });
+        }
+    }
+
+    // GET: api/Notes/GetNoteById
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetNoteById([FromQuery] int id)
+    {
+        var currentUserID = User.FindFirst("id")?.Value;
+
+        if (currentUserID != null)
+        {
+            NoteViewDto note = _notesService.GetNoteById(id);
+            if (note != null)
+            {
+                return Ok(new { message = "Note data get successful", note = note });
+            }
+            else
+            {
+                return Ok(new { message = "There are no such note" });
             }
         }
         else

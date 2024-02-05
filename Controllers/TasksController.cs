@@ -39,7 +39,23 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/GetNotArchivedTasks
+    // POST: api/Tasks/CopyTask
+    [Authorize]
+    [HttpPost]
+    public IActionResult CopyTask([FromBody] TaskStatusUpdateDto request)
+    {
+        // Attempt to add a new task
+        if (_notesService.CopyTask(request.id))
+        {
+            return Ok(new { message = "Task copy successfully" });
+        }
+        else
+        {
+            return BadRequest(new { message = "Task copy failed" });
+        }
+    }
+
+    // GET: api/Tasks/GetNotArchivedTasks
     [Authorize]
     [HttpGet]
     public IActionResult GetNotArchivedTasks()
@@ -65,7 +81,7 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/GetArchivedTasks
+    // GET: api/Tasks/GetArchivedTasks
     [Authorize]
     [HttpGet]
     public IActionResult GetArchivedTasks()
@@ -91,7 +107,57 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/UpdateTask
+    // GET: api/Tasks/GetTitlesOfNotArchivedTasks
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetTitlesOfNotArchivedTasks()
+    {
+        var currentUserID = User.FindFirst("id")?.Value;
+
+        if (currentUserID != null)
+        {
+            List<TaskTitleDto> tasksTitles = _notesService.GetTitlesOfNotArchivedTasks(int.Parse(currentUserID));
+            if (tasksTitles != null)
+            {
+                return Ok(new { message = "Tasks titles get successful", tasksList = tasksTitles });
+            }
+            else
+            {
+                return Ok(new { message = "There are no tasks" });
+            }
+        }
+        else
+        {
+            return Ok(new { message = "User not authorized" });
+        }
+    }
+
+    // GET: api/Tasks/GetTaskById
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetTaskById([FromQuery] int id)
+    {
+        var currentUserID = User.FindFirst("id")?.Value;
+
+        if (currentUserID != null)
+        {
+            TaskViewDto task = _notesService.GetTaskById(id);
+            if (task != null)
+            {
+                return Ok(new { message = "Task data get successful", task = task });
+            }
+            else
+            {
+                return Ok(new { message = "There are no such task" });
+            }
+        }
+        else
+        {
+            return Ok(new { message = "User not authorized" });
+        }
+    }
+
+    // PATCH: api/Tasks/UpdateTask
     [Authorize]
     [HttpPatch]
     public IActionResult UpdateTask([FromBody] TaskUpdateDto request)
@@ -107,7 +173,7 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/UpdateTaskPin
+    // PATCH: api/Tasks/UpdateTaskPin
     [Authorize]
     [HttpPatch]
     public IActionResult UpdateTaskPin([FromBody] TaskStatusUpdateDto request)
@@ -123,23 +189,7 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/CopyTask
-    [Authorize]
-    [HttpPost]
-    public IActionResult CopyTask([FromBody] TaskStatusUpdateDto request)
-    {
-        // Attempt to add a new task
-        if (_notesService.CopyTask(request.id))
-        {
-            return Ok(new { message = "Task copy successfully" });
-        }
-        else
-        {
-            return BadRequest(new { message = "Task copy failed" });
-        }
-    }
-
-    // POST: api/Tasks/ArchiveTask
+    // PATCH: api/Tasks/ArchiveTask
     [Authorize]
     [HttpPatch]
     public IActionResult ArchiveTask([FromBody] TaskStatusUpdateDto request)
@@ -155,7 +205,7 @@ public class TasksController : ControllerBase
         }
     }
 
-    // POST: api/Tasks/DeleteTask
+    // DELETE: api/Tasks/DeleteTask
     [Authorize]
     [HttpDelete]
     public IActionResult DeleteTask([FromBody] TaskStatusUpdateDto request)

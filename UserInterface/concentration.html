@@ -82,10 +82,9 @@
         <div class="center-blocks">
             <div class="first-column">
                 <div class="block timer">
-
-                    <button href="settings.html" class="settings-button" id="settingsButton">
+                    <a href="settings.html" class="settings-button" id="settingsButton">
                         <img src="images/settings.png" alt="Settings">
-                    </button>
+                    </a>
 
                     <div class="timer-control">
                         <div class="timer-display" id="timerDisplay">00:00</div>
@@ -95,11 +94,14 @@
                             <button class="timer-button" id="resetButton">Reset</button>
                         </div>
                     </div>
-                    <p class="break-info">Number of breaks: 0</p>
+
+                    <p class="break-info" id="numberBreks">Number of breaks: 0</p>
+
                     <div class="break-toggle">
                         <input type="checkbox" id="breakToggle" />
                         <label for="breakToggle">Disable breaks</label>
                     </div>
+
                     <button class="start-button" id="startButton">Start Timer</button>
                 </div>
 
@@ -111,9 +113,9 @@
 
                     <div class="goal-item central-block">
                         <div class="goal-label">Ціль на день:</div>
-                        <div class="goal-value" id="dayGoalValue">x годин</div>
+                        <div class="goal-value" id="dayGoalValue">0 годин</div>
                         <div class="goal-label">Виконано:</div>
-                        <div class="goal-value" id="completeValue">y годин</div>
+                        <div class="goal-value" id="completeValue">0 годин</div>
                         <div class="progress-bar" id="progressBar"></div>
                     </div>
 
@@ -138,9 +140,46 @@
                     </div>
                 </div>
             </div>
+
             <div class="second-column">
-                <div class="block tasks">
-                    Tasks
+                <div class="block select">
+                    <h2>Select</h2>
+                    <div class="block-item select-item">
+                        
+                    </div>
+
+                    <h2>Task sets</h2>
+                    <div class="block-item task-sets">
+
+                    </div>
+
+                    <div class="half-line">
+                        <h2>Notes</h2>
+                    </div>
+                    <div class="half-line">
+                        <h2>Habits</h2>
+                    </div>
+                    <div class="block-item notes-habits">
+                        <div class="note-sets">
+
+                        </div>
+
+                        <div class="habits-item">
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="viewTask">
+                    <div class="modal-block" id="viewTaskBlock">
+    
+                    </div>
+                </div>
+
+                <div class="modal" id="viewNote">
+                    <div class="modal-block" id="viewNoteBlock">
+    
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,10 +188,14 @@
     <script src="js/account/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
+
     <script src="js/concentration/timer.js"></script>
     <script src="js/concentration/timer_active.js"></script>
     <script src="js/concentration/goal.js"></script>
-    <script src="js/concentration/tasks.js"></script>
+    <script src="js/concentration/select/common.js"></script>
+    <script src="js/concentration/select/task.js"></script>
+    <script src="js/concentration/select/note.js"></script>
+    <script src="js/concentration/select/habits.js"></script>
     <script src="js/concentration/concentration.js"></script>
 </body>
 

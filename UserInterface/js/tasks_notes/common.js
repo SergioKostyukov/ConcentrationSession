@@ -88,18 +88,6 @@ function fillUpdateModal(updateObjectBlock, objectBlock) {
     }
 }
 
-// Add the "notification" button
-function addNotificationButton(updateObjectBlock, command) {
-    const notificationButton = document.createElement('button');
-    notificationButton.classList.add('action-button', 'fourth-button');
-    const notificationImage = document.createElement('img');
-    notificationImage.src = 'images/notification.png';
-    notificationImage.alt = 'notification';
-    notificationButton.setAttribute('onclick', command);
-    notificationButton.appendChild(notificationImage);
-    updateObjectBlock.appendChild(notificationButton);
-}
-
 // Add the "copy" button
 function addCopyButton(updateObjectBlock, command) {
     const copyButton = document.createElement('button');
@@ -110,6 +98,18 @@ function addCopyButton(updateObjectBlock, command) {
     copyButton.setAttribute('onclick', command);
     copyButton.appendChild(copyImage);
     updateObjectBlock.appendChild(copyButton);
+}
+
+// Add the "archive" button
+function addArchiveButton(updateObjectBlock, command) {
+    const archiveButton = document.createElement('button');
+    archiveButton.classList.add('action-button', 'second-button');
+    const archiveImage = document.createElement('img');
+    archiveImage.src = 'images/folder.png';
+    archiveImage.alt = 'archive';
+    archiveButton.setAttribute('onclick', command);
+    archiveButton.appendChild(archiveImage);
+    updateObjectBlock.appendChild(archiveButton);
 }
 
 // Add the "delete" button
@@ -124,16 +124,16 @@ function addDeleteButton(updateObjectBlock, command) {
     updateObjectBlock.appendChild(deleteButton);
 }
 
-// Add the "archive" button
-function addArchiveButton(updateObjectBlock, command) {
-    const archiveButton = document.createElement('button');
-    archiveButton.classList.add('action-button', 'second-button');
-    const archiveImage = document.createElement('img');
-    archiveImage.src = 'images/folder.png';
-    archiveImage.alt = 'archive';
-    archiveButton.setAttribute('onclick', command);
-    archiveButton.appendChild(archiveImage);
-    updateObjectBlock.appendChild(archiveButton);
+// Add the "notification" button
+function addNotificationButton(updateObjectBlock, command) {
+    const notificationButton = document.createElement('button');
+    notificationButton.classList.add('action-button', 'fourth-button');
+    const notificationImage = document.createElement('img');
+    notificationImage.src = 'images/notification.png';
+    notificationImage.alt = 'notification';
+    notificationButton.setAttribute('onclick', command);
+    notificationButton.appendChild(notificationImage);
+    updateObjectBlock.appendChild(notificationButton);
 }
 
 // Add the "Save Changes" button

@@ -44,6 +44,30 @@ public class NotesService
         return userNotes;
     }
 
+    public List<NoteTitleDto>? GetTitlesOfNotArchivedNotes(int user_id)
+    {
+        var userNotesTitles = FindTitlesOfNotArchivedNotes(user_id);
+
+        return userNotesTitles;
+    }
+
+    public NoteViewDto? GetNoteById(int id)
+    {
+        try
+        {
+            NoteViewDto note = FindNoteView(id);
+
+            logger.LogInfo($"Note data finded");
+
+            return note;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error note data update: {ex.Message}");
+            return null;
+        }
+    }
+
     public bool UpdateNote(NoteUpdateDto request)
     {
         try
@@ -219,6 +243,35 @@ public class NotesService
         return notesList;
     }
 
+    private static List<NoteTitleDto> FindTitlesOfNotArchivedNotes(int user_id)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "SELECT id, name FROM notes WHERE user_id = @user_id AND is_archive = @request";
+        var parameters = new Dictionary<string, object> {
+            { "@user_id", user_id},
+            { "@request", false }
+        };
+
+        List<NoteTitleDto> notesList = new();
+
+        using (var reader = dbContext.ExecuteQuery(command, parameters))
+        {
+            while (reader.Read())
+            {
+                NoteTitleDto note = new()
+                {
+                    id = (int)reader["id"],
+                    name = reader["name"].ToString()
+                };
+
+                notesList.Add(note);
+            }
+
+            return notesList;
+        }
+    }
+
     private NoteData FindNote(int id)
     {
         var dbContext = new DataBaseContext();
@@ -240,6 +293,33 @@ public class NotesService
                 text = reader["text"].ToString(),
                 is_archive = (bool)reader["is_archive"],
                 is_pin = (bool)reader["is_pin"]
+            };
+            return note;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    private NoteViewDto FindNoteView(int id)
+    {
+        var dbContext = new DataBaseContext();
+
+        var command = "SELECT name, text FROM notes WHERE id = @id";
+        var parameters = new Dictionary<string, object>
+        {
+            { "@id", id}
+        };
+
+        using var reader = dbContext.ExecuteQuery(command, parameters);
+        if (reader.Read())
+        {
+            NoteViewDto note = new()
+            {
+                name = reader["name"].ToString(),
+                text = reader["text"].ToString()
             };
             return note;
         }

@@ -7,7 +7,7 @@ document.getElementById("startButton").addEventListener("click", function() {
 });
 
 document.getElementById("exitButtonModal").addEventListener("click", function() {
-    resetTimer();
+    resetTimerModal();
     document.getElementById("overlay").style.display = "none";
 });
 
@@ -16,7 +16,7 @@ document.getElementById("pauseResumeButton").addEventListener("click", function(
 });
 
 document.getElementById("resetButtonModal").addEventListener("click", function() {
-    resetTimer();
+    resetTimerModal();
 });
 
 function startTimer() {
@@ -30,7 +30,7 @@ function startTimer() {
         } else {
             clearInterval(timerInterval);
             alert("Таймер завершено!");
-            resetTimer();
+            resetTimerModal();
         }
     }, 1000);
 }
@@ -46,7 +46,7 @@ function pauseResumeTimer() {
     }
 }
 
-function resetTimer() {
+function resetTimerModal() {
     clearInterval(timerInterval);
     timerInterval = null;
     timerValueModal = localStorage.getItem('timerValue') || 40;

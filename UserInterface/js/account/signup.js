@@ -52,7 +52,7 @@ function signup() {
         window.location.href = 'login.html';
     }).catch(error => {
         // Display error message and clear input fields
-        alert(data.message + '. Please try again.');
+        alert(error.message + '. Please try again.');
         clearInputFields();
         console.error('Error:', error);
     });

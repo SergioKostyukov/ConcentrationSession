@@ -36,3 +36,15 @@ public class TaskStatusUpdateDto
     public int id { get; set; }
     public bool status { get; set; }
 }
+
+public class TaskTitleDto
+{
+    public int id { get; set; }
+    public string name { get; set; }
+}
+
+public class TaskViewDto
+{
+    public string name { get; set; }
+    public string text { get; set; }
+}
