@@ -10,12 +10,14 @@ public class AccountService
     private readonly JwtSettings jwtSettings;
     private readonly Logger logger;
     private readonly SettingsService settingsService;
+    private readonly TasksService tasksService;
 
-    public AccountService(JwtSettings jwtSettings, SettingsService settingsService)
+    public AccountService(JwtSettings jwtSettings, SettingsService settingsService, TasksService tasksService)
     {
         this.jwtSettings = jwtSettings;
         this.settingsService = settingsService;
-        logger = new Logger(LogFilePath);
+		this.tasksService = tasksService;
+		logger = new Logger(LogFilePath);
     }
 
     // Method to handle user authorization
@@ -42,7 +44,8 @@ public class AccountService
 
             var currUser = FindUser(user.tag_name);
             settingsService.SetDefaultSettings(currUser.id);
-            // !!! Add default tasks/habits blocks !!!
+            tasksService.CreateDefaultTasks(currUser.id);
+            // !!! Add default habit blocks !!!
 
             return true;
         }

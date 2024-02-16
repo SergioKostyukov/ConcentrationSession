@@ -1,4 +1,3 @@
-﻿1. General fixes in tasks/notes architecture
-2. Notes page mvp functional provided
-3. Archive page mvp functional provided
-4. Cleaned and optimized server files
+﻿1. Added habit list functionality (unique name and view for habits block)
+2. Updated settings functionality (other settings block also work)
+3. The block with habits is added automatically when creating a profile 

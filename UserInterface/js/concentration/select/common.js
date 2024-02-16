@@ -55,20 +55,21 @@ function displayObjects(objects, name){
     // Clear the objects panel before adding new ones
     objectsPanel.innerHTML = '';
 
-    // const title = document.createElement('h2');
-    // title.textContent = 'Task sets';
-    // objectsPanel.appendChild(title);
     // Iterate over each object and create the corresponding HTML block
     objects.forEach(object => {
-        const objectData = document.createElement('div');
-        objectData.classList.add(`${name}-title-block`);
-        objectData.id = 'block' + object.id;
+        if(object.name === 'Habits' && name === 'task'){
 
-        // Add the object title
-        const objectTitle = document.createElement('h3');
-        objectTitle.textContent = object.name;
-        objectData.appendChild(objectTitle);
-
-        objectsPanel.appendChild(objectData);
+        }else{
+            const objectData = document.createElement('div');
+            objectData.classList.add(`${name}-title-block`);
+            objectData.id = 'block' + object.id;
+    
+            // Add the object title
+            const objectTitle = document.createElement('h3');
+            objectTitle.textContent = object.name;
+            objectData.appendChild(objectTitle);
+    
+            objectsPanel.appendChild(objectData);
+        }
     });
 }

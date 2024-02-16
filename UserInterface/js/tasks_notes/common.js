@@ -29,28 +29,32 @@ function generateUniqueId() {
 function saveUpdate(blockName) {
     const modal = document.getElementById(blockName);
 
-    updateData(blockName);
-
-    modal.classList.remove("active");
+    if(updateData(blockName)){
+        modal.classList.remove("active");
+    }
 }
 
 // ------------------------- Generation of modal window elements -------------------------
 
 // Function to fill the update modal window
 function fillUpdateModal(updateObjectBlock, objectBlock) {
-    // Get data about the object from the selected block
-    const title = objectBlock.querySelector("h3").textContent;
-
     // Clear the content of the update modal window before updating
     updateObjectBlock.innerHTML = '';
-
+    
     // Add the object title
+    // Get data about the object from the selected block
     const objTitle = document.createElement('h3');
+    const title = objectBlock.querySelector("h3").textContent;
     objTitle.textContent = title;
     const obj_id = parseInt(objectBlock.id.replace('block', ''), 10);
     objTitle.id = obj_id;
-    objTitle.contentEditable = true;
     updateObjectBlock.appendChild(objTitle);
+    
+    if(title != "Habits"){
+        objTitle.contentEditable = true;
+    }else{
+        objTitle.contentEditable = false;
+    }
 
     // Add the "pin" button
     const pinButton = document.createElement('button');
@@ -80,10 +84,14 @@ function fillUpdateModal(updateObjectBlock, objectBlock) {
         addArchiveButton(updateObjectBlock, `archiveNote('updateNote')`)
         addSaveButton(updateObjectBlock, `saveUpdate('updateNote')`)
     } else {
-        addNotificationButton(updateObjectBlock, 'updateTask')
-        addCopyButton(updateObjectBlock, `copyTask('updateTask')`)
-        addDeleteButton(updateObjectBlock, `deleteTask('updateTask')`)
-        addArchiveButton(updateObjectBlock, `archiveTask('updateTask')`)
+        if(title != "Habits"){
+            addCopyButton(updateObjectBlock, `copyTask('updateTask')`)
+            addDeleteButton(updateObjectBlock, `deleteTask('updateTask')`)
+            addArchiveButton(updateObjectBlock, `archiveTask('updateTask')`)
+            addNotificationButton(updateObjectBlock, 'updateTask')
+        }else{
+            addNotificationButton(updateObjectBlock, 'updateTask', "first")
+        }
         addSaveButton(updateObjectBlock, `saveUpdate('updateTask')`)
     }
 }
@@ -125,9 +133,9 @@ function addDeleteButton(updateObjectBlock, command) {
 }
 
 // Add the "notification" button
-function addNotificationButton(updateObjectBlock, command) {
+function addNotificationButton(updateObjectBlock, command, position="fourth") {
     const notificationButton = document.createElement('button');
-    notificationButton.classList.add('action-button', 'fourth-button');
+    notificationButton.classList.add('action-button', `${position}-button`);
     const notificationImage = document.createElement('img');
     notificationImage.src = 'images/notification.png';
     notificationImage.alt = 'notification';
@@ -147,13 +155,21 @@ function addSaveButton(updateObjectBlock, command) {
 
 // ------------------------- Generation of .task-panel window elements -------------------------
 
-function displayObjects(objects){
+async function displayObjects(objects){
     const objectsPanel = document.querySelector('.tasks-panel');
     const pinnedObjects = [];
     const otherObjects = [];
 
     // Clear the objects panel before adding new ones
     objectsPanel.innerHTML = '';
+    
+    // Add habits block data
+    if(localStorage.getItem('ignore_habits') === 'false'){
+        const habits = await findHabbits();
+        if(habits != null) {
+            objects.unshift(habits);
+        }
+    }
 
     // Iterate over each object and create the corresponding HTML block
     objects.forEach(object => {
@@ -188,7 +204,7 @@ function displayObjects(objects){
         objectBlock.appendChild(pinButton);
 
         fillObjectsTextContainer(objectBlock, object);
-
+        
         // Insert pinned objects
         pinnedObjects.forEach(objectBlock => {
             objectsPanel.appendChild(objectBlock);

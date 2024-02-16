@@ -1,3 +1,26 @@
+// Function to request the user habits
+async function getHabitsData() {
+    try {
+        const response = await fetch('https://localhost:7131/api/Tasks/GetHabits', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error(response.statusText + `HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.habits;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 // Function to request the list of user tasks
 function getUserData() {
     fetch('https://localhost:7131/api/Tasks/GetNotArchivedTasks', {
@@ -28,6 +51,12 @@ function getUserData() {
 // Function to request adding a task to the DB
 async function addTask(blockName) {
     const taskBlock = document.getElementById(blockName);
+    if(taskBlock.querySelector("#taskTitle").textContent == "Habits"){
+        console.log("Can`t save task with title like this");
+        alert("Incorrect title, please change it");
+        return false;
+    }
+
     const pinButton = document.getElementById("pinButton");
 
     // Get the content of "done-toggle" elements
@@ -57,11 +86,18 @@ async function addTask(blockName) {
     } catch (error) {
         console.error('Error adding task:', error);
     }
+
+    return true;
 }
 
 // Function to request updating a task
 async function updateData(blockName) {
     const taskBlock = document.getElementById(blockName);
+    // if(taskBlock.querySelector("h3").textContent == "Habits" && blockName == "updateTask"){
+    //     console.log("Can`t save task with title like this");
+    //     alert("Incorrect title, please change it");
+    //     return false;
+    // }
     const pinButton = taskBlock.querySelector(".pin-button");
 
     // Get the content of "done-toggle" elements
@@ -91,6 +127,8 @@ async function updateData(blockName) {
     } catch (error) {
         console.error('Error updating task:', error);
     }
+
+    return true;
 }
 
 // Function to request updating the pinned status of a task

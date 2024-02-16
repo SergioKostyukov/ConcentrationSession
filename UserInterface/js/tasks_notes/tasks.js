@@ -97,11 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Save the object to the DB and the main menu
     saveTaskButton.addEventListener("click", function () {
-        addTask("newTask");
-
-        // Close the modal window
-        modal.classList.remove("active");
-        resetTaskBlock("newTask");
+        if(addTask("newTask")){
+            // Close the modal window
+            modal.classList.remove("active");
+            resetTaskBlock("newTask");
+        }
     });
 
     // Event handler for the Enter key in <p> blocks
@@ -251,6 +251,15 @@ function fillObjectsTextContainer(objectBlock, object) {
     }
 
     objectBlock.appendChild(textContainer);
+}
+
+async function findHabbits() {
+    const habits = await getHabitsData();
+    
+    if (habits == null) {
+        console.log("No habits available");
+    }
+    return habits;
 }
 
 getUserData();

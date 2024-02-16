@@ -7,7 +7,7 @@ public class TaskData
     public string name { get; set; }
     public string text { get; set; }
     public bool is_archive { get; set; }
-    public DateTime notification_time { get; set; }
+    public DateTime? notification_time { get; set; }
     public bool is_pin { get; set; }
 }
 

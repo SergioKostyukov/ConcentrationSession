@@ -55,8 +55,34 @@ public class TasksController : ControllerBase
         }
     }
 
-    // GET: api/Tasks/GetNotArchivedTasks
-    [Authorize]
+	// GET: api/Tasks/GetHabits
+	[Authorize]
+	[HttpGet]
+	public IActionResult GetHabits()
+	{
+		var currentUserID = User.FindFirst("id")?.Value;
+
+		if (currentUserID != null)
+		{
+			TaskDataDto? task = _notesService.GetHabits(int.Parse(currentUserID));
+			// Attempt to find habits
+			if (task != null)
+			{
+				return Ok(new { message = "Habits data get successful", habits = task });
+			}
+			else
+			{
+				return Ok(new { message = "There are no habits" });
+			}
+		}
+		else
+		{
+			return Ok(new { message = "User not authorized" });
+		}
+	}
+
+	// GET: api/Tasks/GetNotArchivedTasks
+	[Authorize]
     [HttpGet]
     public IActionResult GetNotArchivedTasks()
     {
@@ -64,8 +90,8 @@ public class TasksController : ControllerBase
 
         if (currentUserID != null)
         {
-            List<TaskDataDto> tasks = _notesService.GetNotArchivedTasks(int.Parse(currentUserID));
-            // Attempt to add a new task
+            List<TaskDataDto>? tasks = _notesService.GetNotArchivedTasks(int.Parse(currentUserID));
+            // Attempt to find not archived tasks
             if (tasks != null)
             {
                 return Ok(new { message = "Task data get successful", tasksList = tasks });
@@ -81,8 +107,8 @@ public class TasksController : ControllerBase
         }
     }
 
-    // GET: api/Tasks/GetArchivedTasks
-    [Authorize]
+	// GET: api/Tasks/GetArchivedTasks
+	[Authorize]
     [HttpGet]
     public IActionResult GetArchivedTasks()
     {
@@ -90,9 +116,9 @@ public class TasksController : ControllerBase
 
         if (currentUserID != null)
         {
-            List<TaskDataDto> tasks = _notesService.GetArchivedTasks(int.Parse(currentUserID));
-            // Attempt to add a new task
-            if (tasks != null)
+            List<TaskDataDto>? tasks = _notesService.GetArchivedTasks(int.Parse(currentUserID));
+			// Attempt to find archived tasks
+			if (tasks != null)
             {
                 return Ok(new { message = "Task data get successful", tasksList = tasks });
             }
@@ -116,7 +142,7 @@ public class TasksController : ControllerBase
 
         if (currentUserID != null)
         {
-            List<TaskTitleDto> tasksTitles = _notesService.GetTitlesOfNotArchivedTasks(int.Parse(currentUserID));
+            List<TaskTitleDto>? tasksTitles = _notesService.GetTitlesOfNotArchivedTasks(int.Parse(currentUserID));
             if (tasksTitles != null)
             {
                 return Ok(new { message = "Tasks titles get successful", tasksList = tasksTitles });
@@ -141,7 +167,7 @@ public class TasksController : ControllerBase
 
         if (currentUserID != null)
         {
-            TaskViewDto task = _notesService.GetTaskById(id);
+            TaskViewDto? task = _notesService.GetTaskById(id);
             if (task != null)
             {
                 return Ok(new { message = "Task data get successful", task = task });
@@ -162,7 +188,6 @@ public class TasksController : ControllerBase
     [HttpPatch]
     public IActionResult UpdateTask([FromBody] TaskUpdateDto request)
     {
-        // Attempt to add a new task
         if (_notesService.UpdateTask(request))
         {
             return Ok(new { message = "Task update successfully" });
@@ -178,7 +203,6 @@ public class TasksController : ControllerBase
     [HttpPatch]
     public IActionResult UpdateTaskPin([FromBody] TaskStatusUpdateDto request)
     {
-        // Attempt to add a new task
         if (_notesService.UpdatePin(request))
         {
             return Ok(new { message = "Task pin update successfully" });
@@ -194,7 +218,6 @@ public class TasksController : ControllerBase
     [HttpPatch]
     public IActionResult ArchiveTask([FromBody] TaskStatusUpdateDto request)
     {
-        // Attempt to add a new task
         if (_notesService.ArchiveTask(request))
         {
             return Ok(new { message = "Task archive successfully" });
@@ -210,7 +233,6 @@ public class TasksController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteTask([FromBody] TaskStatusUpdateDto request)
     {
-        // Attempt to add a new task
         if (_notesService.DeleteTask(request.id))
         {
             return Ok(new { message = "Task deleted successfully" });

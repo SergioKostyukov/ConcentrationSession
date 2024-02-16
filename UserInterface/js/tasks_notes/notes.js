@@ -111,4 +111,8 @@ function fillObjectsTextContainer(objectBlock, object) {
     objectBlock.appendChild(textContainer);
 }
 
+function findHabbits() {
+    return null;
+}
+
 getUserData();
