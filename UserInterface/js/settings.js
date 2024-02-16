@@ -2,9 +2,14 @@
 var workPeriodSelect = document.getElementById('workPeriod');
 var breakPeriodSelect = document.getElementById('breakPeriod');
 var soundSwitch = document.getElementById('soundSwitch');
+
 var dayGoalSelect = document.getElementById('dayGoal');
 var resetTimeSelect = document.getElementById('resetTime');
 var weekendsSwitch = document.getElementById('weekendsSwitch');
+
+var themeColorSwitch = document.getElementById('themeColorSwitch');
+var ignoreHabitsSwitch = document.getElementById('ignoreHabitsSwitch');
+var blockSitesSwitch = document.getElementById('blockSitesSwitch');
 
 // Event handler for selecting work period
 workPeriodSelect.addEventListener('change', function () {
@@ -40,6 +45,24 @@ resetTimeSelect.addEventListener('change', function () {
 weekendsSwitch.addEventListener('change', function () {
     var selectedWeekends = weekendsSwitch.checked;
     console.log('Selected Weekends:', selectedWeekends);
+});
+
+// Event handler for selecting theme color
+themeColorSwitch.addEventListener('change', function () {
+    var selectedThemeColor = themeColorSwitch.checked;
+    console.log('Selected theme color:', selectedThemeColor);
+});
+
+// Event handler for selecting habits ignore
+ignoreHabitsSwitch.addEventListener('change', function () {
+    var selectedignoreHabits = ignoreHabitsSwitch.checked;
+    console.log('Selected habits ignore:', selectedignoreHabits);
+});
+
+// Event handler for selecting sites block
+blockSitesSwitch.addEventListener('change', function () {
+    var selectedBlockSites = blockSitesSwitch.checked;
+    console.log('Selected sites block:', selectedBlockSites);
 });
 
 // Function to enable edit mode
@@ -88,6 +111,14 @@ function saveChanges(blockId) {
         localStorage.setItem('day_goal', values['dayGoal']);
         localStorage.setItem('reset_time', values['resetTime']);
         localStorage.setItem('is_weekend', values['weekendsSwitch']);
+    } else if (blockId === 'otherSettings') {
+        // Save values to DB
+        sendOtherSettings(values);
+
+        // Save values to local storage
+        localStorage.setItem('theme_color', values['themeColorSwitch']);
+        localStorage.setItem('ignore_habits', values['ignoreHabitsSwitch']);
+        localStorage.setItem('block_sites', values['blockSitesSwitch']);
     }
 
     // Disable inputs
@@ -164,6 +195,37 @@ function sendGoalSettings(request) {
         });
 }
 
+// Function to send other settings to the server
+function sendOtherSettings(request) {
+    var settingsData = {
+        user_id: getUserId("jwtToken"),
+        theme_color: request['themeColorSwitch'],
+        ignore_habits: request['ignoreHabitsSwitch'],
+        block_sites: request['blockSitesSwitch']
+    };
+
+    fetch('https://localhost:7131/api/Settings/UpdateOtherParams', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+        },
+        body: JSON.stringify(settingsData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
 // Function to restore saved values when the page loads
 function restoreSavedValues(blockId) {
     if (blockId === 'sessionSettings') {
@@ -182,9 +244,18 @@ function restoreSavedValues(blockId) {
         document.getElementById('dayGoal').value = dayGoal;
         document.getElementById('resetTime').value = resetTime;
         document.getElementById('weekendsSwitch').checked = isWeekend === 'true';
+    } else if(blockId === 'otherSettings'){
+        var themeColor = localStorage.getItem('theme_color');
+        var ignoreHabits = localStorage.getItem('ignore_habits');
+        var blockSites = localStorage.getItem('block_sites');
+
+        document.getElementById('themeColorSwitch').checked = themeColor === 'true';
+        document.getElementById('ignoreHabitsSwitch').checked = ignoreHabits === 'true';
+        document.getElementById('blockSitesSwitch').checked = blockSites === 'true';
     }
 }
 
 // Call the function to restore saved values for each block
 restoreSavedValues('sessionSettings');
 restoreSavedValues('goalSettings');
+restoreSavedValues('otherSettings');

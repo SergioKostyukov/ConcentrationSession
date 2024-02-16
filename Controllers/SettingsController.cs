@@ -67,4 +67,20 @@ public class SettingsController : ControllerBase
             return BadRequest(new { message = "Goal settings data update failed" });
         }
     }
+
+	// PATCH: api/Settings/UpdateOtherParams
+	[Authorize]
+	[HttpPatch]
+	public IActionResult UpdateOtherParams(SettingsOtherDto request)
+	{
+		// Attempt to update goal settings data
+		if (_settingsService.UpdateOtherParams(request))
+		{
+			return Ok(new { message = "Other settings data update successfully" });
+		}
+		else
+		{
+			return BadRequest(new { message = "Other settings data update failed" });
+		}
+	}
 }

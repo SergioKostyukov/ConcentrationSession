@@ -3,6 +3,8 @@
     color: #fff;
     padding: 10px;
     width: auto;
+    height: 85vh;
+    min-height: 500px;
     min-width: 47px;
     max-width: 180px;
     display: flex;

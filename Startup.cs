@@ -12,7 +12,7 @@ public class Startup
         _configuration = configuration;
     }
 
-    // Use this method to add services to the container.
+    // Method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddJWTTokenServices(_configuration);
@@ -39,7 +39,7 @@ public class Startup
         services.AddSwaggerGen();
     }
 
-    // Use this method to configure the HTTP request pipeline.
+    // Method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseAuthentication();

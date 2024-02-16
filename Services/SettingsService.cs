@@ -29,7 +29,7 @@ public class SettingsService
         }
     }
 
-    public Settings GetSettings(int user_id)
+    public Settings? GetSettings(int user_id)
     {
         try
         {
@@ -79,9 +79,25 @@ public class SettingsService
         }
     }
 
-    // ---------------- DATABASE methods ----------------
+	public bool UpdateOtherParams(SettingsOtherDto request)
+	{
+		try
+		{
+			UpdateOtherSettings(request);
 
-    private void SetDefault(int user_id)
+			logger.LogInfo($"Other settings updated successful");
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Update other settings error: {ex.Message}");
+			return false;
+		}
+	}
+
+	// ---------------- DATABASE methods ----------------
+
+	private static void SetDefault(int user_id)
     {
         var dbContext = new DataBaseContext();
 
@@ -96,7 +112,7 @@ public class SettingsService
         dbContext.ExecuteNonQuery(command, parameters);
     }
 
-    private Settings FindSettings(int user_id)
+    private static Settings FindSettings(int user_id)
     {
         var dbContext = new DataBaseContext();
 
@@ -114,8 +130,11 @@ public class SettingsService
                     is_notification_sound = Convert.ToBoolean(reader["is_notification_sound"]),
                     day_goal = Convert.ToInt16(reader["day_goal"]),
                     reset_time = TimeSpan.Parse(reader["reset_time"].ToString()),
-                    is_weekend = Convert.ToBoolean(reader["is_weekend"])
-                };
+                    is_weekend = Convert.ToBoolean(reader["is_weekend"]),
+					theme_color = Convert.ToBoolean(reader["theme_color"]),
+					ignore_habits = Convert.ToBoolean(reader["ignore_habits"]),
+					block_sites = Convert.ToBoolean(reader["block_sites"])
+				};
 
                 return settings;
             }
@@ -124,7 +143,7 @@ public class SettingsService
         return null;
     }
 
-    private void UpdateGoalSettings(SettingsGoalDto request)
+    private static void UpdateGoalSettings(SettingsGoalDto request)
     {
         var dbContext = new DataBaseContext();
 
@@ -142,7 +161,7 @@ public class SettingsService
         dbContext.ExecuteNonQuery(command, parameters);
     }
 
-    private void UpdateSessionSettings(SettingsSessionDto request)
+    private static void UpdateSessionSettings(SettingsSessionDto request)
     {
         var dbContext = new DataBaseContext();
 
@@ -159,4 +178,22 @@ public class SettingsService
 
         dbContext.ExecuteNonQuery(command, parameters);
     }
+
+	private static void UpdateOtherSettings(SettingsOtherDto request)
+	{
+		var dbContext = new DataBaseContext();
+
+		var command = "UPDATE settings SET theme_color = @theme_color, ignore_habits = @ignore_habits," +
+			" block_sites = @block_sites WHERE user_id = @user_id;";
+
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@user_id", request.user_id},
+			{ "@theme_color", request.theme_color },
+			{ "@ignore_habits", request.ignore_habits },
+			{ "@block_sites", request.block_sites }
+		};
+
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
 }

@@ -174,15 +174,15 @@
                 <div class="select-block">
                     <h2>Theme color</h2>
                     <label class="switch">
-                        <input type="checkbox" id="newFieldSwitch">
+                        <input type="checkbox" id="themeColorSwitch" disabled>
                         <span class="slider round"></span>
                     </label>
                 </div>
 
                 <div class="select-block">
-                    <h2>Ignore habits statistic</h2>
+                    <h2>Ignore habits</h2>
                     <label class="switch">
-                        <input type="checkbox" id="newFieldSwitch">
+                        <input type="checkbox" id="ignoreHabitsSwitch" disabled>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -190,12 +190,12 @@
                 <div class="select-block">
                     <h2>Block other sites</h2>
                     <label class="switch">
-                        <input type="checkbox" id="newFieldSwitch">
+                        <input type="checkbox" id="blockSitesSwitch" disabled>
                         <span class="slider round"></span>
                     </label>
                 </div>
 
-                <button class="update-button" id="settingsUpdate" onclick="">Want to
+                <button class="update-button" id="otherSettingsUpdate" onclick="enableEditMode('otherSettings')">Want to
                     change</button>
             </div>
         </div>

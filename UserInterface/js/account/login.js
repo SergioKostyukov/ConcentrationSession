@@ -47,9 +47,14 @@ function login() {
         localStorage.setItem('work_time', data.settings.work_time);
         localStorage.setItem('break_time', data.settings.break_time);
         localStorage.setItem('is_notification_sound', data.settings.is_notification_sound);
+        
         localStorage.setItem('day_goal', data.settings.day_goal);
         localStorage.setItem('reset_time', data.settings.reset_time);
         localStorage.setItem('is_weekend', data.settings.is_weekend);
+
+        localStorage.setItem('theme_color', data.settings.theme_color);
+        localStorage.setItem('ignore_habits', data.settings.ignore_habits);
+        localStorage.setItem('block_sites', data.settings.block_sites);
 
         // Display successful login message and redirect to index page
         alert(data.message + '. Redirecting to index page.');

@@ -42,6 +42,7 @@ public class AccountService
 
             var currUser = FindUser(user.tag_name);
             settingsService.SetDefaultSettings(currUser.id);
+            // !!! Add default tasks/habits blocks !!!
 
             return true;
         }
