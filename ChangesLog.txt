@@ -1,3 +1,5 @@
-﻿1. Added habit list functionality (unique name and view for habits block)
-2. Updated settings functionality (other settings block also work)
-3. The block with habits is added automatically when creating a profile 
+﻿1. Modified Concentration->Select block:
+	a. Select buttons (task, note, habits)
+	b. Task/notes select button changes
+	c. Habits list in block
+	d. Simple view changes

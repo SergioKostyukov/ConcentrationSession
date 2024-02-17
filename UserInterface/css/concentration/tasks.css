@@ -26,6 +26,32 @@ h2 {
 /* ------------------------ SELECT ITEM BLOCK ------------------------ */
 .select-item {
     height: calc(25% - 90px);
+    padding-bottom: 0;
+
+    gap: 15px;
+}
+
+.select-block {
+    height: 100%;
+    width: auto;
+    max-width: 80px;
+    max-height: 80px;
+
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px;
+    box-sizing: border-box;
+}
+.select-block img {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
 }
 
 /* ------------------------ TASKS SETS BLOCK ------------------------ */
@@ -53,8 +79,23 @@ h2 {
     box-sizing: border-box;
 }
 
-.task-title-block:hover {
+.task-title-block:hover,
+.note-title-block:hover,
+.select-block:hover {
     background-color: #e5e5e5;
+}
+
+.task-title-block.highlighted,
+.note-title-block.highlighted,
+.select-block:active {
+    background-color: #ccc;
+}
+
+.task-title-block h3,
+.note-title-block h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* ------------------------ NOTES/HABITS BLOCKS ------------------------ */
@@ -77,11 +118,11 @@ h2 {
 }
 
 .note-title-block {
-    height: calc(33.33% - 30px/3);
-    width: calc(33.33% - 30px/3);
+    height: calc(25% - 45px/3);
+    width: calc(50% - 15px/2);
     border: 1px solid #ccc;
     background-color: #eee;
-    border-radius: 25px;
+    border-radius: 20px;
 
     display: flex;
     justify-content: center;
@@ -91,16 +132,37 @@ h2 {
     box-sizing: border-box;
 }
 
-.note-title-block:hover {
-    background-color: #e5e5e5;
-}
-
 /* ------------------------ HABITS BLOCK ------------------------ */
 .notes-habits .habits-item {
     width: 50%;
+    height: 100%;
+    padding: 0px 15px;
+
+    overflow-y: auto;
+
     display: flex;
+    box-sizing: border-box;
     justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.habits-item input {
+    width: 15px;
+    height: 15px;
+    margin: 5px 10px 0 0;
+}
+
+.habits-item p {
+    font-size: 18px;
+    margin: 3px 0 0 0;
+    width: calc(100% - 25px);
+    outline: none;
+}
+
+.habits-item .done-toggle {
+    display: flex;
+    margin-bottom: 5px;
 }
 
 /* ------------------------ Modal styling ------------------------ */
@@ -220,24 +282,28 @@ h2 {
 
 /* ------------------------ Scrollbar styling ------------------------ */
 .task-sets::-webkit-scrollbar,
-.note-sets::-webkit-scrollbar {
+.note-sets::-webkit-scrollbar,
+.habits-item::-webkit-scrollbar {
     width: 12px;
 }
 
 .task-sets::-webkit-scrollbar-thumb,
-.note-sets::-webkit-scrollbar-thumb {
+.note-sets::-webkit-scrollbar-thumb,
+.habits-item::-webkit-scrollbar-thumb {
     background-color: #eee;
     border-radius: 6px;
     border: 3px solid #fff;
 }
 
 .task-sets::-webkit-scrollbar-track,
-.note-sets::-webkit-scrollbar-track {
+.note-sets::-webkit-scrollbar-track,
+.habits-item::-webkit-scrollbar-track {
     background-color: #eee;
     border-radius: 6px;
 }
 
 .task-sets:not(:hover)::-webkit-scrollbar-thumb,
-.note-sets:not(:hover)::-webkit-scrollbar-thumb {
+.note-sets:not(:hover)::-webkit-scrollbar-thumb,
+.habits-item:not(:hover)::-webkit-scrollbar-thumb {
     background-color: transparent;
 }

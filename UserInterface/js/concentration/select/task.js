@@ -66,14 +66,14 @@ function taskViewTextContainer(viewTaskBlock, objectData) {
     viewTaskBlock.appendChild(textContainer);
 }
 
-function selectTask(TaskName){
-
-    document.getElementById("viewTask").classList.remove('active');
-    document.getElementById('viewTaskBlock').innerHTML = '';
+function deactivateModalTask(){
+    const modal = document.getElementById("viewTask");
+    const viewTaskBlock = document.getElementById('viewTaskBlock');
+    modal.classList.remove("active");
+    viewTaskBlock.innerHTML = '';
 }
 
-/*  ----------------------------- Requests ----------------------------- */
-
+/* ----------------------------- Requests ----------------------------- */
 // Function to request the list of user tasks titles
 function getTitlesOfTasks() {
     fetch('https://localhost:7131/api/Tasks/GetTitlesOfNotArchivedTasks', {

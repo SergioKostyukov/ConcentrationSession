@@ -237,7 +237,7 @@ function fillObjectsTextContainer(objectBlock, object) {
 
             const deleteButton = document.createElement('button');
             deleteButton.classList.add('delete-toggle-button');
-            deleteButton.textContent = '×';
+            deleteButton.textContent = 'U+00d7';
             deleteButton.style.visibility = 'hidden';
 
             // Add the created elements to doneToggleElement

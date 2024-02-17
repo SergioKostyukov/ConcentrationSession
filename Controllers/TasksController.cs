@@ -64,11 +64,11 @@ public class TasksController : ControllerBase
 
 		if (currentUserID != null)
 		{
-			TaskDataDto? task = _notesService.GetHabits(int.Parse(currentUserID));
+			TaskDataDto? habitsList = _notesService.GetHabits(int.Parse(currentUserID));
 			// Attempt to find habits
-			if (task != null)
+			if (habitsList != null)
 			{
-				return Ok(new { message = "Habits data get successful", habits = task });
+				return Ok(new { message = "Habits data get successful", habits = habitsList });
 			}
 			else
 			{

@@ -44,10 +44,11 @@ function noteViewTextContainer(viewNoteBlock, objectData) {
     viewNoteBlock.appendChild(textContainer);
 }
 
-function selectNote(NoteName) {
-
-    document.getElementById("viewNote").classList.remove('active');
-    document.getElementById('viewNoteBlock').innerHTML = '';
+function deactivateModalNote(){
+    const modal = document.getElementById("viewNote");
+    const viewNoteBlock = document.getElementById('viewNoteBlock');
+    modal.classList.remove("active");
+    viewNoteBlock.innerHTML = '';
 }
 
 /*  ----------------------------- Requests ----------------------------- */
