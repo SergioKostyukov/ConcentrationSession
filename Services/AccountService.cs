@@ -45,7 +45,6 @@ public class AccountService
             var currUser = FindUser(user.tag_name);
             settingsService.SetDefaultSettings(currUser.id);
             tasksService.CreateDefaultTasks(currUser.id);
-            // !!! Add default habit blocks !!!
 
             return true;
         }
@@ -63,14 +62,10 @@ public class AccountService
         {
             // Compare users' database data with user request data
             request.tag_name = request.tag_name.ToLower();
-            var storedUser = FindUser(request.tag_name);
-            if (storedUser == null)
-            {
-                throw new Exception("User not found");
-            }
+            var storedUser = FindUser(request.tag_name) ?? throw new Exception("User not found");
 
-            // If the user was found, verify the password
-            if (BCrypt.Net.BCrypt.Verify(request.password, storedUser.password))
+			// If the user was found, verify the password
+			if (BCrypt.Net.BCrypt.Verify(request.password, storedUser.password))
             {
                 // Create a token
                 var token = CreateToken(storedUser);
@@ -79,7 +74,9 @@ public class AccountService
 
                 var settings = settingsService.GetSettings(storedUser.id);
 
-                return new LoginResponse { Token = token, Settings = settings};
+                var habits_id = tasksService.GetHabits(storedUser.id).id;
+
+                return new LoginResponse { Token = token, Settings = settings, HabitsId = habits_id };
             }
             else
             {
@@ -134,29 +131,25 @@ public class AccountService
     {
         try
         {
-            //UserInfo? storedUser = GetCurrentUser();
-            //if (storedUser == null)
-            //{
-            //    throw new Exception("No such user");
-            //}
+			User? storedUser = FindUserById(request.id) ?? throw new Exception("No such user");
 
-            //// Verify the password
-            //if (BCrypt.Net.BCrypt.Verify(request.old_password, storedUser.password))
-            //{
-            //    // Hash the user's password
-            //    request.password = BCrypt.Net.BCrypt.HashPassword(request.password, BCrypt.Net.BCrypt.GenerateSalt());
+			// Verify the password
+			if (BCrypt.Net.BCrypt.Verify(request.old_password, storedUser.password))
+            {
+                // Hash the user's password
+                request.password = BCrypt.Net.BCrypt.HashPassword(request.password, BCrypt.Net.BCrypt.GenerateSalt());
 
-            //    // Save current user data to Redis
-            //    UpdateUserPassword(request);
+                // Save current user data to Redis
+                UpdateUserPassword(request);
 
-            //    logger.LogInfo($"Update password successful");
+                logger.LogInfo($"Update password successful");
 
-            //    return true;
-            //}
-            //else
-            //{
-            //    throw new Exception("Wrong password");
-            //}
+                return true;
+            }
+            else
+            {
+                throw new Exception("Wrong password");
+            }
             return true;
         }
         catch (Exception ex)
@@ -216,32 +209,56 @@ public class AccountService
     {
         var dbContext = new DataBaseContext();
 
-        var command = "SELECT * FROM users WHERE tag_name = @request";
+        var command = "SELECT * FROM users WHERE tag_name = @request LIMIT 1";
         var parameters = new Dictionary<string, object> { { "@request", request } };
 
-        using (var reader = dbContext.ExecuteQuery(command, parameters))
-        {
-            if (reader.Read())
-            {
-                var user = new User
-                {
-                    id = Convert.ToInt16(reader["id"]),
-                    tag_name = reader["tag_name"].ToString(),
-                    user_name = reader["user_name"].ToString(),
-                    email = reader["email"].ToString(),
-                    password = reader["password"].ToString(),
-                    notifications = Convert.ToBoolean(reader["notifications"])
-                };
+		using var reader = dbContext.ExecuteQuery(command, parameters);
+		if (reader.Read())
+		{
+			var user = new User
+			{
+				id = Convert.ToInt16(reader["id"]),
+				tag_name = reader["tag_name"].ToString(),
+				user_name = reader["user_name"].ToString(),
+				email = reader["email"].ToString(),
+				password = reader["password"].ToString(),
+				notifications = Convert.ToBoolean(reader["notifications"])
+			};
 
-                return user;
-            }
-        }
+			return user;
+		}
 
-        return null;
+		return null;
     }
 
-    // Method to save user data to the DataBase
-    private static void SaveUserToDB(User user)
+	private static User? FindUserById(int request)
+	{
+		var dbContext = new DataBaseContext();
+
+		var command = "SELECT * FROM users WHERE id = @request LIMIT 1";
+		var parameters = new Dictionary<string, object> { { "@request", request } };
+
+		using var reader = dbContext.ExecuteQuery(command, parameters);
+		if (reader.Read())
+		{
+			var user = new User
+			{
+				id = Convert.ToInt16(reader["id"]),
+				tag_name = reader["tag_name"].ToString(),
+				user_name = reader["user_name"].ToString(),
+				email = reader["email"].ToString(),
+				password = reader["password"].ToString(),
+				notifications = Convert.ToBoolean(reader["notifications"])
+			};
+
+			return user;
+		}
+
+		return null;
+	}
+
+	// Method to save user data to the DataBase
+	private static void SaveUserToDB(User user)
     {
         var dbContext = new DataBaseContext();
 
@@ -284,13 +301,12 @@ public class AccountService
     {
         var dbContext = new DataBaseContext();
 
-        var command = "UPDATE users SET password = @Newpassword WHERE id = @id AND password =@Oldpassword;";
+        var command = "UPDATE users SET password = @Newpassword WHERE id = @id;";
 
         var parameters = new Dictionary<string, object>
         {
             { "@id", request.id},
-            { "@Newpassword", request.password },
-            { "@Oldpassword", request.old_password }
+            { "@Newpassword", request.password }
         };
 
         dbContext.ExecuteNonQuery(command, parameters);

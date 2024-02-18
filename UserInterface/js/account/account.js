@@ -67,10 +67,12 @@ function sendUserData(userName, userTag, userEmail) {
         })
         .then(data => {
             console.log(data.message);
-
+            
             // Update cookie`s token
             setCookie("jwtToken", data.user_token, new Date(Date.now() + 12 * 3600 * 1000), "/");
             console.log("Token was updated");
+            
+            getUserInfo();
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -87,6 +89,7 @@ function sendUserPassword(currentPassword, newPassword, confirmNewPassword) {
 
     // Create an object to send data
     var passwordData = {
+        id: getUserId("jwtToken"),
         old_password: currentPassword,
         password: newPassword
     };

@@ -102,6 +102,12 @@ async function deleteNote(NoteName) {
         id: parseInt(noteBlock.querySelector('h3').id),
     };
 
+    // check if this block selected
+    var selectedNote = localStorage.getItem('selected_note');
+    if (selectedNote == parseInt(noteBlock.querySelector('h3').id)) {
+        localStorage.removeItem('selected_note');
+    }
+
     try {
         await serverRequest('Notes/DeleteNote', 'DELETE', requestData);
     } catch (error) {
@@ -117,6 +123,12 @@ async function archiveNote(NoteName) {
         id: parseInt(noteBlock.querySelector('h3').id),
         status: true
     };
+
+    // check if this block selected
+    var selectedNote = localStorage.getItem('selected_note');
+    if (selectedNote == parseInt(noteBlock.querySelector('h3').id)) {
+        localStorage.removeItem('selected_note');
+    }
 
     try {
         await serverRequest('Notes/ArchiveNote', 'PATCH', requestData);

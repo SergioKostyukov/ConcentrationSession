@@ -45,6 +45,11 @@ function addSelectButton(viewObjectBlock, command, image_ = 'add') {
     image.src = `images/${image_}.png`;
     image.alt = 'copy';
     button.setAttribute('onclick', command);
+    if(image_ ==  'add'){
+        button.setAttribute('title', 'Select to session')
+    }else{
+        button.setAttribute('title', 'Unselect from session')
+    }
     button.appendChild(image);
     viewObjectBlock.appendChild(button);
 }

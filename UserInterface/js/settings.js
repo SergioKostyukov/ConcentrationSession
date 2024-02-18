@@ -11,60 +11,6 @@ var themeColorSwitch = document.getElementById('themeColorSwitch');
 var ignoreHabitsSwitch = document.getElementById('ignoreHabitsSwitch');
 var blockSitesSwitch = document.getElementById('blockSitesSwitch');
 
-// Event handler for selecting work period
-workPeriodSelect.addEventListener('change', function () {
-    var selectedWorkPeriod = workPeriodSelect.value;
-    console.log('Selected Work Period:', selectedWorkPeriod);
-});
-
-// Event handler for selecting break period
-breakPeriodSelect.addEventListener('change', function () {
-    var selectedBreakPeriod = breakPeriodSelect.value;
-    console.log('Selected Break Period:', selectedBreakPeriod);
-});
-
-// Event handler for selecting notification sound
-soundSwitch.addEventListener('change', function () {
-    var selectedSound = soundSwitch.checked;
-    console.log('Selected sound:', selectedSound);
-});
-
-// Event handler for selecting day goal
-dayGoalSelect.addEventListener('change', function () {
-    var selectedDayGoal = dayGoalSelect.value;
-    console.log('Selected Day Goal:', selectedDayGoal);
-});
-
-// Event handler for selecting reset time
-resetTimeSelect.addEventListener('change', function () {
-    var selectedResetTime = resetTimeSelect.value;
-    console.log('Selected Reset Time:', selectedResetTime);
-});
-
-// Event handler for selecting weekends
-weekendsSwitch.addEventListener('change', function () {
-    var selectedWeekends = weekendsSwitch.checked;
-    console.log('Selected Weekends:', selectedWeekends);
-});
-
-// Event handler for selecting theme color
-themeColorSwitch.addEventListener('change', function () {
-    var selectedThemeColor = themeColorSwitch.checked;
-    console.log('Selected theme color:', selectedThemeColor);
-});
-
-// Event handler for selecting habits ignore
-ignoreHabitsSwitch.addEventListener('change', function () {
-    var selectedignoreHabits = ignoreHabitsSwitch.checked;
-    console.log('Selected habits ignore:', selectedignoreHabits);
-});
-
-// Event handler for selecting sites block
-blockSitesSwitch.addEventListener('change', function () {
-    var selectedBlockSites = blockSitesSwitch.checked;
-    console.log('Selected sites block:', selectedBlockSites);
-});
-
 // Function to enable edit mode
 function enableEditMode(blockId) {
     var inputs = document.querySelectorAll(`#${blockId} select, #${blockId} input`);
@@ -132,6 +78,9 @@ function saveChanges(blockId) {
         enableEditMode(blockId);
     };
 }
+
+
+/* ----------------------------- Requests ----------------------------- */
 
 // Function to send session settings to the server
 function sendSessionSettings(request) {
@@ -225,6 +174,8 @@ function sendOtherSettings(request) {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
+/* ----------------------------- Initial setup  ----------------------------- */
 
 // Function to restore saved values when the page loads
 function restoreSavedValues(blockId) {

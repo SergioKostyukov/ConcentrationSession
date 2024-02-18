@@ -90,13 +90,7 @@ function logout() {
 
     console.log('Logout successful');
 
-    if (!window.location.href.endsWith('index.html')) {
-        window.location.href = 'index.html';
-    }
-    else {
-        updateProfileButtonText();
-        toggleUserMenu(); // Update the menu after logout
-    }
+    window.location.href = 'login.html';
 }
 
 // Close the menu if the user clicks outside of it

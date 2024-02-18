@@ -32,6 +32,27 @@ function addNewContent(modal_id) {
     newParagraph.focus();
 }
 
+function addNewContentAfter(activeElement) {
+    const newContentElement = document.createElement('div');
+    newContentElement.classList.add('done-toggle');
+    const uniqueId = generateUniqueId();
+    newContentElement.id = uniqueId;
+
+    newContentElement.innerHTML = `
+            <input type="checkbox" id="breakToggle" />
+            <p contenteditable="true"></p>
+            <button class="delete-toggle-button" onclick="deleteToggle('${uniqueId}')">✖</button>
+    `;
+
+    // Insert the new content element after the focused element
+    activeElement.parentNode.insertAdjacentElement('afterend', newContentElement);
+
+    // Set focus to the new paragraph
+    const newParagraph = newContentElement.querySelector('p');
+    newParagraph.contentEditable = true;
+    newParagraph.focus();
+}
+
 // Deleting a text element
 function deleteToggle(toggleId) {
     const toggleToDelete = document.getElementById(toggleId);
@@ -97,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Save the object to the DB and the main menu
     saveTaskButton.addEventListener("click", function () {
-        if(addTask("newTask")){
+        if (addTask("newTask")) {
             // Close the modal window
             modal.classList.remove("active");
             resetTaskBlock("newTask");
@@ -113,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (activeElement.tagName === 'P' && activeElement.isContentEditable) {
                 // Trigger the function to add a new block
                 event.preventDefault();
-                addNewContent("newTask");
+                addNewContentAfter(activeElement);
             }
         }
     });
@@ -154,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (activeElement.tagName === 'P' && activeElement.isContentEditable) {
                 // Trigger the function to add a new block
                 event.preventDefault();
-                addNewContent("updateTask");
+                addNewContentAfter(activeElement);
             }
         }
     });
@@ -182,10 +203,21 @@ function fillUpdateTextContainer(updateTaskBlock, objectBlock) {
         checkbox.checked = content.querySelector("#breakToggle").checked;
         doneToggleElement.appendChild(checkbox);
 
+        checkbox.addEventListener("change", function () {
+            if (this.checked) {
+                paragraph.classList.add("line-through");
+            } else {
+                paragraph.classList.remove("line-through");
+            }
+        });
+
         // Copy the <p> element and make it editable
         const paragraph = document.createElement('p');
         paragraph.contentEditable = true;
         paragraph.textContent = content.querySelector("p").textContent;
+        if (checkbox.checked) {
+            paragraph.classList.add("line-through");
+        }
         doneToggleElement.appendChild(paragraph);
 
         // Add the delete button
@@ -233,6 +265,9 @@ function fillObjectsTextContainer(objectBlock, object) {
 
             const paragraph = document.createElement('p');
             paragraph.contentEditable = false;
+            if (checkbox.checked) {
+                paragraph.classList.add("line-through");
+            }
             paragraph.textContent = objectContent.text;
 
             const deleteButton = document.createElement('button');
@@ -255,7 +290,7 @@ function fillObjectsTextContainer(objectBlock, object) {
 
 async function findHabbits() {
     const habits = await getHabitsData();
-    
+
     if (habits == null) {
         console.log("No habits available");
     }

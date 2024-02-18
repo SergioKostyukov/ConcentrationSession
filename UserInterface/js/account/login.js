@@ -35,13 +35,20 @@ function login() {
         },
         body: JSON.stringify(userLoginData),
     }).then(response => {
-        if (!response.ok) {
+        if (response.status === 200) {
+            return response.json();
+        } else if (response.status === 400) {
+            return response.json().then(data => {
+                throw new Error(data.message);
+            });
+        } else {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json();
     }).then(data => {
         // Set cookie with token
         setCookie("jwtToken", data.user_token, new Date(Date.now() + 12 * 3600 * 1000), "/");
+
+        localStorage.setItem('habits_id', data.habits_id);
 
         // Save settings data to localStorage
         localStorage.setItem('work_time', data.settings.work_time);
@@ -61,9 +68,9 @@ function login() {
         window.location.href = 'index.html';
     }).catch(error => {
         // Display error message and clear input fields
-        alert(data.message + '. Please check your credentials.');
+        alert(error.message + '. Please check your credentials.');
         clearInputFields();
-        console.error('Error:', error);
+        console.error(error);
     });
 }
 
@@ -74,6 +81,11 @@ function clearInputFields() {
     inputFields.forEach(input => {
         input.value = '';
     });
+
+    // Remove empty fields from userLoginData
+    for (const field in userLoginData) {
+        userLoginData[field] = '';
+    }
 }
 
 // Function to validate a field
@@ -82,7 +94,7 @@ function validateFields() {
 
     // Validation for empty fields
     for (const field in userLoginData) {
-        if (userLoginData[field] === "") {
+        if (userLoginData[field] === '') {
             displayError(field, ERROR_MESSAGES[field]);
             is_error = true;
         }

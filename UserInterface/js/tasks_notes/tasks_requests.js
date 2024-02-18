@@ -93,11 +93,12 @@ async function addTask(blockName) {
 // Function to request updating a task
 async function updateData(blockName) {
     const taskBlock = document.getElementById(blockName);
-    // if(taskBlock.querySelector("h3").textContent == "Habits" && blockName == "updateTask"){
-    //     console.log("Can`t save task with title like this");
-    //     alert("Incorrect title, please change it");
-    //     return false;
-    // }
+    const tasktitle = taskBlock.querySelector("h3");
+    if(tasktitle.textContent == "Habits" && tasktitle.id != localStorage.getItem('habits_id')){
+        console.log("Can`t save task with title like this");
+        alert("Incorrect title, please change it");
+        return false;
+    }
     const pinButton = taskBlock.querySelector(".pin-button");
 
     // Get the content of "done-toggle" elements
@@ -166,6 +167,12 @@ async function deleteTask(TaskName){
         id: parseInt(taskBlock.querySelector('h3').id),
     };
 
+    // check if this block selected
+    var selectedTask = localStorage.getItem('selected_task');
+    if (selectedTask == parseInt(taskBlock.querySelector('h3').id)) {
+        localStorage.removeItem('selected_task');
+    }
+
     try {
         await serverRequest('Tasks/DeleteTask', 'DELETE', requestData);
     } catch (error) {
@@ -181,6 +188,12 @@ async function archiveTask(TaskName){
         id: parseInt(taskBlock.querySelector('h3').id),
         status: true
     };
+
+     // check if this block selected
+     var selectedTask = localStorage.getItem('selected_task');
+     if (selectedTask == parseInt(taskBlock.querySelector('h3').id)) {
+         localStorage.removeItem('selected_task');
+     }
 
     try {
         await serverRequest('Tasks/ArchiveTask', 'PATCH', requestData);

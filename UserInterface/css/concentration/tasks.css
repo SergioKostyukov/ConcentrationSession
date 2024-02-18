@@ -67,6 +67,8 @@ h2 {
 .task-title-block {
     height: calc(33.33% - 30px/3);
     width: calc(20% - 60px/5);
+    min-width: 100px;
+    min-height: 50px;
     border: 1px solid #ccc;
     background-color: #eee;
     border-radius: 25px;
@@ -165,6 +167,11 @@ h2 {
     margin-bottom: 5px;
 }
 
+.done-toggle p.line-through {
+    text-decoration: line-through;
+    color: #999; 
+}
+
 /* ------------------------ Modal styling ------------------------ */
 .modal {
     display: none;
@@ -186,7 +193,7 @@ h2 {
 .modal-block {
     width: 20%;
     min-width: 300px;
-    max-height: 700px;
+    max-height: 500px;
     padding: 20px;
     
     position: absolute;
@@ -199,9 +206,6 @@ h2 {
     border-radius: 30px;
     
     text-align: left;
-    text-decoration: none;
-    color: #000;
-    overflow: hidden;
 }
 
 .modal-block h3 {
@@ -212,7 +216,7 @@ h2 {
 }
 
 .modal-block .text-container {
-    max-height: calc(100% - 84px);
+    max-height: 450px;
     margin-top: 0px;
     overflow-y: auto;
 }
@@ -283,13 +287,15 @@ h2 {
 /* ------------------------ Scrollbar styling ------------------------ */
 .task-sets::-webkit-scrollbar,
 .note-sets::-webkit-scrollbar,
-.habits-item::-webkit-scrollbar {
+.habits-item::-webkit-scrollbar,
+.text-container::-webkit-scrollbar {
     width: 12px;
 }
 
 .task-sets::-webkit-scrollbar-thumb,
 .note-sets::-webkit-scrollbar-thumb,
-.habits-item::-webkit-scrollbar-thumb {
+.habits-item::-webkit-scrollbar-thumb,
+.text-container::-webkit-scrollbar-thumb {
     background-color: #eee;
     border-radius: 6px;
     border: 3px solid #fff;
@@ -297,13 +303,15 @@ h2 {
 
 .task-sets::-webkit-scrollbar-track,
 .note-sets::-webkit-scrollbar-track,
-.habits-item::-webkit-scrollbar-track {
+.habits-item::-webkit-scrollbar-track,
+.text-container::-webkit-scrollbar-track {
     background-color: #eee;
     border-radius: 6px;
 }
 
 .task-sets:not(:hover)::-webkit-scrollbar-thumb,
 .note-sets:not(:hover)::-webkit-scrollbar-thumb,
-.habits-item:not(:hover)::-webkit-scrollbar-thumb {
+.habits-item:not(:hover)::-webkit-scrollbar-thumb,
+.text-container:not(:hover)::-webkit-scrollbar-thumb {
     background-color: transparent;
 }

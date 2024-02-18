@@ -72,6 +72,11 @@ function clearInputFields() {
     inputFields.forEach(input => {
         input.value = '';
     });
+
+    // Remove empty fields from userData
+    for (const field in userData) {
+        userData[field] = '';
+    }
 }
 
 // Function to validate a field
@@ -89,13 +94,13 @@ function validateFields() {
 
     // Validation for email domain
     if (!userData.email.endsWith('@gmail.com')) {
-        displayError('Email', ERROR_MESSAGES.email);
+        displayError('email', ERROR_MESSAGES.email);
         is_error = true;
     }
 
     // Validation for password match
     if (userData.password !== userData.confirm_password) {
-        displayError('ConfirmPassword', ERROR_MESSAGES.confirm_password);
+        displayError('confirm_password', ERROR_MESSAGES.confirm_password);
         is_error = true;
     }
 

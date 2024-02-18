@@ -4,4 +4,5 @@ public class LoginResponse
 {
     public string? Token { get; set; }
     public Settings Settings { get; set; }
+    public int HabitsId { get; set; }
 }

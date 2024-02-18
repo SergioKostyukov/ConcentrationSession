@@ -73,7 +73,7 @@ public class AccountController : ControllerBase
 
         if (loginResponse.Token != "")
         {
-            return Ok(new { message = "User login successfully", user_token = loginResponse.Token, settings = loginResponse.Settings });
+            return Ok(new { message = "User login successfully", user_token = loginResponse.Token, settings = loginResponse.Settings, habits_id = loginResponse.HabitsId });
         }
         else
         {

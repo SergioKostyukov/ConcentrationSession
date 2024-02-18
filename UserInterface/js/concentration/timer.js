@@ -17,7 +17,7 @@ function updateBreaksNumber(){
         let break_time = parseFloat(localStorage.getItem('break_time'));
         numberBreksElement.textContent = "Number of breaks: " + Math.floor(timerValue / (work_time + break_time));
     }else{
-        numberBreksElement.textContent = "Number of breaks: 0";
+        numberBreksElement.textContent = "You will have no breaks";
     }
 }
 

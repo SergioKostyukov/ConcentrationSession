@@ -28,6 +28,9 @@ function displayHabits(habits) {
             const paragraph = document.createElement('p');
             paragraph.contentEditable = false;
             paragraph.textContent = objectContent.text;
+            if (checkbox.checked) {
+                paragraph.classList.add("line-through");
+            }
 
             // Add the created elements to doneToggleElement
             doneToggleElement.appendChild(checkbox);

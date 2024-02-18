@@ -77,3 +77,8 @@ a {
     display: flex;
     align-items: center;
 }
+
+.error-message {
+    margin: -15px 0 15px 0 ;
+    color: rgb(213, 23, 23);
+}

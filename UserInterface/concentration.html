@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Power Of Control</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
+
     <link rel="stylesheet" href="css/base_styles/base.css">
     <link rel="stylesheet" href="css/base_styles/block.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
+
     <link rel="stylesheet" href="css/concentration/concentration.css">
     <link rel="stylesheet" href="css/concentration/timer.css">
     <link rel="stylesheet" href="css/concentration/timer_active.css">
@@ -89,20 +91,26 @@
                     <div class="timer-control">
                         <div class="timer-display" id="timerDisplay">00:00</div>
                         <div class="timer-buttons">
-                            <button class="timer-button" id="increaseButton">+</button>
-                            <button class="timer-button" id="decreaseButton">-</button>
-                            <button class="timer-button" id="resetButton">Reset</button>
+                            <button class="timer-button" id="increaseButton">
+                                <img src="images/arrow_up.png" alt="Increase">
+                            </button>
+                            <button class="timer-button" id="decreaseButton">
+                                <img src="images/arrow_down.png" alt="Reduse">
+                            </button>
+                            <button class="timer-button" id="resetButton">
+                                <img src="images/reset.png" alt="Reset">
+                            </button>
                         </div>
                     </div>
 
-                    <p class="break-info" id="numberBreks">Number of breaks: 0</p>
+                    <p id="numberBreks">Number of breaks: 0</p>
 
                     <div class="break-toggle">
                         <input type="checkbox" id="breakToggle" />
                         <label for="breakToggle">Disable breaks</label>
                     </div>
 
-                    <button class="start-button" id="startButton">Start Timer</button>
+                    <button class="start-button" id="startButton">Start session</button>
                 </div>
 
                 <div class="block goals">
@@ -124,34 +132,19 @@
                         <div class="goal-value" id="seriesValue">0</div>
                     </div>
                 </div>
-
-                <div class="overlay" id="overlay">
-                    <div class="modal">
-                        <div class="modal-content">
-                            <div class="timer-container">
-                                <div id="timer" class="circle-timer"></div>
-                                <div class="timer-buttons">
-                                    <button id="pauseResumeButton">Пауза</button>
-                                    <button id="resetButtonModal">Скинути</button>
-                                    <button id="exitButtonModal">Вийти</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="second-column">
                 <div class="block select">
                     <h2>Select</h2>
                     <div class="block-item select-item">
-                        <button class="select-block" id="select-task">
+                        <button class="select-block" id="select-task" title="Select task">
                             <img alt="Task">
                         </button>
-                        <button class="select-block" id="select-note">
+                        <button class="select-block" id="select-note" title="Select note">
                             <img alt="Note">
                         </button>
-                        <button class="select-block" id="select-habits" onclick="setHabits()">
+                        <button class="select-block" id="select-habits" onclick="setHabits()" title="Activate habits">
                             <img alt="Habits">
                         </button>
                     </div>
@@ -173,20 +166,31 @@
                         </div>
 
                         <div class="habits-item">
-                            
+
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="modal" id="viewTask">
-                    <div class="modal-block" id="viewTaskBlock">
-    
-                    </div>
+            <div class="modal" id="viewTask">
+                <div class="modal-block" id="viewTaskBlock">
+
                 </div>
+            </div>
 
-                <div class="modal" id="viewNote">
-                    <div class="modal-block" id="viewNoteBlock">
-    
+            <div class="modal" id="viewNote">
+                <div class="modal-block" id="viewNoteBlock">
+
+                </div>
+            </div>
+
+            <div class="overlay" id="overlay">
+                <div class="modal" id="sessionModeContent">
+                    <div id="timer" class="circle-timer"></div>
+                    <div class="timer-buttons">
+                        <button id="pauseResumeButton">Пауза</button>
+                        <button id="resetButtonModal">Скинути</button>
+                        <button id="exitButtonModal">Вийти</button>
                     </div>
                 </div>
             </div>

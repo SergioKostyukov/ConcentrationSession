@@ -16,6 +16,7 @@ function fillObject(object, type) {
     archiveImage.src = 'images/folder.png';
     archiveImage.alt = 'archive';
     archiveButton.setAttribute('onclick', `unArchive${type}(${object.id})`);
+    archiveButton.setAttribute('title', 'Unarchive');
     archiveButton.appendChild(archiveImage);
     objectBlock.appendChild(archiveButton);
 
