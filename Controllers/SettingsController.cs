@@ -23,7 +23,8 @@ public class SettingsController : ControllerBase
     [HttpGet]
     public IActionResult GetSettings()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         var settings = _settingsService.GetSettings(int.Parse(currentUserID));
         if (settings != null)

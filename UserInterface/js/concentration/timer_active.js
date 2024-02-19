@@ -2,8 +2,21 @@ let timerInterval;
 let timerValueModal;
 
 document.getElementById("startButton").addEventListener("click", function() {
+    // Зберегти інформацію про стан вікна активності у localStorage
+    localStorage.setItem("overlayActive", "true");
+
     document.getElementById("overlay").style.display = "flex";
+    
     startTimer();
+});
+
+window.addEventListener("load", function() {
+    // Перевірити, чи вікно активності було активоване перед оновленням сторінки
+    var overlayActive = localStorage.getItem("overlayActive");
+    if (overlayActive === "true") {
+        // Відобразити вікно активності
+        document.getElementById("overlay").style.display = "flex";
+    }
 });
 
 document.getElementById("exitButtonModal").addEventListener("click", function() {

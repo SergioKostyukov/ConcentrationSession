@@ -50,10 +50,10 @@ public class SettingsService
     {
         try
         {
-            logger.LogInfo($"{request.user_id}, {request.work_time}");
             UpdateSessionSettings(request);
 
             logger.LogInfo("Session settings updated successful");
+
             return true;
         }
         catch (Exception ex)
@@ -70,6 +70,7 @@ public class SettingsService
             UpdateGoalSettings(request);
 
             logger.LogInfo($"Goal settings updated successful");
+
             return true;
         }
         catch (Exception ex)
@@ -86,6 +87,7 @@ public class SettingsService
 			UpdateOtherSettings(request);
 
 			logger.LogInfo($"Other settings updated successful");
+
 			return true;
 		}
 		catch (Exception ex)

@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Power Of Control</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/base_styles/base.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/navigation_panel.css">
-    <link rel="stylesheet" href="css/base_styles/base.css">
-    <link rel="stylesheet" href="css/tasks.css">
-    <link rel="stylesheet" href="css/archive.css">
+    <link rel="stylesheet" href="css/main_page_body.css">
+    <link rel="stylesheet" href="css/base_styles/block.css">
 </head>
 
 <body>
@@ -26,7 +26,7 @@
         <nav class="user-account">
             <button class="profile-button" onclick="toggleUserMenu()">
                 <img src="images/avatar.png" alt="Avatar" class="user-avatar">
-                <h2>User</h2> 
+                <h2></h2> 
             </button>
             <div class="user-menu" id="userMenu">
                 <div id="userInfo" class="user-info"></div>
@@ -75,25 +75,37 @@
             </div>
         </aside>
 
-        <div class="center-blocks">
-            <div class="half-page" id="tasksArchive">
-                <h1>
-                    Archived Tasks
-                </h1>
-            </div>
-
-            <div class="half-page" id="notesArchive">
-                <h1>
-                    Archived Notes
-                </h1>
-            </div>
-        </div>
+        <section class="center-blocks">
+            <a href="concentration.html" class="block"
+                style="background-image: url('images/concentration.jpg');">
+                <h2>Concentration session</h2>
+            </a>
+            <a href="tasks.html" class="block"
+                style="background-image: url('images/tasks.jpg');">
+                <h2>Tasks</h2>
+            </a>
+            <a href="notes.html" class="block"
+                style="background-image: url('images/notes.jpg');">
+                <h2>Notes</h2>
+            </a>
+            <a href="statistic.html" class="block"
+                style="background-image: url('images/statistic.jpg');">
+                <h2>Statistic and result tracking</h2>
+            </a>
+            <a href="settings.html" class="block"
+                style="background-image: url('images/settings.jpg');">
+                <h2>Settings</h2>
+            </a>
+            <a href="about.html" class="block"
+                style="background-image: url('images/about.jpg');">
+                <h2>About</h2>
+            </a>
+        </section>
     </main>
 
     <script src="js/account/cookies.js"></script>
     <script src="js/account_bar.js"></script>
     <script src="js/navigation_panel.js"></script>
-    <script src="js/archive.js"></script>
 
 </body>
 

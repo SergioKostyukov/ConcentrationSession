@@ -11,7 +11,7 @@
     justify-content: center;
 }
 
-.modal {
+.overlay .modal {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -63,4 +63,30 @@
     border: none;
     border-radius: 5px;
     margin-top: 20px;
+}
+
+
+.clock {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.circle {
+    fill: none;
+    stroke: #4CAF50; 
+    stroke-width: 10; 
+    stroke-dasharray: 565;
+    stroke-dashoffset: 0;
+    transform: rotate(-90deg); 
+    transform-origin: center; 
+    transition: stroke-dashoffset 1s linear; 
+}
+
+.time {
+    font-size: 24px;
+    font-weight: bold;
+    fill: #333;
+    dominant-baseline: middle;
+    text-anchor: middle;
 }

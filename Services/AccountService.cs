@@ -6,211 +6,212 @@ namespace PowerOfControl.Services;
 
 public class AccountService
 {
-    private static readonly string LogFilePath = "./Data/account_log.txt";
-    private readonly JwtSettings jwtSettings;
-    private readonly Logger logger;
-    private readonly SettingsService settingsService;
-    private readonly TasksService tasksService;
+	private static readonly string LogFilePath = "./Data/account_log.txt";
+	private readonly JwtSettings jwtSettings;
+	private readonly Logger logger;
+	private readonly SettingsService settingsService;
+	private readonly TasksService tasksService;
 
-    public AccountService(JwtSettings jwtSettings, SettingsService settingsService, TasksService tasksService)
-    {
-        this.jwtSettings = jwtSettings;
-        this.settingsService = settingsService;
+	public AccountService(JwtSettings jwtSettings, SettingsService settingsService, TasksService tasksService)
+	{
+		this.jwtSettings = jwtSettings;
+		this.settingsService = settingsService;
 		this.tasksService = tasksService;
 		logger = new Logger(LogFilePath);
-    }
+	}
 
-    // Method to handle user authorization
-    public bool AuthorizationUser(User user)
-    {
-        try
-        {
-            // Hash the user's password
-            user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
-            user.email = user.email.ToLower();
-            user.tag_name = user.tag_name.ToLower();
+	// Method to handle user authorization
+	public bool AuthorizationUser(User user)
+	{
+		try
+		{
+			// Hash the user's password
+			user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
+			user.email = user.email.ToLower();
+			user.tag_name = user.tag_name.ToLower();
 
-            // Check if the user already exists
-            var userExist = FindUser(user.tag_name);
-            if (userExist != null)
-            {
-                throw new Exception($"User already exists: {JsonConvert.SerializeObject(user)}");
-            }
+			// Check if the user already exists
+			var userExist = FindUser(user.tag_name);
+			if (userExist != null)
+			{
+				throw new Exception($"User already exists: {JsonConvert.SerializeObject(user)}");
+			}
 
-            // Save user data to the database
-            SaveUserToDB(user);
+			// Save user data to the database
+			SaveUserToDB(user);
 
-            logger.LogInfo($"New user authorized");
+			logger.LogInfo($"New user authorized");
 
-            var currUser = FindUser(user.tag_name);
-            settingsService.SetDefaultSettings(currUser.id);
-            tasksService.CreateDefaultTasks(currUser.id);
+			// Set default params for new user
+			var currUserId = FindUserId(user.tag_name);
+			settingsService.SetDefaultSettings(currUserId);
+			tasksService.CreateDefaultTasks(currUserId);
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"Authorization error: {ex.Message}");
-            return false;
-        }
-    }
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Authorization error: {ex.Message}");
+			return false;
+		}
+	}
 
-    // Method to handle user login
-    public LoginResponse LoginUser(UserLoginDto request)
-    {
-        try
-        {
-            // Compare users' database data with user request data
-            request.tag_name = request.tag_name.ToLower();
-            var storedUser = FindUser(request.tag_name) ?? throw new Exception("User not found");
+	// Method to handle user login
+	public LoginResponse LoginUser(UserLoginDto request)
+	{
+		try
+		{
+			// Compare users' database data with user request data
+			request.tag_name = request.tag_name.ToLower();
+			var storedUser = FindUser(request.tag_name) ?? throw new Exception("User not found");
 
 			// If the user was found, verify the password
 			if (BCrypt.Net.BCrypt.Verify(request.password, storedUser.password))
-            {
-                // Create a token
-                var token = CreateToken(storedUser);
+			{
+				// Create a token
+				var token = CreateToken(storedUser);
 
-                logger.LogInfo($"Login successful");
+				logger.LogInfo($"Login successful");
 
-                var settings = settingsService.GetSettings(storedUser.id);
+				// Get user params to save it in local storage
+				var settings = settingsService.GetSettings(storedUser.id);
+				var habits_id = tasksService.GetHabits(storedUser.id).id;
 
-                var habits_id = tasksService.GetHabits(storedUser.id).id;
+				return new LoginResponse { Token = token, Settings = settings, HabitsId = habits_id };
+			}
+			else
+			{
+				throw new Exception("Wrong password");
+			}
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Login error: {ex.Message}");
+			return new LoginResponse { Token = "", Settings = null, HabitsId = -1 }; ;
+		}
+	}
 
-                return new LoginResponse { Token = token, Settings = settings, HabitsId = habits_id };
-            }
-            else
-            {
-                throw new Exception("Wrong password");
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"Login error: {ex.Message}");
-            return new LoginResponse { Token = "", Settings = null }; ;
-        }
-    }
+	// Method to handle user data update 
+	public string? UpdateUser(UserDto request, string currentUserTag)
+	{
+		try
+		{
+			request.email = request.email.ToLower();
+			request.tag_name = request.tag_name.ToLower();
+			// Check if user with this tag already exists
+			if (currentUserTag != request.tag_name)
+			{
+				var userExist = FindUser(request.tag_name);
+				if (userExist != null)
+				{
+					throw new Exception($"User with this tag already exists: {JsonConvert.SerializeObject(request.tag_name)}");
+				}
+			}
+			// update user info in DataBase
+			UpdateUserData(request);
 
-    // Method to handle user data update 
-    public string? UpdateUser(UserDto request, string currentUserTag)
-    {
-        try
-        {
-            // update user info in DataBase
-            request.email = request.email.ToLower();
-            request.tag_name = request.tag_name.ToLower();
-            if (currentUserTag != request.tag_name)
-            {
-                // Check if the user already exists
-                var userExist = FindUser(request.tag_name);
-                if (userExist != null)
-                {
-                    throw new Exception($"User with this tag already exists: {JsonConvert.SerializeObject(request.tag_name)}");
-                }
-            }
-            UpdateUserData(request);
+			logger.LogInfo($"User data updated successful");
 
-            logger.LogInfo($"User data updated successful");
+			// Update (create new) token
+			var storedUser = FindUser(request.tag_name);
+			var token = CreateToken(storedUser);
 
-            // Update (create new) token
-            var storedUser = FindUser(request.tag_name);
-            var token = CreateToken(storedUser);
+			logger.LogInfo($"User token updated successful");
 
-            logger.LogInfo($"User token updated successful");
+			return token;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Update user data error: {ex.Message}");
+			return "";
+		}
+	}
 
-            return token;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"Update user data error: {ex.Message}");
-            return "";
-        }
-    }
-
-    // Method to handle user password update
-    public bool UpdatePassword(UpdatePasswordDto request)
-    {
-        try
-        {
+	// Method to handle user password update
+	public bool UpdatePassword(UpdatePasswordDto request)
+	{
+		try
+		{
+			// Compare users' database data with user request data
 			User? storedUser = FindUserById(request.id) ?? throw new Exception("No such user");
 
 			// Verify the password
 			if (BCrypt.Net.BCrypt.Verify(request.old_password, storedUser.password))
-            {
-                // Hash the user's password
-                request.password = BCrypt.Net.BCrypt.HashPassword(request.password, BCrypt.Net.BCrypt.GenerateSalt());
+			{
+				// Hash the user's password
+				request.password = BCrypt.Net.BCrypt.HashPassword(request.password, BCrypt.Net.BCrypt.GenerateSalt());
 
-                // Save current user data to Redis
-                UpdateUserPassword(request);
+				// Save current user data to Redis
+				UpdateUserPassword(request);
 
-                logger.LogInfo($"Update password successful");
+				logger.LogInfo($"Update password successful");
 
-                return true;
-            }
-            else
-            {
-                throw new Exception("Wrong password");
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"Update user password error: {ex.Message}");
-            return false;
-        }
-    }
+				return true;
+			}
+			else
+			{
+				throw new Exception("Wrong password");
+			}
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Update user password error: {ex.Message}");
+			return false;
+		}
+	}
 
-    // Method to handle user deletion
-    public bool DeleteUser(string id)
-    {
-        try
-        {
-            DeleteUserFromDB(id);
+	// Method to handle user deletion
+	public bool DeleteUser(string id)
+	{
+		try
+		{
+			DeleteUserFromDB(id);
 
-            logger.LogInfo($"Delete successful");
+			logger.LogInfo($"Delete successful");
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"Delete error: {ex.Message}");
-            return false;
-        }
-    }
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Delete error: {ex.Message}");
+			return false;
+		}
+	}
 
-    // Method to get the curr user
-    public User? GetCurrentUser(string? tag_name)
-    {
-        if (tag_name == null) return null;
+	// Method to get the curr user
+	public User? GetCurrentUser(string? tag_name)
+	{
+		if (tag_name == null) return null;
 
-        var currUserInfo = FindUser(tag_name);
+		var currUserInfo = FindUser(tag_name);
 
-        return currUserInfo;
-    }
+		return currUserInfo;
+	}
 
-    // Method to create new token
-    private string CreateToken(User storedUser)
-    {
-        var token = JwtHelpers.JwtHelpers.GenTokenkey(new UserDto()
-        {
-            id = storedUser.id,
-            user_name = storedUser.user_name,
-            tag_name = storedUser.tag_name,
-            email = storedUser.email,
-            notifications = storedUser.notifications,
-        }, jwtSettings);
+	// Method to create new token
+	private string CreateToken(User storedUser)
+	{
+		var token = JwtHelpers.JwtHelpers.GenTokenkey(new UserDto()
+		{
+			id = storedUser.id,
+			user_name = storedUser.user_name,
+			tag_name = storedUser.tag_name,
+			email = storedUser.email,
+			notifications = storedUser.notifications,
+		}, jwtSettings);
 
-        return token;
-    }
+		return token;
+	}
 
-    // ---------------- DATABASE methods ----------------
+	// ---------------- DATABASE methods ----------------
 
-    // Method to find a user in the DataBase
-    private static User? FindUser(string request)
-    {
-        var dbContext = new DataBaseContext();
+	// Method to find a user in the DataBase
+	private static User? FindUser(string request)
+	{
+		var dbContext = new DataBaseContext();
 
-        var command = "SELECT * FROM users WHERE tag_name = @request LIMIT 1";
-        var parameters = new Dictionary<string, object> { { "@request", request } };
+		var command = "SELECT * FROM users WHERE tag_name = @request LIMIT 1";
+		var parameters = new Dictionary<string, object> { { "@request", request } };
 
 		using var reader = dbContext.ExecuteQuery(command, parameters);
 		if (reader.Read())
@@ -229,8 +230,26 @@ public class AccountService
 		}
 
 		return null;
-    }
+	}
 
+	// Method to find a user id in the DataBase
+	private static int FindUserId(string request)
+	{
+		var dbContext = new DataBaseContext();
+
+		var command = "SELECT id FROM users WHERE tag_name = @request LIMIT 1";
+		var parameters = new Dictionary<string, object> { { "@request", request } };
+
+		using var reader = dbContext.ExecuteQuery(command, parameters);
+		if (reader.Read())
+		{
+			return Convert.ToInt16(reader["id"]);
+		}
+
+		return -1;
+	}
+
+	// Method to find a user in the DataBase by id
 	private static User? FindUserById(int request)
 	{
 		var dbContext = new DataBaseContext();
@@ -259,71 +278,71 @@ public class AccountService
 
 	// Method to save user data to the DataBase
 	private static void SaveUserToDB(User user)
-    {
-        var dbContext = new DataBaseContext();
+	{
+		var dbContext = new DataBaseContext();
 
-        var command = "INSERT INTO users(user_name, tag_name, email, password, notifications) " +
-            "VALUES (@user_name, @tag_name, @email, @password, @notifications)";
+		var command = "INSERT INTO users(user_name, tag_name, email, password, notifications) " +
+			"VALUES (@user_name, @tag_name, @email, @password, @notifications)";
 
-        var parameters = new Dictionary<string, object>
-        {
-            { "@user_name", user.user_name },
-            { "@tag_name", user.tag_name },
-            { "@email", user.email },
-            { "@password", user.password },
-            { "@notifications", user.notifications }
-        };
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@user_name", user.user_name },
+			{ "@tag_name", user.tag_name },
+			{ "@email", user.email },
+			{ "@password", user.password },
+			{ "@notifications", user.notifications }
+		};
 
-        dbContext.ExecuteNonQuery(command, parameters);
-    }
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
 
-    // Method to update user data in DataBase
-    private static void UpdateUserData(UserDto request)
-    {
-        var dbContext = new DataBaseContext();
+	// Method to update user data in DataBase
+	private static void UpdateUserData(UserDto request)
+	{
+		var dbContext = new DataBaseContext();
 
-        var command = "UPDATE users SET user_name = @user_name, tag_name = @tag_name, email = @email, notifications = @notifications WHERE id = @id;";
+		var command = "UPDATE users SET user_name = @user_name, tag_name = @tag_name, email = @email, notifications = @notifications WHERE id = @id;";
 
-        var parameters = new Dictionary<string, object>
-        {
-            { "@id", request.id},
-            { "@user_name", request.user_name },
-            { "@tag_name", request.tag_name },
-            { "@email", request.email },
-            { "@notifications", request.notifications }
-        };
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@id", request.id},
+			{ "@user_name", request.user_name },
+			{ "@tag_name", request.tag_name },
+			{ "@email", request.email },
+			{ "@notifications", request.notifications }
+		};
 
-        dbContext.ExecuteNonQuery(command, parameters);
-    }
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
 
-    // Method to update user password 
-    private static void UpdateUserPassword(UpdatePasswordDto request)
-    {
-        var dbContext = new DataBaseContext();
+	// Method to update user password 
+	private static void UpdateUserPassword(UpdatePasswordDto request)
+	{
+		var dbContext = new DataBaseContext();
 
-        var command = "UPDATE users SET password = @Newpassword WHERE id = @id;";
+		var command = "UPDATE users SET password = @Newpassword WHERE id = @id;";
 
-        var parameters = new Dictionary<string, object>
-        {
-            { "@id", request.id},
-            { "@Newpassword", request.password }
-        };
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@id", request.id},
+			{ "@Newpassword", request.password }
+		};
 
-        dbContext.ExecuteNonQuery(command, parameters);
-    }
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
 
-    // Method to delate user data from the DataBase
-    private static void DeleteUserFromDB(string id)
-    {
-        var dbContext = new DataBaseContext();
+	// Method to delate user data from the DataBase
+	private static void DeleteUserFromDB(string id)
+	{
+		var dbContext = new DataBaseContext();
 
-        var command = "DELETE FROM users WHERE id = @id;";
+		var command = "DELETE FROM users WHERE id = @id;";
 
-        var parameters = new Dictionary<string, object>
-        {
-            { "@id", int.Parse(id)}
-        };
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@id", int.Parse(id)}
+		};
 
-        dbContext.ExecuteNonQuery(command, parameters);
-    }
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
 }

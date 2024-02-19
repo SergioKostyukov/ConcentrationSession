@@ -44,7 +44,6 @@ public class TasksController : ControllerBase
     [HttpPost]
     public IActionResult CopyTask([FromBody] TaskStatusUpdateDto request)
     {
-        // Attempt to add a new task
         if (_notesService.CopyTask(request.id))
         {
             return Ok(new { message = "Task copy successfully" });
@@ -60,12 +59,13 @@ public class TasksController : ControllerBase
 	[HttpGet]
 	public IActionResult GetHabits()
 	{
+		// Get user id from request data
 		var currentUserID = User.FindFirst("id")?.Value;
 
 		if (currentUserID != null)
 		{
-			TaskDataDto? habitsList = _notesService.GetHabits(int.Parse(currentUserID));
 			// Attempt to find habits
+			TaskDataDto? habitsList = _notesService.GetHabits(int.Parse(currentUserID));
 			if (habitsList != null)
 			{
 				return Ok(new { message = "Habits data get successful", habits = habitsList });
@@ -81,17 +81,44 @@ public class TasksController : ControllerBase
 		}
 	}
 
+	// GET: api/Tasks/GetTaskById
+	[Authorize]
+	[HttpGet]
+	public IActionResult GetTaskById([FromQuery] int id)
+	{
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
+
+		if (currentUserID != null)
+		{
+			TaskViewDto? task = _notesService.GetTaskById(id);
+			if (task != null)
+			{
+				return Ok(new { message = "Task data get successful", task = task });
+			}
+			else
+			{
+				return Ok(new { message = "There are no such task" });
+			}
+		}
+		else
+		{
+			return Ok(new { message = "User not authorized" });
+		}
+	}
+
 	// GET: api/Tasks/GetNotArchivedTasks
 	[Authorize]
     [HttpGet]
     public IActionResult GetNotArchivedTasks()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<TaskDataDto>? tasks = _notesService.GetNotArchivedTasks(int.Parse(currentUserID));
             // Attempt to find not archived tasks
+            List<TaskDataDto>? tasks = _notesService.GetNotArchivedTasks(int.Parse(currentUserID));
             if (tasks != null)
             {
                 return Ok(new { message = "Task data get successful", tasksList = tasks });
@@ -112,12 +139,13 @@ public class TasksController : ControllerBase
     [HttpGet]
     public IActionResult GetArchivedTasks()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<TaskDataDto>? tasks = _notesService.GetArchivedTasks(int.Parse(currentUserID));
 			// Attempt to find archived tasks
+            List<TaskDataDto>? tasks = _notesService.GetArchivedTasks(int.Parse(currentUserID));
 			if (tasks != null)
             {
                 return Ok(new { message = "Task data get successful", tasksList = tasks });
@@ -138,11 +166,13 @@ public class TasksController : ControllerBase
     [HttpGet]
     public IActionResult GetTitlesOfNotArchivedTasks()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<TaskTitleDto>? tasksTitles = _notesService.GetTitlesOfNotArchivedTasks(int.Parse(currentUserID));
+			// Attempt to get tasks
+			List<TaskTitleDto>? tasksTitles = _notesService.GetTitlesOfNotArchivedTasks(int.Parse(currentUserID));
             if (tasksTitles != null)
             {
                 return Ok(new { message = "Tasks titles get successful", tasksList = tasksTitles });
@@ -150,31 +180,6 @@ public class TasksController : ControllerBase
             else
             {
                 return Ok(new { message = "There are no tasks" });
-            }
-        }
-        else
-        {
-            return Ok(new { message = "User not authorized" });
-        }
-    }
-
-    // GET: api/Tasks/GetTaskById
-    [Authorize]
-    [HttpGet]
-    public IActionResult GetTaskById([FromQuery] int id)
-    {
-        var currentUserID = User.FindFirst("id")?.Value;
-
-        if (currentUserID != null)
-        {
-            TaskViewDto? task = _notesService.GetTaskById(id);
-            if (task != null)
-            {
-                return Ok(new { message = "Task data get successful", task = task });
-            }
-            else
-            {
-                return Ok(new { message = "There are no such task" });
             }
         }
         else

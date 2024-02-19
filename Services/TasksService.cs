@@ -30,7 +30,6 @@ public class TasksService
 		SaveTaskToDB(newTask);
 	}
 
-	// Middleware
 	public bool CreateTask(TaskData task)
 	{
 		try
@@ -48,11 +47,37 @@ public class TasksService
 		}
 	}
 
+	public bool CopyTask(int id)
+	{
+		try
+		{
+			TaskData task = FindTask(id);
+
+			SaveTaskToDB(task);
+
+			logger.LogInfo($"Task copied");
+
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Error task copy: {ex.Message}");
+			return false;
+		}
+	}
+
 	public TaskDataDto? GetHabits(int user_id)
 	{
 		var userHabits = FindHabits(user_id);
 
 		return userHabits;
+	}
+
+	public TaskViewDto? GetTaskById(int id)
+	{
+		var task = FindTaskView(id);
+
+		return task;
 	}
 
 	public List<TaskDataDto>? GetNotArchivedTasks(int user_id)
@@ -74,23 +99,6 @@ public class TasksService
 		var userTasksTitles = FindTitlesOfNotArchivedTasks(user_id);
 
 		return userTasksTitles;
-	}
-
-	public TaskViewDto? GetTaskById(int id)
-	{
-		try
-		{
-			TaskViewDto task = FindTaskView(id);
-
-			logger.LogInfo($"Task data finded");
-
-			return task;
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"Error task data update: {ex.Message}");
-			return null;
-		}
 	}
 
 	public bool UpdateTask(TaskUpdateDto request)
@@ -127,34 +135,10 @@ public class TasksService
 		}
 	}
 
-	public bool CopyTask(int id)
-	{
-		try
-		{
-			logger.LogInfo($"Task copy started {id}");
-			TaskData task = FindTask(id);
-
-			logger.LogInfo($"Task finded");
-
-			SaveTaskToDB(task);
-
-			logger.LogInfo($"Task copy finish");
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"Error task copy: {ex.Message}");
-			return false;
-		}
-	}
-
 	public bool ArchiveTask(TaskStatusUpdateDto request)
 	{
 		try
 		{
-			logger.LogInfo($"Task archive started {request.id} {request.status}");
-
 			ArchiveTaskDB(request);
 
 			logger.LogInfo($"Task archived");
@@ -172,8 +156,6 @@ public class TasksService
 	{
 		try
 		{
-			logger.LogInfo($"Task delete started {id}");
-
 			DeleteTaskFromDB(id);
 
 			logger.LogInfo($"Task deleted");
@@ -187,7 +169,7 @@ public class TasksService
 		}
 	}
 
-	// Action functions
+	// ---------------- DATABASE methods ----------------
 	private static void SaveTaskToDB(TaskData task)
 	{
 		var dbContext = new DataBaseContext();
@@ -331,7 +313,7 @@ public class TasksService
 		}
 	}
 
-	private TaskData FindTask(int id)
+	private static TaskData FindTask(int id)
 	{
 		var dbContext = new DataBaseContext();
 
@@ -362,7 +344,7 @@ public class TasksService
 
 	}
 
-	private TaskViewDto FindTaskView(int id)
+	private static TaskViewDto FindTaskView(int id)
 	{
 		var dbContext = new DataBaseContext();
 
@@ -386,7 +368,6 @@ public class TasksService
 		{
 			return null;
 		}
-
 	}
 
 	private static void UpdateTaskData(TaskUpdateDto request)

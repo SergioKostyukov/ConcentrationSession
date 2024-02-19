@@ -39,18 +39,61 @@ public class NotesController : ControllerBase
         }
     }
 
-    // GET: api/Notes/GetNotArchivedNotes
-    [Authorize]
+	// POST: api/Notes/CopyNote
+	[Authorize]
+	[HttpPost]
+	public IActionResult CopyNote([FromBody] NoteStatusUpdateDto request)
+	{
+		if (_notesService.CopyNote(request.id))
+		{
+			return Ok(new { message = "Note copy successfully" });
+		}
+		else
+		{
+			return BadRequest(new { message = "Note copy failed" });
+		}
+	}
+
+	// GET: api/Notes/GetNoteById
+	[Authorize]
+	[HttpGet]
+	public IActionResult GetNoteById([FromQuery] int id)
+	{
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
+
+		if (currentUserID != null)
+		{
+			NoteViewDto note = _notesService.GetNoteById(id);
+			if (note != null)
+			{
+				return Ok(new { message = "Note data get successful", note = note });
+			}
+			else
+			{
+				return Ok(new { message = "There are no such note" });
+			}
+		}
+		else
+		{
+			return Ok(new { message = "User not authorized" });
+		}
+	}
+
+
+	// GET: api/Notes/GetNotArchivedNotes
+	[Authorize]
     [HttpGet]
     public IActionResult GetNotArchivedNotes()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<NoteDataDto> notes = _notesService.GetNotArchivedNotes(int.Parse(currentUserID));
-            // Attempt to add a new note
-            if (notes != null)
+			// Attempt to find not archived notes
+			List<NoteDataDto> notes = _notesService.GetNotArchivedNotes(int.Parse(currentUserID));
+			if (notes != null)
             {
                 return Ok(new { message = "Note data get successful", notesList = notes });
             }
@@ -65,17 +108,18 @@ public class NotesController : ControllerBase
         }
     }
 
-    // GET: api/Notes/GetArchivedNotes
-    [Authorize]
+	// GET: api/Notes/GetArchivedNotes
+	[Authorize]
     [HttpGet]
     public IActionResult GetArchivedNotes()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<NoteDataDto> notes = _notesService.GetArchivedNotes(int.Parse(currentUserID));
-            // Attempt to add a new note
+			// Attempt to find archived notes
+			List<NoteDataDto> notes = _notesService.GetArchivedNotes(int.Parse(currentUserID));
             if (notes != null)
             {
                 return Ok(new { message = "Note data get successful", notesList = notes });
@@ -96,11 +140,13 @@ public class NotesController : ControllerBase
     [HttpGet]
     public IActionResult GetTitlesOfNotArchivedNotes()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         if (currentUserID != null)
         {
-            List<NoteTitleDto> notesTitles = _notesService.GetTitlesOfNotArchivedNotes(int.Parse(currentUserID));
+			// Attempt to get notes
+			List<NoteTitleDto> notesTitles = _notesService.GetTitlesOfNotArchivedNotes(int.Parse(currentUserID));
             if (notesTitles != null)
             {
                 return Ok(new { message = "Notes titles get successful", notesList = notesTitles });
@@ -116,37 +162,11 @@ public class NotesController : ControllerBase
         }
     }
 
-    // GET: api/Notes/GetNoteById
-    [Authorize]
-    [HttpGet]
-    public IActionResult GetNoteById([FromQuery] int id)
-    {
-        var currentUserID = User.FindFirst("id")?.Value;
-
-        if (currentUserID != null)
-        {
-            NoteViewDto note = _notesService.GetNoteById(id);
-            if (note != null)
-            {
-                return Ok(new { message = "Note data get successful", note = note });
-            }
-            else
-            {
-                return Ok(new { message = "There are no such note" });
-            }
-        }
-        else
-        {
-            return Ok(new { message = "User not authorized" });
-        }
-    }
-
     // PATCH: api/Notes/UpdateNote
     [Authorize]
     [HttpPatch]
     public IActionResult UpdateNote([FromBody] NoteUpdateDto request)
     {
-        // Attempt to add a new note
         if (_notesService.UpdateNote(request))
         {
             return Ok(new { message = "Note update successfully" });
@@ -162,7 +182,6 @@ public class NotesController : ControllerBase
     [HttpPatch]
     public IActionResult UpdateNotePin([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new note
         if (_notesService.UpdatePin(request))
         {
             return Ok(new { message = "Note pin update successfully" });
@@ -173,28 +192,11 @@ public class NotesController : ControllerBase
         }
     }
 
-    // POST: api/Notes/CopyNote
-    [Authorize]
-    [HttpPost]
-    public IActionResult CopyNote([FromBody] NoteStatusUpdateDto request)
-    {
-        // Attempt to add a new note
-        if (_notesService.CopyNote(request.id))
-        {
-            return Ok(new { message = "Note copy successfully" });
-        }
-        else
-        {
-            return BadRequest(new { message = "Note copy failed" });
-        }
-    }
-
     // PATCH: api/Notes/ArchiveNote
     [Authorize]
     [HttpPatch]
     public IActionResult ArchiveNote([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new note
         if (_notesService.ArchiveNote(request))
         {
             return Ok(new { message = "Note archive successfully" });
@@ -210,7 +212,6 @@ public class NotesController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteNote([FromBody] NoteStatusUpdateDto request)
     {
-        // Attempt to add a new note
         if (_notesService.DeleteNote(request.id))
         {
             return Ok(new { message = "Note deleted successfully" });

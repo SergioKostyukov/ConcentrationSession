@@ -23,7 +23,7 @@ public class AccountController : ControllerBase
     [HttpGet]
     public IActionResult GetUser()
     {
-        // Attempt to update the user
+        // Get user tag from request data
         var currentUserTag = User.FindFirst("tag_name")?.Value;
 
         // Retrieve current user information
@@ -86,12 +86,11 @@ public class AccountController : ControllerBase
     [HttpPatch]
     public IActionResult UpdateUser(UserDto request)
     {
-        // Attempt to update the user
-        var currentUserTag = User.FindFirst("tag_name").Value;
-
-        var userToken = _authService.UpdateUser(request, currentUserTag);
+		// Get user tag from request data
+		var currentUserTag = User.FindFirst("tag_name").Value;
 
         // Attempt to update user data
+        var userToken = _authService.UpdateUser(request, currentUserTag);
         if (userToken != "")
         {
             return Ok(new { message = "User data update successfully", user_token = userToken });
@@ -123,7 +122,8 @@ public class AccountController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteAccount()
     {
-        var currentUserID = User.FindFirst("id")?.Value;
+		// Get user id from request data
+		var currentUserID = User.FindFirst("id")?.Value;
 
         // Attempt to delete the user
         if ((currentUserID != null) && _authService.DeleteUser(currentUserID))

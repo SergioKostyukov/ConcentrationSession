@@ -63,9 +63,9 @@ function login() {
         localStorage.setItem('ignore_habits', data.settings.ignore_habits);
         localStorage.setItem('block_sites', data.settings.block_sites);
 
-        // Display successful login message and redirect to index page
-        alert(data.message + '. Redirecting to index page.');
-        window.location.href = 'index.html';
+        // Display successful login message and redirect to main page
+        alert(data.message + '. Redirecting to main page.');
+        window.location.href = 'mainpage.html';
     }).catch(error => {
         // Display error message and clear input fields
         alert(error.message + '. Please check your credentials.');
