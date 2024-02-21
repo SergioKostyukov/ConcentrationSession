@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    //--------------------------------TASK UPDATE MODE--------------------------------
+    //--------------------------------TASK VIEW MODE--------------------------------
 
     const modal_update = document.getElementById("viewTask");
     const viewTaskBlock = document.getElementById('viewTaskBlock');
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function ShowModal(taskBlock){
         var id = parseInt(taskBlock.id.replace('block', ''), 10);
-        taskData = await getTaskData(id);
+        var taskData = await getTaskData(id);
         // Pass data to the modal window
         fillViewModal(viewTaskBlock, id, taskData);
     }

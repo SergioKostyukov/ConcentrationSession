@@ -1,7 +1,2 @@
-﻿1. Simple login/signup pages styles (error text color)
-2. Added functionality to update user password
-3. Simple Tasks page changes 
-	a. done tasks are crossed out
-	b. 'Enter' adds a new line after the active one
-	c. the habit block is now unique (can`t create task with this name)
-4. Simple timer block view 
+﻿1. Simple cleanup of server code
+2. Added start page

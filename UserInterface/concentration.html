@@ -110,7 +110,7 @@
                         <label for="breakToggle">Disable breaks</label>
                     </div>
 
-                    <button class="start-button" id="startButton">Start session</button>
+                    <button class="start-button" id="startTimerButton">Start session</button>
                 </div>
 
                 <div class="block goals">
@@ -186,17 +186,30 @@
 
             <div class="overlay" id="overlay">
                 <div class="modal" id="sessionModeContent">
-                    <div id="timer" class="clock">
-                        <svg width="200" height="200">
-                            <circle class="circle" cx="100" cy="100" r="90"></circle>
-                            <text x="50%" y="55%" text-anchor="middle" class="time">00:00</text>
-                        </svg>
+                    <div class="half-block" id="timerBlock">
+                        <div class="timer-block">
+                            <div id="timer" class="clock">
+
+                            </div>
+                        </div>
+                        <div class="buttons-block">
+                            <button class="session-button" id="pauseTimerButton">
+                                <img src="images/pause.png" id="pauseButton" alt="Pause">
+                            </button>
+                            <button class="session-button" id="resetTimerButton">
+                                <img src="images/reset_timer.png" alt="Reset">
+                            </button>
+                            <button class="session-button" id="exitTimerButton">
+                                <img src="images/exit.png" alt="Exit">
+                            </button>
+                        </div>
                     </div>
-                    <div class="timer-buttons">
-                        <button id="pauseResumeButton">Пауза</button>
-                        <button id="resetButtonModal">Скинути</button>
-                        <button id="exitButtonModal">Вийти</button>
+                    <div class="half-block" id="contentBlock">
+                        <!-- <div class="content-block first-mode">
+                        
+                        </div> -->
                     </div>
+
                 </div>
             </div>
         </div>

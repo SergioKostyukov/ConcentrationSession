@@ -35,8 +35,8 @@ function noteViewTextContainer(viewNoteBlock, objectData) {
     textContainer.classList.add('text-container');
 
     const paragraph = document.createElement('p');
-    paragraph.contentEditable = false;
     paragraph.textContent = objectData.text;
+    paragraph.contentEditable = false;
 
     // Add doneToggleElement to textContainer
     textContainer.appendChild(paragraph);
