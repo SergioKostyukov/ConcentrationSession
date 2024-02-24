@@ -30,7 +30,7 @@ document.getElementById("decreaseButton").addEventListener("click", function () 
 });
 
 document.getElementById("resetButton").addEventListener("click", function () {
-    resetTimer();
+    resetTimerValue();
 });
 
 document.getElementById("breakToggle").addEventListener("change", function () {
@@ -52,7 +52,7 @@ function decreaseTimer() {
     updateTimerDisplay();
 }
 
-function resetTimer() {
+function resetTimerValue() {
     timerValue = 40;
     updateTimerDisplay();
 }

@@ -1,5 +1,4 @@
 let timerInterval;
-let timerValueModal;
 
 // Generate a unique identifier value
 function generateUniqueId() {
@@ -17,10 +16,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const exitButton = document.getElementById("exitTimerButton")
 
     window.addEventListener("load", function () {
-        var overlayActive = localStorage.getItem("overlayActive");
+        var overlayActive = sessionStorage.getItem("overlayActive");
         if (overlayActive === "true") {
-            overlay.style.display = "flex";
-            modal.classList.add("active");
+            activateOverlay();
+        }
+    });
+
+    window.addEventListener('beforeunload', function (e) {
+        if (sessionStorage.getItem("overlayActive") === "true") {
+            SaveBlocksData();
+            
+            // Визначаємо повідомлення, яке буде відображатися користувачу
+            var confirmationMessage = 'Ви покидаєте цю сторінку. Ви впевнені?';
+        
+            // Встановлюємо текст повідомлення
+            (e || window.event).returnValue = confirmationMessage; // Для браузків, які підтримують returnValue
+            return confirmationMessage; // Для сучасних браузерів
         }
     });
 
@@ -30,21 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        localStorage.setItem("overlayActive", "true");
-        document.getElementById("overlay").style.display = "flex";
+        sessionStorage.setItem("overlayActive", "true");
+        sessionStorage.setItem("timerStatus", sessionStorage.getItem("timerValue"));
 
-        const modal = document.getElementById("sessionModeContent");
-        modal.classList.add("active");
-
-        fillContentBlock();
-
-        startTimer();
-    });
-
-    exitButton.addEventListener("click", function () {
-        resetTimerModal();
-        document.getElementById("overlay").style.display = "none";
-        localStorage.setItem("overlayActive", "false");
+        activateOverlay();
     });
 
     pauseButton.addEventListener("click", function () {
@@ -52,8 +52,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     resetButton.addEventListener("click", function () {
-        resetTimerModal();
+        resetTimer();
+        
+        // update progress value
+        updateCompleteTime();
+        
+        timerStatus = sessionStorage.getItem('timerValue');
     });
+
+    exitButton.addEventListener("click", function () {
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        // update progress value
+        updateCompleteTime();
+        // unset local variables / delete unnecessary session params 
+        unsetLocalVariables();
+        // update blocks data
+        // SaveBlocksData();
+
+        document.getElementById("overlay").style.display = "none";
+        sessionStorage.setItem("overlayActive", "false");
+    });
+
+    function activateOverlay() {
+        overlay.style.display = "flex";
+
+        modal.classList.add("active");
+
+        fillContentBlock();
+
+        document.getElementById("pauseButton").src = "images/pause.png";
+
+        startTimer();
+    }
 });
 
 function fillContentBlock() {
@@ -126,6 +158,7 @@ async function fillTaskBlock(contentBlock, taskID, type = 'first') {
     // Add a container for the habits text
     const textContainer = document.createElement('div');
     textContainer.classList.add('text-container');
+    textContainer.id = 'Task';
 
     // Check if there is task text
     if (taskData.text) {
@@ -188,6 +221,7 @@ async function fillNoteBlock(contentBlock, nodeID, type = 'second') {
     // Add a container for the habits text
     const textContainer = document.createElement('div');
     textContainer.classList.add('text-container');
+    textContainer.id = 'Note';
 
     const paragraph = document.createElement('p');
     paragraph.textContent = noteData.text;
@@ -218,6 +252,7 @@ async function fillHabitsBlock(contentBlock, habitsID, type = 'second') {
     // Add a container for the habits text
     const textContainer = document.createElement('div');
     textContainer.classList.add('text-container');
+    textContainer.id = 'Habits';
 
     // Check if there is task text
     if (taskData.text) {
@@ -266,17 +301,17 @@ async function fillHabitsBlock(contentBlock, habitsID, type = 'second') {
 /* ----------------------------- TIMER FUNCTIONS ----------------------------- */
 
 function startTimer() {
-    timerValueModal = sessionStorage.getItem('timerValue') || 40;
+    timerStatus = sessionStorage.getItem('timerStatus');
     updateTimerDisplayModal();
 
     timerInterval = setInterval(function () {
-        if (timerValueModal > 0) {
-            timerValueModal--;
+        if (timerStatus > 0) {
+            timerStatus--;
             updateTimerDisplayModal();
         } else {
             clearInterval(timerInterval);
             alert("Таймер завершено!");
-            resetTimerModal();
+            resetTimer();
         }
     }, 1000);
 }
@@ -292,21 +327,19 @@ function pauseResumeTimer() {
     }
 }
 
-function resetTimerModal() {
+function resetTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
-    timerValueModal = sessionStorage.getItem('timerValue') || 40;
     updateTimerDisplayModal();
     document.getElementById("pauseButton").src = "images/start.png";
 }
 
 function updateTimerDisplayModal() {
     const timerDisplay = document.getElementById("timer");
-    const progress = (1 - timerValueModal / sessionStorage.getItem('timerValue')) * 360;
 
-    timerDisplay.innerText = formatTime(timerValueModal);
-    timerDisplay.style.backgroundImage = `conic-gradient(#4CAF50 ${progress}deg, transparent ${progress}deg 360deg)`;
-    sessionStorage.setItem('timerValue', timerValueModal);
+    timerDisplay.innerText = formatTime(timerStatus);
+
+    sessionStorage.setItem('timerStatus', timerStatus);
 }
 
 function formatTime(seconds) {
@@ -315,4 +348,99 @@ function formatTime(seconds) {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
 
+/* ----------------------------- After session updates ----------------------------- */
+
+function updateCompleteTime() {
+    var currentCompleteTime = parseInt(localStorage.getItem("complete_time"));
+    var simpleWorkInterval = parseInt(localStorage.getItem("work_time"));
+    var lastTimeInterval = parseInt(sessionStorage.getItem("timerStatus"));
+
+    if (!currentCompleteTime) {
+        currentCompleteTime = 0;
+    }
+    
+    console.log(simpleWorkInterval, lastTimeInterval, simpleWorkInterval - lastTimeInterval);
+    localStorage.setItem("complete_time", currentCompleteTime + simpleWorkInterval - lastTimeInterval);
+}
+
+function unsetLocalVariables(){
+    //sessionStorage.removeItem("timerStatus");
+    //sessionStorage.removeItem("timerValue");
+}
+
+function SaveBlocksData(){
+    UpdateTask('Task');
+    UpdateTask('Habits');
+    UpdateNote();
+}
+
 /* ----------------------------- Requests ----------------------------- */
+async function UpdateTask(type){
+    const taskBlock = document.getElementById(type);
+
+    // Get the content of "done-toggle" elements
+    const doneToggleElements = taskBlock.querySelectorAll(".done-toggle");
+
+    // Create an array to store text and status
+    const taskContentArray = [];
+
+    // Iterate over "done-toggle" elements and gather text and status
+    doneToggleElements.forEach(doneToggleElement => {
+        const text = doneToggleElement.querySelector("p").textContent;
+        const isDone = doneToggleElement.querySelector("#breakToggle").checked;
+        taskContentArray.push({ text, isDone });
+    });
+
+    var userData = {
+        id: localStorage.getItem('selected_task'),
+        text: JSON.stringify(taskContentArray)
+    };
+
+    try {
+        await serverRequest('Tasks/UpdateTaskText', 'PATCH', userData);
+    } catch (error) {
+        console.error('Error updating task:', error);
+    }
+
+    return true;
+}
+
+// Function to request updating a note
+async function UpdateNote() {
+    const noteBlock = document.getElementById('Note');
+
+    var userData = {
+        id: localStorage.getItem('selected_note'),
+        text: noteBlock.querySelector("p").textContent
+    };
+
+    try {
+        await serverRequest('Notes/UpdateNoteText', 'PATCH', userData);
+    } catch (error) {
+        console.error('Error updating note:', error);
+    }
+}
+
+// Template function for sending a request (without data returned)
+async function serverRequest(path, type, requestObject) {
+    try {
+        const response = await fetch('https://localhost:7131/api/' + path, {
+            method: type,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getCookieValue("jwtToken"),
+            },
+            body: JSON.stringify(requestObject)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data.message);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error;
+    }
+}

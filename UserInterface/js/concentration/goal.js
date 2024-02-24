@@ -1,7 +1,7 @@
 
 function updateGoalBlock(){
     var dayGoal = localStorage.getItem('day_goal');
-    var complete = localStorage.getItem('complete_time') || 90;
+    var complete = localStorage.getItem('complete_time') || 0;
     
     var goalValueElement = document.getElementById('dayGoalValue');
     var completeValueElement = document.getElementById('completeValue');

@@ -109,11 +109,10 @@ h3 {
     height: 33%;
 }
 
-
 .text-container {
+    width: 95%;
     margin-top: 0px;
     overflow-y: auto;
-    padding: 0 10px;
 }
 
 .text-container .done-toggle {
