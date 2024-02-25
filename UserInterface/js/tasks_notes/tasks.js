@@ -288,6 +288,20 @@ function fillObjectsTextContainer(objectBlock, object) {
     objectBlock.appendChild(textContainer);
 }
 
+// Function to reset Checkbox value
+function resetCheckboxValues(blockName){
+    const taskBlock = document.getElementById(blockName);
+
+    // Get the content of "done-toggle" elements
+    const doneToggleElements = taskBlock.querySelectorAll(".done-toggle");
+
+    // Iterate over "done-toggle" elements and reset checkbox
+    doneToggleElements.forEach(doneToggleElement => {
+        doneToggleElement.querySelector("#breakToggle").checked = false;
+        doneToggleElement.querySelector("p").classList.remove("line-through");
+    });
+}
+
 async function findHabbits() {
     const habits = await getHabitsData();
 

@@ -1,4 +1,5 @@
-body, html {
+body{
+    user-select: none;
     margin: 0;
     padding: 0;
 }
@@ -13,13 +14,11 @@ body, html {
 }
 
 .background-image {
-    position: center;
-    top: 0;
-    left: 0;
     width: 50%;
     height: 60%;
     object-fit: cover;
     z-index: -1;
+    pointer-events: none;
 }
 
 .buttons-container {
@@ -31,20 +30,24 @@ body, html {
     flex-direction: column;
 }
 
+.buttons-container a {
+    text-decoration: none;
+    color: #fff;
+}
+
 .login-button,
 .signup-button {
     padding: 10px 20px;
     margin-bottom: 10px;
     font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: #777;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .login-button:hover,
 .signup-button:hover {
-    background-color: #0056b3;
+    background-color: #444;
 }

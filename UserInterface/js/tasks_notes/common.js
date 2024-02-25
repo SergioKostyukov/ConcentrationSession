@@ -91,6 +91,7 @@ function fillUpdateModal(updateObjectBlock, objectBlock) {
             addNotificationButton(updateObjectBlock, 'updateTask')
         }else{
             addNotificationButton(updateObjectBlock, 'updateTask', "first")
+            addResetCheckboxButton(updateObjectBlock, `resetCheckboxValues('updateTask')`);
         }
         addSaveButton(updateObjectBlock, `saveUpdate('updateTask')`)
     }
@@ -100,6 +101,7 @@ function fillUpdateModal(updateObjectBlock, objectBlock) {
 function addCopyButton(updateObjectBlock, command) {
     const copyButton = document.createElement('button');
     copyButton.classList.add('action-button', 'first-button');
+    copyButton.setAttribute('title', 'Copy');
     const copyImage = document.createElement('img');
     copyImage.src = 'images/copy.png';
     copyImage.alt = 'copy';
@@ -112,6 +114,7 @@ function addCopyButton(updateObjectBlock, command) {
 function addArchiveButton(updateObjectBlock, command) {
     const archiveButton = document.createElement('button');
     archiveButton.classList.add('action-button', 'second-button');
+    archiveButton.setAttribute('title', 'Archive');
     const archiveImage = document.createElement('img');
     archiveImage.src = 'images/folder.png';
     archiveImage.alt = 'archive';
@@ -124,6 +127,7 @@ function addArchiveButton(updateObjectBlock, command) {
 function addDeleteButton(updateObjectBlock, command) {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('action-button', 'third-button');
+    deleteButton.setAttribute('title', 'Delete');
     const deleteImage = document.createElement('img');
     deleteImage.src = 'images/delete.png';
     deleteImage.alt = 'delete';
@@ -135,6 +139,7 @@ function addDeleteButton(updateObjectBlock, command) {
 // Add the "notification" button
 function addNotificationButton(updateObjectBlock, command, position="fourth") {
     const notificationButton = document.createElement('button');
+    notificationButton.setAttribute('title', 'Notification');
     notificationButton.classList.add('action-button', `${position}-button`);
     const notificationImage = document.createElement('img');
     notificationImage.src = 'images/notification.png';
@@ -142,6 +147,19 @@ function addNotificationButton(updateObjectBlock, command, position="fourth") {
     notificationButton.setAttribute('onclick', command);
     notificationButton.appendChild(notificationImage);
     updateObjectBlock.appendChild(notificationButton);
+}
+
+// Add the "Reset checkbox" button
+function addResetCheckboxButton(updateObjectBlock, command) {
+    const resetButton = document.createElement('button');
+    resetButton.setAttribute('title', 'Reset');
+    resetButton.classList.add('action-button', 'second-button');
+    const resetImage = document.createElement('img');
+    resetImage.src = 'images/reset.png';
+    resetImage.alt = 'reset';
+    resetButton.setAttribute('onclick', command);
+    resetButton.appendChild(resetImage);
+    updateObjectBlock.appendChild(resetButton);
 }
 
 // Add the "Save Changes" button

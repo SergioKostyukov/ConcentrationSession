@@ -69,7 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // unset local variables / delete unnecessary session params 
         unsetLocalVariables();
         // update blocks data
-        // SaveBlocksData();
+        SaveBlocksData();
+        updateGoalBlock();
 
         document.getElementById("overlay").style.display = "none";
         sessionStorage.setItem("overlayActive", "false");
@@ -118,27 +119,27 @@ function fillFirstMode(taskID) {
     fillTaskBlock(contentBlock, taskID);
 }
 
-function fillSecondMode(taskID, nodeID, habitsID) {
+async function fillSecondMode(taskID, nodeID, habitsID) {
     const contentBlock = document.getElementById("contentBlock");
 
     contentBlock.innerHTML = '';
 
-    fillTaskBlock(contentBlock, taskID, 'second');
+    await fillTaskBlock(contentBlock, taskID, 'second');
     if (nodeID) {
-        fillNoteBlock(contentBlock, nodeID);
+        await fillNoteBlock(contentBlock, nodeID);
     } else {
-        fillHabitsBlock(contentBlock, habitsID);
+        await fillHabitsBlock(contentBlock, habitsID);
     }
 }
 
-function fillThirdMode(taskID, nodeID, habitsID) {
+async function fillThirdMode(taskID, nodeID, habitsID) {
     const contentBlock = document.getElementById("contentBlock");
 
     contentBlock.innerHTML = '';
 
-    fillTaskBlock(contentBlock, taskID, 'third');
-    fillNoteBlock(contentBlock, nodeID, 'third');
-    fillHabitsBlock(contentBlock, habitsID, 'third');
+    await fillTaskBlock(contentBlock, taskID, 'third');
+    await fillNoteBlock(contentBlock, nodeID, 'third');
+    await fillHabitsBlock(contentBlock, habitsID, 'third');
 }
 
 async function fillTaskBlock(contentBlock, taskID, type = 'first') {
@@ -369,9 +370,9 @@ function unsetLocalVariables(){
 }
 
 function SaveBlocksData(){
-    UpdateTask('Task');
-    UpdateTask('Habits');
-    UpdateNote();
+    //UpdateTask('Task');
+    //UpdateTask('Habits');
+    //UpdateNote();
 }
 
 /* ----------------------------- Requests ----------------------------- */
