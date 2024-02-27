@@ -94,6 +94,23 @@ public class NotesService
 		}
 	}
 
+	public bool UpdateNoteText(NoteTextDto request)
+	{
+		try
+		{
+			UpdateNoteTextData(request);
+
+			logger.LogInfo($"Note text data updated");
+
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Error note text data update: {ex.Message}");
+			return false;
+		}
+	}
+
 	public bool UpdatePin(NoteStatusUpdateDto request)
 	{
 		try
@@ -325,6 +342,21 @@ public class NotesService
 			{ "@name", request.name },
 			{ "@text", request.text },
 			{ "@is_pin", request.is_pin },
+			{ "@id", request.id}
+		};
+
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
+
+	private static void UpdateNoteTextData(NoteTextDto request)
+	{
+		var dbContext = new DataBaseContext();
+
+		var command = "UPDATE notes SET text = @text WHERE id = @id;";
+
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@text", request.text },
 			{ "@id", request.id}
 		};
 

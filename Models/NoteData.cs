@@ -45,3 +45,9 @@ public class NoteViewDto
     public string name { get; set; }
     public string text { get; set; }
 }
+
+public class NoteTextDto
+{
+    public int id { get; set; }
+    public string text { get; set; }
+}

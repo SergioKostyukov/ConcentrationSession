@@ -16,9 +16,9 @@ const COLOR_CODES = {
     }
 };
 
-const TIME_LIMIT = parseInt(sessionStorage.getItem("timerStatus")) * 60;
+let TIME_LIMIT = 0;
 let timePassed = 0;
-let timeLeft = TIME_LIMIT;
+let timeLeft = 0;
 let timerInterval = null;
 let remainingPathColor = COLOR_CODES.info.color;
 
@@ -48,11 +48,20 @@ document.getElementById("timer").innerHTML = `
 
 function onTimesUp() {
     clearInterval(timerInterval);
+    timerInterval = null;
+    document.getElementById("pauseButton").src = "images/start.png";
+
+    updateCompleteTime();
 }
 
 function startTimer() {
+    document.getElementById("pauseButton").src = "images/pause.png";
+
+    TIME_LIMIT = sessionStorage.getItem("timerValue") * 60;
+    timePassed = parseInt(sessionStorage.getItem("timerStatus") || 0);
     timerInterval = setInterval(() => {
         timePassed = timePassed += 1;
+
         timeLeft = TIME_LIMIT - timePassed;
         document.getElementById("base-timer-label").innerHTML = formatTime(
             timeLeft
@@ -79,13 +88,24 @@ function formatTime(time) {
 
 function setRemainingPathColor(timeLeft) {
     const { alert, warning, info } = COLOR_CODES;
-    if (timeLeft <= alert.threshold) {
+    if (remainingPathColor != info.color && timeLeft > warning.threshold) {
+        document
+            .getElementById("base-timer-path-remaining")
+            .classList.remove(remainingPathColor);
+        document
+            .getElementById("base-timer-path-remaining")
+            .classList.add(COLOR_CODES.info.color);
+
+        remainingPathColor = COLOR_CODES.info.color;
+    } else if (timeLeft <= alert.threshold) {
         document
             .getElementById("base-timer-path-remaining")
             .classList.remove(warning.color);
         document
             .getElementById("base-timer-path-remaining")
             .classList.add(alert.color);
+
+        remainingPathColor = COLOR_CODES.alert.color;
     } else if (timeLeft <= warning.threshold) {
         document
             .getElementById("base-timer-path-remaining")
@@ -93,6 +113,8 @@ function setRemainingPathColor(timeLeft) {
         document
             .getElementById("base-timer-path-remaining")
             .classList.add(warning.color);
+
+        remainingPathColor = COLOR_CODES.warning.color;
     }
 }
 
@@ -110,23 +132,6 @@ function setCircleDasharray() {
         .setAttribute("stroke-dasharray", circleDasharray);
 }
 
-// OLD CODE
-function startTimer() {
-    timerStatus = sessionStorage.getItem('timerStatus');
-    updateTimerDisplayModal();
-
-    timerInterval = setInterval(function () {
-        if (timerStatus > 0) {
-            timerStatus--;
-            updateTimerDisplayModal();
-        } else {
-            clearInterval(timerInterval);
-            alert("Таймер завершено!");
-            resetTimer();
-        }
-    }, 1000);
-}
-
 function pauseResumeTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
@@ -134,27 +139,14 @@ function pauseResumeTimer() {
         document.getElementById("pauseButton").src = "images/start.png";
     } else {
         startTimer();
-        document.getElementById("pauseButton").src = "images/pause.png";
     }
 }
 
 function resetTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
-    updateTimerDisplayModal();
-    document.getElementById("pauseButton").src = "images/start.png";
-}
 
-function updateTimerDisplayModal() {
-    const timerDisplay = document.getElementById("timer");
+    updateCompleteTime();
 
-    timerDisplay.innerText = formatTime(timerStatus);
-
-    sessionStorage.setItem('timerStatus', timerStatus);
-}
-
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    startTimer();
 }

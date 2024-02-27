@@ -7,9 +7,9 @@ function updateGoalBlock(){
     var completeValueElement = document.getElementById('completeValue');
     
     goalValueElement.textContent = dayGoal/60 + ' hours';
-    completeValueElement.textContent = complete/60 + ' hours';
+    completeValueElement.textContent = complete/3600 + ' hours';
     
-    var completionPercentage = (complete / dayGoal) * 100;
+    var completionPercentage = ((complete/60) / dayGoal) * 100;
     
     document.getElementById('progressBar').style.setProperty('--progress-width', completionPercentage + '%');
 }

@@ -1,5 +1,5 @@
 
-async function UpdateTask(type) {
+async function UpdateTask(type = 'Task') {
     const taskBlock = document.getElementById(type);
 
     // Get the content of "done-toggle" elements
@@ -15,8 +15,15 @@ async function UpdateTask(type) {
         taskContentArray.push({ text, isDone });
     });
 
+    var taskId;
+    if(type == 'Task'){
+        taskId = localStorage.getItem('selected_task')
+    } else{
+        taskId = localStorage.getItem('habits_id')
+    }
+
     var userData = {
-        id: localStorage.getItem('selected_task'),
+        id: taskId,
         text: JSON.stringify(taskContentArray)
     };
 

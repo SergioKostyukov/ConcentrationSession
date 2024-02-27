@@ -23,13 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener('beforeunload', function (e) {
         if (sessionStorage.getItem("overlayActive") === "true") {
             SaveBlocksData();
+            sessionStorage.setItem("timerStatus", timePassed);
 
-            // Визначаємо повідомлення, яке буде відображатися користувачу
-            var confirmationMessage = 'Ви покидаєте цю сторінку. Ви впевнені?';
+            var confirmationMessage = 'You are leaving this page. Are you sure?';
 
-            // Встановлюємо текст повідомлення
-            (e || window.event).returnValue = confirmationMessage; // Для браузків, які підтримують returnValue
-            return confirmationMessage; // Для сучасних браузерів
+            (e || window.event).returnValue = confirmationMessage;
+            return confirmationMessage; 
         }
     });
 
@@ -39,8 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        if(sessionStorage.getItem("timerValue") == 0){
+            alert("You have to choose a time!");
+            return;
+        }
+
         sessionStorage.setItem("overlayActive", "true");
-        sessionStorage.setItem("timerStatus", sessionStorage.getItem("timerValue"));
 
         activateOverlay();
     });
@@ -51,21 +54,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     resetButton.addEventListener("click", function () {
         resetTimer();
-
-        // update progress value
-        updateCompleteTime();
-
-        timerStatus = sessionStorage.getItem('timerValue');
     });
 
     exitButton.addEventListener("click", function () {
         clearInterval(timerInterval);
         timerInterval = null;
+        sessionStorage.setItem("timerStatus", timePassed);
 
         // update progress value
         updateCompleteTime();
-        // unset local variables / delete unnecessary session params 
-        unsetLocalVariables();
+        
         // update blocks data
         SaveBlocksData();
         updateGoalBlock();
@@ -81,8 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         fillContentBlock();
 
-        document.getElementById("pauseButton").src = "images/pause.png";
-
         startTimer();
     }
 });
@@ -91,24 +87,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function updateCompleteTime() {
     var currentCompleteTime = parseInt(localStorage.getItem("complete_time"));
-    var simpleWorkInterval = parseInt(localStorage.getItem("work_time"));
-    var lastTimeInterval = parseInt(sessionStorage.getItem("timerStatus"));
+    var lastcompleteTimeInterval = parseInt(sessionStorage.getItem("timerStatus"));
 
     if (!currentCompleteTime) {
         currentCompleteTime = 0;
     }
 
-    console.log(simpleWorkInterval, lastTimeInterval, simpleWorkInterval - lastTimeInterval);
-    localStorage.setItem("complete_time", currentCompleteTime + simpleWorkInterval - lastTimeInterval);
+    localStorage.setItem("complete_time", currentCompleteTime + lastcompleteTimeInterval);
+    sessionStorage.setItem("timerStatus", 0);
 }
 
-function unsetLocalVariables() {
-    //sessionStorage.removeItem("timerStatus");
-    //sessionStorage.removeItem("timerValue");
-}
-
-function SaveBlocksData() {
-    //UpdateTask('Task');
-    //UpdateTask('Habits');
-    //UpdateNote();
+async function SaveBlocksData() {
+    UpdateTask();
+    if(localStorage.getItem("selected_note")){
+        UpdateNote();
+    }
+    if(localStorage.getItem("selected_habits")){
+        await UpdateTask('Habits');
+        getHabitsData();
+    }
 }

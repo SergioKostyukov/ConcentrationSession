@@ -177,8 +177,23 @@ public class NotesController : ControllerBase
         }
     }
 
-    // PATCH: api/Notes/UpdateNotePin
-    [Authorize]
+	// PATCH: api/Notes/UpdateNoteText
+	[Authorize]
+	[HttpPatch]
+	public IActionResult UpdateNoteText([FromBody] NoteTextDto request)
+	{
+		if (_notesService.UpdateNoteText(request))
+		{
+			return Ok(new { message = "Note text update successfully" });
+		}
+		else
+		{
+			return BadRequest(new { message = "Note text update failed" });
+		}
+	}
+
+	// PATCH: api/Notes/UpdateNotePin
+	[Authorize]
     [HttpPatch]
     public IActionResult UpdateNotePin([FromBody] NoteStatusUpdateDto request)
     {

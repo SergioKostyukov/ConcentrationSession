@@ -118,6 +118,23 @@ public class TasksService
 		}
 	}
 
+	public bool UpdateTaskText(TaskTextDto request)
+	{
+		try
+		{
+			UpdateTaskTextData(request);
+
+			logger.LogInfo($"Task data updated");
+
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"Error task data update: {ex.Message}");
+			return false;
+		}
+	}
+
 	public bool UpdatePin(TaskStatusUpdateDto request)
 	{
 		try
@@ -382,6 +399,21 @@ public class TasksService
 			{ "@text", request.text },
 			{ "@notification_time", request.notification_time },
 			{ "@is_pin", request.is_pin },
+			{ "@id", request.id}
+		};
+
+		dbContext.ExecuteNonQuery(command, parameters);
+	}
+
+	private static void UpdateTaskTextData(TaskTextDto request)
+	{
+		var dbContext = new DataBaseContext();
+
+		var command = "UPDATE tasks SET text = @text WHERE id = @id;";
+
+		var parameters = new Dictionary<string, object>
+		{
+			{ "@text", request.text },
 			{ "@id", request.id}
 		};
 

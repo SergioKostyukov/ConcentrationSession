@@ -203,8 +203,23 @@ public class TasksController : ControllerBase
         }
     }
 
-    // PATCH: api/Tasks/UpdateTaskPin
-    [Authorize]
+	// PATCH: api/Tasks/UpdateTaskText
+	[Authorize]
+	[HttpPatch]
+	public IActionResult UpdateTaskText([FromBody] TaskTextDto request)
+	{
+		if (_notesService.UpdateTaskText(request))
+		{
+			return Ok(new { message = "Task test update successfully" });
+		}
+		else
+		{
+			return BadRequest(new { message = "Task test update failed" });
+		}
+	}
+
+	// PATCH: api/Tasks/UpdateTaskPin
+	[Authorize]
     [HttpPatch]
     public IActionResult UpdateTaskPin([FromBody] TaskStatusUpdateDto request)
     {

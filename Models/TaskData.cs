@@ -48,3 +48,9 @@ public class TaskViewDto
     public string name { get; set; }
     public string text { get; set; }
 }
+
+public class TaskTextDto
+{
+	public int id { get; set; }
+	public string text { get; set; }
+}
