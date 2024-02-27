@@ -1,6 +1,6 @@
 const FULL_DASH_ARRAY = 283;
-const WARNING_THRESHOLD = 10;
-const ALERT_THRESHOLD = 5;
+const WARNING_THRESHOLD = 300/60;
+const ALERT_THRESHOLD = 60/60;
 
 const COLOR_CODES = {
     info: {
@@ -46,33 +46,67 @@ document.getElementById("timer").innerHTML = `
 </div>
 `;
 
+async function timerController() {
+    const timerValue = parseInt(sessionStorage.getItem("timerValue"));
+
+    if(parseInt(sessionStorage.getItem("disableBreaks")) == 1){
+        const workTime = parseInt(localStorage.getItem("work_time"));
+        const breakTime = parseInt(localStorage.getItem("break_time"));
+    
+        const totalStages = Math.floor(timerValue / (workTime + breakTime));
+        const remainingTime = timerValue % (workTime + breakTime);
+    
+        for (let i = 0; i < totalStages; i++) {
+            await startTimer(workTime);
+            await startTimer(breakTime);
+        }
+    
+        // Запуск останнього етапу
+        if (remainingTime > 0) {
+            if (remainingTime >= workTime) {
+                await startTimer(workTime);
+                await startTimer(remainingTime - workTime);
+            } else {
+                await startTimer(remainingTime);
+            }
+        }
+    }else{
+        await startTimer(timerValue);
+    }
+
+    exitTimer();
+}
+
+async function startTimer(timerValue) {
+    TIME_LIMIT = timerValue;// * 60;
+    timePassed = parseInt(sessionStorage.getItem("timerStatus") || 0);
+    console.log(TIME_LIMIT / 60);
+
+    document.getElementById("pauseButton").src = "images/pause.png";
+
+    return new Promise(resolve => {
+        timerInterval = setInterval(() => {
+            timePassed = timePassed += 1;
+
+            timeLeft = TIME_LIMIT - timePassed;
+            document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
+            setCircleDasharray();
+            setRemainingPathColor(timeLeft);
+
+            if (timeLeft === 0) {
+                onTimesUp();
+                resolve(); // Повідомлення про завершення таймера
+            }
+        }, 1000);
+    });
+}
+
 function onTimesUp() {
     clearInterval(timerInterval);
     timerInterval = null;
     document.getElementById("pauseButton").src = "images/start.png";
 
     updateCompleteTime();
-}
-
-function startTimer() {
-    document.getElementById("pauseButton").src = "images/pause.png";
-
-    TIME_LIMIT = sessionStorage.getItem("timerValue") * 60;
-    timePassed = parseInt(sessionStorage.getItem("timerStatus") || 0);
-    timerInterval = setInterval(() => {
-        timePassed = timePassed += 1;
-
-        timeLeft = TIME_LIMIT - timePassed;
-        document.getElementById("base-timer-label").innerHTML = formatTime(
-            timeLeft
-        );
-        setCircleDasharray();
-        setRemainingPathColor(timeLeft);
-
-        if (timeLeft === 0) {
-            onTimesUp();
-        }
-    }, 1000);
 }
 
 function formatTime(time) {
@@ -88,7 +122,8 @@ function formatTime(time) {
 
 function setRemainingPathColor(timeLeft) {
     const { alert, warning, info } = COLOR_CODES;
-    if (remainingPathColor != info.color && timeLeft > warning.threshold) {
+    if ((remainingPathColor != info.color && timeLeft > warning.threshold) ||
+        (remainingPathColor == alert.color && timeLeft > alert.threshold)) {
         document
             .getElementById("base-timer-path-remaining")
             .classList.remove(remainingPathColor);
@@ -138,7 +173,7 @@ function pauseResumeTimer() {
         timerInterval = null;
         document.getElementById("pauseButton").src = "images/start.png";
     } else {
-        startTimer();
+        startTimer(TIME_LIMIT / 60);
     }
 }
 
@@ -148,5 +183,21 @@ function resetTimer() {
 
     updateCompleteTime();
 
-    startTimer();
+    startTimer(TIME_LIMIT / 60);
+}
+
+function exitTimer(){
+    clearInterval(timerInterval);
+        timerInterval = null;
+        sessionStorage.setItem("timerStatus", timePassed);
+
+        // update progress value
+        updateCompleteTime();
+        
+        // update blocks data
+        SaveBlocksData();
+        updateGoalBlock();
+
+        document.getElementById("overlay").style.display = "none";
+        sessionStorage.setItem("overlayActive", "false");
 }

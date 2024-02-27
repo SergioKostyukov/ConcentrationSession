@@ -57,19 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     exitButton.addEventListener("click", function () {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        sessionStorage.setItem("timerStatus", timePassed);
-
-        // update progress value
-        updateCompleteTime();
-        
-        // update blocks data
-        SaveBlocksData();
-        updateGoalBlock();
-
-        document.getElementById("overlay").style.display = "none";
-        sessionStorage.setItem("overlayActive", "false");
+        exitTimer();
     });
 
     function activateOverlay() {
@@ -79,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         fillContentBlock();
 
-        startTimer();
+        timerController();
     }
 });
 
@@ -95,6 +83,8 @@ function updateCompleteTime() {
 
     localStorage.setItem("complete_time", currentCompleteTime + lastcompleteTimeInterval);
     sessionStorage.setItem("timerStatus", 0);
+
+    console.log("Data updated");
 }
 
 async function SaveBlocksData() {
