@@ -45,9 +45,9 @@ function addSelectButton(viewObjectBlock, command, image_ = 'add') {
     image.src = `images/${image_}.png`;
     image.alt = 'copy';
     button.setAttribute('onclick', command);
-    if(image_ ==  'add'){
+    if (image_ == 'add') {
         button.setAttribute('title', 'Select to session')
-    }else{
+    } else {
         button.setAttribute('title', 'Unselect from session')
     }
     button.appendChild(image);
@@ -124,15 +124,20 @@ function unselect(ObjectId, type) {
 }
 
 function setHabits() {
-    // check if this block selected
-    var selectedHabits = localStorage.getItem('selected_habits');
-    if (selectedHabits !== null) {
-        localStorage.removeItem('selected_habits');
-    } else {
-        localStorage.setItem('selected_habits', 1);
-    }
+    if (localStorage.getItem("ignore_habits") === 'false') {
+        // check if this block selected
+        var selectedHabits = localStorage.getItem('selected_habits');
+        if (selectedHabits !== null) {
+            localStorage.removeItem('selected_habits');
+        } else {
+            localStorage.setItem('selected_habits', 1);
+        }
 
-    setObjectSelectBlock('habits');
+        setObjectSelectBlock('habits');
+    } else {
+        alert("Oops, maybe you are ignoring habits( Change this option in settings");
+        return;
+    }
 }
 
 function setSelectBlocksImages() {
@@ -142,6 +147,10 @@ function setSelectBlocksImages() {
 }
 
 function setObjectSelectBlock(name) {
+    if(name === 'habits' && localStorage.getItem("ignore_habits") === 'true'){
+        localStorage.removeItem('selected_habits');
+    }
+
     var selectedTask = localStorage.getItem(`selected_${name}`);
     const selectTaskButton = document.getElementById(`select-${name}`);
     if (selectedTask !== null) {

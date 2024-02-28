@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener to check if overlay was active on previous session
     window.addEventListener("load", function () {
         if (sessionStorage.getItem("overlayActive") === "true") {
-            activateOverlay();
+            ActivateOverlay();
         }
     });
 
@@ -47,21 +47,21 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.setItem("overlayActive", "true");
         sessionStorage.setItem("stageType", "Work");
 
-        activateOverlay();
+        ActivateOverlay();
     });
 
     // Event listeners for controlling the timer (pause, reset, exit)
-    pauseButton.addEventListener("click", pauseResumeTimer);
-    resetButton.addEventListener("click", resetTimer);
-    exitButton.addEventListener("click", exitTimer);
+    pauseButton.addEventListener("click", PauseResumeTimer);
+    resetButton.addEventListener("click", ResetTimer);
+    exitButton.addEventListener("click", ExitTimer);
 
     // Function to activate the overlay and start the timer
-    const activateOverlay = async () => {
+    const ActivateOverlay = async () => {
         overlay.style.display = "flex";
         modal.classList.add("active");
         fillContentBlock();
-        initializeTimerUI();
-        await timerController();
+        InitializeTimerUI();
+        await TimerController();
     };
 });
 

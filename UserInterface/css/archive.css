@@ -5,8 +5,9 @@
 }
 
 .half-page .task-block {
-    width: calc((100% - 124px)/4);
-    height: calc((100% - 84px)/3);
+    width: calc((100% - 216px)/3);
+    height: calc((100% - 54px)/3);
+    margin: 0 15px 30px 15px;
 }
 
 .action-button.archive-button {

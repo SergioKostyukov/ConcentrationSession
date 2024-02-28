@@ -14,7 +14,7 @@ const COLOR_CODES = {
 };
 
 // Variables to manage the timer
-let TIME_LIMIT = 0;
+let timeLimit = 0;
 let timePassed = 0;
 let timeLeft = 0;
 let timerInterval = null;
@@ -22,7 +22,7 @@ let remainingPathColor = COLOR_CODES.info.color;
 let timerStoped = false; // Flag to track if the timer is stopped
 
 // Function to initialize timer UI
-function initializeTimerUI() {
+function InitializeTimerUI() {
     document.getElementById("timer").innerHTML = `
         <div class="base-timer">
             <svg class="base-timer__svg" viewBox="0 0 100 100">
@@ -47,7 +47,7 @@ function initializeTimerUI() {
 }
 
 // Function to control the timer flow based on session and local storage values
-async function timerController() {
+async function TimerController() {
     const timerValue = parseInt(sessionStorage.getItem("timerValue"));
     const disableBreaks = sessionStorage.getItem("disableBreaks") === "true";
     const doneValue = parseInt(sessionStorage.getItem("doneValue")) || 0;
@@ -57,7 +57,7 @@ async function timerController() {
     if (!disableBreaks) {
         timeLeft = timerValue - doneValue;
         if (sessionStorage.getItem("stageType") === "Break") {
-            await startTimer(Math.min(timeLeft, breakTime), "Break");
+            await StartTimer(Math.min(timeLeft, breakTime), "Break");
         }
 
         timeLeft = timerValue - parseInt(sessionStorage.getItem("doneValue"));
@@ -66,29 +66,29 @@ async function timerController() {
             const remainingTime = timeLeft % (workTime + breakTime);
 
             for (let i = 0; i < totalStages; i++) {
-                await startTimer(workTime, "Work");
-                await startTimer(breakTime, "Break");
+                await StartTimer(workTime, "Work");
+                await StartTimer(breakTime, "Break");
             }
 
             // Start last stage
             if (remainingTime > 0) {
                 if (remainingTime >= workTime) {
-                    await startTimer(workTime, "Work");
-                    await startTimer(remainingTime - workTime, "Break");
+                    await StartTimer(workTime, "Work");
+                    await StartTimer(remainingTime - workTime, "Break");
                 } else {
-                    await startTimer(remainingTime, "Work");
+                    await StartTimer(remainingTime, "Work");
                 }
             }
         }
     } else {
-        await startTimer(timerValue, "Work");
+        await StartTimer(timerValue, "Work");
     }
 
-    exitTimer();
+    ExitTimer();
 }
 
 // Function to update the text indicating the next stage of the timer
-function updateNextStage(stageValue, stage) {
+function UpdateNextStage(stageValue, stage) {
     const workTime = parseInt(localStorage.getItem("work_time"));
     const breakTime = parseInt(localStorage.getItem("break_time"));
 
@@ -100,25 +100,25 @@ function updateNextStage(stageValue, stage) {
     } else if (leftTime - stageValue === 0) {
         nextStageText = "The last one";
     } else if (stage === "Work") {
-        nextStageText = `Next: ${leftTime - stageValue <= breakTime ? leftTime - stageValue + " break" : breakTime + " break"}`;
+        nextStageText = `Next: ${leftTime - stageValue <= breakTime ? leftTime - stageValue + " min. break" : breakTime + " min. break"}`;
     } else {
-        nextStageText = `Next: ${leftTime - stageValue <= workTime ? leftTime - stageValue + " work" : workTime + " work"}`;
+        nextStageText = `Next: ${leftTime - stageValue <= workTime ? leftTime - stageValue + " min. work" : workTime + " min. work"}`;
     }
 
     document.getElementById("nextStage").innerText = nextStageText;
 }
 
 // Function to start the timer for a given duration and stage type
-async function startTimer(timerValue, stageType) {
+async function StartTimer(timerValue, stageType) {
     COLOR_CODES.warning.threshold = timerValue * 60 * 0.25;
     COLOR_CODES.alert.threshold = timerValue * 60 * 0.1;
 
-    updateNextStage(timerValue, stageType);
+    UpdateNextStage(timerValue, stageType);
     sessionStorage.setItem("stageType", stageType);
 
     document.getElementById("pauseButton").src = "images/pause.png";
 
-    TIME_LIMIT = timerValue * 60;
+    timeLimit = timerValue * 60;
     timePassed = parseInt(sessionStorage.getItem("timerStatus") || 0);
 
     return new Promise(resolve => {
@@ -126,13 +126,13 @@ async function startTimer(timerValue, stageType) {
             if (!timerStoped) {
                 timePassed++;
 
-                timeLeft = TIME_LIMIT - timePassed;
+                timeLeft = timeLimit - timePassed;
                 document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
-                setCircleDasharray();
-                setRemainingPathColor(timeLeft);
+                SetCircleDasharray();
+                SetRemainingPathColor(timeLeft);
 
                 if (timeLeft === 0) {
-                    onTimesUp();
+                    OnTimesUp();
                     resolve();
                 }
             }
@@ -141,8 +141,8 @@ async function startTimer(timerValue, stageType) {
 }
 
 // Function called when the timer reaches zero
-function onTimesUp() {
-    sessionStorage.setItem("doneValue", parseInt(sessionStorage.getItem("doneValue")) + TIME_LIMIT / 60);
+function OnTimesUp() {
+    sessionStorage.setItem("doneValue", parseInt(sessionStorage.getItem("doneValue")) + timeLimit / 60);
 
     clearInterval(timerInterval);
     timerInterval = null;
@@ -151,20 +151,8 @@ function onTimesUp() {
     UpdateCompleteTime();
 }
 
-// Function to format time into minutes and seconds
-function formatTime(time) {
-    const minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-
-    if (seconds < 10) {
-        seconds = `0${seconds}`;
-    }
-
-    return `${minutes}:${seconds}`;
-}
-
 // Function to set the remaining path color of the timer based on time left
-function setRemainingPathColor(timeLeft) {
+function SetRemainingPathColor(timeLeft) {
     const { alert, warning, info } = COLOR_CODES;
     const remainingPath = document.getElementById("base-timer-path-remaining");
 
@@ -184,21 +172,21 @@ function setRemainingPathColor(timeLeft) {
 }
 
 // Function to calculate the time fraction elapsed for the timer
-function calculateTimeFraction() {
-    const rawTimeFraction = timeLeft / TIME_LIMIT;
-    return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+function CalculateTimeFraction() {
+    const rawTimeFraction = timeLeft / timeLimit;
+    return rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
 }
 
 // Function to set the dash array of the timer circle based on elapsed time
-function setCircleDasharray() {
-    const circleDasharray = `${(calculateTimeFraction() * FULL_DASH_ARRAY).toFixed(0)} 283`;
+function SetCircleDasharray() {
+    const circleDasharray = `${(CalculateTimeFraction() * FULL_DASH_ARRAY).toFixed(0)} 283`;
     document
         .getElementById("base-timer-path-remaining")
         .setAttribute("stroke-dasharray", circleDasharray);
 }
 
 // Function to pause or resume the timer
-function pauseResumeTimer() {
+function PauseResumeTimer() {
     document.getElementById("pauseButton").src =
         timerStoped ? "images/pause.png" : "images/start.png";
 
@@ -206,7 +194,7 @@ function pauseResumeTimer() {
 }
 
 // Function to reset the timer
-function resetTimer() {
+function ResetTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
     timerStoped = false;
@@ -214,11 +202,11 @@ function resetTimer() {
     sessionStorage.setItem("doneValue", 0);
 
     UpdateCompleteTime();
-    timerController();
+    TimerController();
 }
 
 // Function to exit the timer mode
-function exitTimer() {
+function ExitTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
     timerStoped = false

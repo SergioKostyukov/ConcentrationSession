@@ -1,6 +1,13 @@
 let isPanelExpandedByButton = false;
 let isPanelExpandedByCursor = false;
 
+function reserButtonText(){
+    const roundButtons = document.querySelectorAll('.round-button span');
+    roundButtons.forEach((span) => {
+        span.style.opacity = '0';
+    });
+}
+
 function toggleNavigationPanel() {
     const navigationPanel = document.getElementById('navigationPanel');
 
@@ -58,3 +65,5 @@ document.getElementById('navigationPanel').addEventListener('mouseleave', () => 
         }
     }
 });
+
+reserButtonText();

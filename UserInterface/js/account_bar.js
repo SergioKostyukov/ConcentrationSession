@@ -70,7 +70,8 @@ function getUserInfo() {
             console.error('Error decoding token body: ', error);
         }
     } else {
-        console.log("Unregistered user.");
+        alert("Sorry, but you not logged in(");
+        window.location.href = 'login.html';
     }
 
     updateProfileButtonText();

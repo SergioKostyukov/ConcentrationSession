@@ -4,6 +4,7 @@
     border: 1px solid #ccc;
     background-color: #eee;
     border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-decoration: none;
     color: #000;
 }

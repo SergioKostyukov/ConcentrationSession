@@ -80,8 +80,13 @@
     color: #fff;
     border: none;
     border-radius: 20px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     position: absolute;
     bottom: 10px;
+}
+
+.start-button:hover {
+    background-color: #aaa;
 }
 
 .settings-button {
@@ -93,6 +98,7 @@
     color: #fff;
     border: none;
     border-radius: 20px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     position: absolute;
     top: 15px;
     right: 15px;
