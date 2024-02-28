@@ -1,98 +1,88 @@
-// Generate a unique identifier value
-function generateUniqueId() {
-    return 'toggle_' + Math.random().toString(36).substring(2, 11);
-}
-
 //-------------------------------- SESSION MODE--------------------------------
+// Event listener for when the DOM content is loaded
 document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.getElementById("overlay");
     const modal = document.getElementById("sessionModeContent");
 
+    // Buttons for controlling the timer
     const startButton = document.getElementById("startTimerButton");
     const resetButton = document.getElementById("resetTimerButton")
     const pauseButton = document.getElementById("pauseTimerButton")
     const exitButton = document.getElementById("exitTimerButton")
 
+    // Event listener to check if overlay was active on previous session
     window.addEventListener("load", function () {
-        var overlayActive = sessionStorage.getItem("overlayActive");
-        if (overlayActive === "true") {
+        if (sessionStorage.getItem("overlayActive") === "true") {
             activateOverlay();
         }
     });
 
+    // Event listener to prompt user before leaving the page if overlay is active
     window.addEventListener('beforeunload', function (e) {
         if (sessionStorage.getItem("overlayActive") === "true") {
             SaveBlocksData();
             sessionStorage.setItem("timerStatus", timePassed);
 
-            var confirmationMessage = 'You are leaving this page. Are you sure?';
+            const confirmationMessage = 'You are leaving this page. Are you sure?';
 
             (e || window.event).returnValue = confirmationMessage;
-            return confirmationMessage; 
+            return confirmationMessage;
         }
     });
 
+    // Event listener for starting the timer
     startButton.addEventListener("click", function () {
+        // Check if a task and a time duration are selected
         if (!(localStorage.getItem("selected_task"))) {
             alert("You have to choose a task!");
             return;
         }
 
-        if(sessionStorage.getItem("timerValue") == 0){
+        if (sessionStorage.getItem("timerValue") == 0) {
             alert("You have to choose a time!");
             return;
         }
 
+        // Set overlay as active and start the timer
         sessionStorage.setItem("overlayActive", "true");
+        sessionStorage.setItem("stageType", "Work");
 
         activateOverlay();
     });
 
-    pauseButton.addEventListener("click", function () {
-        pauseResumeTimer();
-    });
+    // Event listeners for controlling the timer (pause, reset, exit)
+    pauseButton.addEventListener("click", pauseResumeTimer);
+    resetButton.addEventListener("click", resetTimer);
+    exitButton.addEventListener("click", exitTimer);
 
-    resetButton.addEventListener("click", function () {
-        resetTimer();
-    });
-
-    exitButton.addEventListener("click", function () {
-        exitTimer();
-    });
-
-    function activateOverlay() {
+    // Function to activate the overlay and start the timer
+    const activateOverlay = async () => {
         overlay.style.display = "flex";
-
         modal.classList.add("active");
-
         fillContentBlock();
-
-        timerController();
-    }
+        initializeTimerUI();
+        await timerController();
+    };
 });
 
 /* ----------------------------- After session updates ----------------------------- */
 
-function updateCompleteTime() {
-    var currentCompleteTime = parseInt(localStorage.getItem("complete_time"));
+// Function to update the complete time spent on tasks
+function UpdateCompleteTime() {
+    var currentCompleteTime = parseInt(localStorage.getItem("complete_time")) || 0;
     var lastcompleteTimeInterval = parseInt(sessionStorage.getItem("timerStatus"));
-
-    if (!currentCompleteTime) {
-        currentCompleteTime = 0;
-    }
 
     localStorage.setItem("complete_time", currentCompleteTime + lastcompleteTimeInterval);
     sessionStorage.setItem("timerStatus", 0);
-
-    console.log("Data updated");
 }
 
+// Function to save task and habit data after a session
 async function SaveBlocksData() {
-    UpdateTask();
-    if(localStorage.getItem("selected_note")){
+    await UpdateTask();
+    if (localStorage.getItem("selected_note")) {
         UpdateNote();
     }
-    if(localStorage.getItem("selected_habits")){
+    if (localStorage.getItem("selected_habits")) {
         await UpdateTask('Habits');
         getHabitsData();
     }

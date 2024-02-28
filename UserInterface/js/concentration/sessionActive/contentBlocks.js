@@ -1,3 +1,6 @@
+// Generate a unique identifier value
+const generateUniqueId = () => 'toggle_' + Math.random().toString(36).substring(2, 11);
+
 function fillContentBlock() {
     var taskId = localStorage.getItem("selected_task");
     var noteId = localStorage.getItem("selected_note");

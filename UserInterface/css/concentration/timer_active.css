@@ -48,6 +48,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+
+.timer-block p{
+    display: flex;
+    justify-content: center;
 }
 
 .buttons-block {
