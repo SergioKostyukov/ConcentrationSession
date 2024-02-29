@@ -93,7 +93,7 @@ function select(ObjectId, type) {
     }
 
     const objBlock = document.getElementById(`block${ObjectId}`);
-    // Встановлюємо клас, що виділяє блок task-sets
+
     objBlock.classList.add('highlighted');
 
     localStorage.setItem(`selected_${type}`, ObjectId);
@@ -109,7 +109,7 @@ function select(ObjectId, type) {
 
 function unselect(ObjectId, type) {
     const objBlock = document.getElementById(`block${ObjectId}`);
-    // Встановлюємо клас, що виділяє блок task-sets
+
     objBlock.classList.remove('highlighted');
 
     localStorage.removeItem(`selected_${type}`);
@@ -147,7 +147,7 @@ function setSelectBlocksImages() {
 }
 
 function setObjectSelectBlock(name) {
-    if(name === 'habits' && localStorage.getItem("ignore_habits") === 'true'){
+    if (name === 'habits' && localStorage.getItem("ignore_habits") === 'true') {
         localStorage.removeItem('selected_habits');
     }
 

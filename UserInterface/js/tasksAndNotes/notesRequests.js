@@ -1,3 +1,5 @@
+/* ----------------------------- Requests ----------------------------- */
+
 // Function to request the list of user notes
 function getUserData() {
     fetch('https://localhost:7131/api/Notes/GetNotArchivedNotes', {

@@ -1,0 +1,31 @@
+/* ------------------------ Scrollbar styling ------------------------ */
+.task-sets::-webkit-scrollbar,
+.note-sets::-webkit-scrollbar,
+.habits-item::-webkit-scrollbar,
+.text-container::-webkit-scrollbar {
+    width: 12px;
+}
+
+.task-sets::-webkit-scrollbar-thumb,
+.note-sets::-webkit-scrollbar-thumb,
+.habits-item::-webkit-scrollbar-thumb,
+.text-container::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 6px;
+    border: 3px solid #fff;
+}
+
+.task-sets::-webkit-scrollbar-track,
+.note-sets::-webkit-scrollbar-track,
+.habits-item::-webkit-scrollbar-track,
+.text-container::-webkit-scrollbar-track {
+    background-color: #eee;
+    border-radius: 6px;
+}
+
+.task-sets:not(:hover)::-webkit-scrollbar-thumb,
+.note-sets:not(:hover)::-webkit-scrollbar-thumb,
+.habits-item:not(:hover)::-webkit-scrollbar-thumb,
+.text-container:not(:hover)::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}

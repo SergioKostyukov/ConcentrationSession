@@ -77,6 +77,7 @@ function deactivateModalTask(){
 }
 
 /* ----------------------------- Requests ----------------------------- */
+
 // Function to request the list of user tasks titles
 function getTitlesOfTasks() {
     fetch('https://localhost:7131/api/Tasks/GetTitlesOfNotArchivedTasks', {

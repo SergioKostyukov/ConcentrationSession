@@ -65,20 +65,6 @@ function getSignupFormData() {
     return formData;
 }
 
-// Function to clear input fields
-function clearInputFields() {
-    const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
-
-    inputFields.forEach(input => {
-        input.value = '';
-    });
-
-    // Remove empty fields from userData
-    for (const field in userData) {
-        userData[field] = '';
-    }
-}
-
 // Function to validate a field
 function validateFields() {
     let is_error = false;
@@ -111,4 +97,19 @@ function validateFields() {
 function displayError(fieldId, errorMessage) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = errorMessage;
+}
+
+
+// Function to clear input fields
+function clearInputFields() {
+    const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
+
+    inputFields.forEach(input => {
+        input.value = '';
+    });
+
+    // Remove empty fields from userData
+    for (const field in userData) {
+        userData[field] = '';
+    }
 }

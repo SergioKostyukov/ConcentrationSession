@@ -74,20 +74,6 @@ function login() {
     });
 }
 
-// Function to clear input fields
-function clearInputFields() {
-    const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
-
-    inputFields.forEach(input => {
-        input.value = '';
-    });
-
-    // Remove empty fields from userLoginData
-    for (const field in userLoginData) {
-        userLoginData[field] = '';
-    }
-}
-
 // Function to validate a field
 function validateFields() {
     let is_error = false;
@@ -107,4 +93,18 @@ function validateFields() {
 function displayError(fieldId, errorMessage) {
     const errorElement = document.getElementById(`${fieldId}_error`);
     errorElement.textContent = errorMessage;
+}
+
+// Function to clear input fields
+function clearInputFields() {
+    const inputFields = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
+
+    inputFields.forEach(input => {
+        input.value = '';
+    });
+
+    // Remove empty fields from userLoginData
+    for (const field in userLoginData) {
+        userLoginData[field] = '';
+    }
 }

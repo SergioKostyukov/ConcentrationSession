@@ -1,3 +1,5 @@
+/* ----------------------------- Requests ----------------------------- */
+
 // Function to request the user habits
 async function getHabitsData() {
     try {

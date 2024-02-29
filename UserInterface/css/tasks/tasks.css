@@ -1,0 +1,101 @@
+/* Add task panel styling */
+.center-blocks .add-task-panel {
+    width: 100%;
+    height: 80px;
+}
+
+.add-task-panel .add-task-button {
+    display: block;
+    margin: 0px auto;
+    width: 600px;
+    height: 60px;
+    border-radius: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    padding: 0px 20px;
+    text-align: left;
+}
+
+.add-task-panel .add-task-button:hover {
+    background-color: #e5e5e5;
+}
+
+/* Tasks panel styling */
+.center-blocks .tasks-panel {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    width: 100%;
+    height: calc(100% - 62px);
+    padding: 0px 20px;
+}
+
+/* Individual task block styling */
+.task-block {
+    width: calc(18%);
+    min-width: calc(20% - 30px);
+    height: calc(40%);
+    min-height: 200px;
+    max-height: 700px;
+    margin: 0px 20px 40px 20px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    border-radius: 40px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    text-decoration: none;
+    color: #000;
+    text-align: left;
+    padding: 0px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.task-block:hover {
+    background-color: #e5e5e5;
+}
+
+.task-block h3 {
+    max-width: calc(100% - 30px);
+    margin: 20px 0px 10px 0px;
+    font-size: 20px;
+}
+
+.text-container {
+    max-height: calc(100% - 84px);
+    margin-top: 0px;
+}
+
+hr {
+    width: 99%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+input {
+    width: 15px;
+    height: 15px;
+    margin: 5px 10px 0 0;
+}
+
+main p {
+    font-size: 18px;
+    margin: 3px 0 0 0;
+    width: 100%;
+    outline: none;
+}
+
+.done-toggle {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.done-toggle p.line-through {
+    text-decoration: line-through;
+    color: #999; 
+}

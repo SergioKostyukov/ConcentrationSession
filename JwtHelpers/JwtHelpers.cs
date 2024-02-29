@@ -12,12 +12,12 @@ public static class JwtHelpers
     {
         IEnumerable<Claim> claims = new Claim[]
         {
-            new Claim("user_name", userAccounts.user_name),
-            new Claim("email", userAccounts.email),
-            new Claim("id", userAccounts.id.ToString()),
-            new Claim("tag_name", userAccounts.tag_name),
-            new Claim("notifications", userAccounts.notifications.ToString()),
-            new Claim("expiration", DateTime.UtcNow.AddDays(1).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
+            new("user_name", userAccounts.user_name),
+            new("email", userAccounts.email),
+            new("id", userAccounts.id.ToString()),
+            new("tag_name", userAccounts.tag_name),
+            new("notifications", userAccounts.notifications.ToString()),
+            new("expiration", DateTime.UtcNow.AddDays(1).ToString("MMM ddd dd yyyy HH:mm:ss tt"))
         };
         return claims;
     }

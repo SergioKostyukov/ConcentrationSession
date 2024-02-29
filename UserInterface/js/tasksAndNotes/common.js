@@ -1,3 +1,6 @@
+// Generate a unique identifier value
+const generateUniqueId = () => 'toggle_' + Math.random().toString(36).substring(2, 11);
+
 // Toggle pin activation/deactivation
 function togglePin(pinID) {
     const pinButton = document.getElementById(pinID);
@@ -20,10 +23,6 @@ function saveTogglePin(pinID) {
     updatePin(pinButton);
 }
 
-// Generate a unique identifier value
-function generateUniqueId() {
-    return 'toggle_' + Math.random().toString(36).substring(2, 11);
-}
 
 // Function triggered when the save button is clicked
 function saveUpdate(blockName) {
@@ -235,7 +234,7 @@ async function displayObjects(objects){
     });
 }
 
-// ------------------------- Sending Requests -------------------------
+// ------------------------- Request -------------------------
 
 // Template function for sending a request (without data returned)
 async function serverRequest(path, type, requestObject) {

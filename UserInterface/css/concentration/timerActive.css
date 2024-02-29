@@ -142,26 +142,6 @@ h3 {
     width: calc(100% - 25px);
 }
 
-/* ------------------------ Scrollbar styling ------------------------ */
-.text-container::-webkit-scrollbar {
-    width: 12px;
-}
-
-.text-container::-webkit-scrollbar-thumb {
-    background-color: #eee;
-    border-radius: 6px;
-    border: 3px solid #fff;
-}
-
-.text-container::-webkit-scrollbar-track {
-    background-color: #eee;
-    border-radius: 6px;
-}
-
-.text-container:not(:hover)::-webkit-scrollbar-thumb {
-    background-color: transparent;
-}
-
 /* TIMER STYLES*/
 .base-timer {
     position: relative;

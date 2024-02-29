@@ -1,4 +1,6 @@
 
+/* ----------------------------- Requests ----------------------------- */
+
 async function UpdateTask(type = 'Task') {
     const taskBlock = document.getElementById(type);
 

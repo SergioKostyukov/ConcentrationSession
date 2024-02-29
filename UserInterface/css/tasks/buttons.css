@@ -1,0 +1,128 @@
+
+/* Buttons */
+.add-content-button {
+    background-color: #ddd;
+    color: #000;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.add-content-button:hover {
+    background-color: #ccc;
+}
+
+.save-task-button {
+    background-color: #ddd;
+    color: #000;
+    width: 100px;
+    height: 39px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    position: absolute;
+    right: 20%;
+    transform: translateX(50%); 
+    bottom: 5px;
+    margin: 3px 0px;
+}
+
+.save-task-button:hover {
+    background-color: #ccc;
+}
+
+.delete-toggle-button {
+    height: 25px;
+    width: 25px;
+    border: none;
+    border-radius: 50%;
+    padding: 0px;
+    opacity: 0;
+    color: #333;
+    cursor: pointer;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.done-toggle:hover .delete-toggle-button {
+    opacity: 1;
+    visibility: visible;
+    font-size: 16px;
+}
+
+.delete-toggle-button:hover {
+    background-color: #e2e2e2;
+    opacity: 1;
+    visibility: visible;
+    font-size: 16px;
+}
+
+/* Action buttons styling*/
+.action-button {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    padding: 6px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    background-color: transparent;
+}
+
+.action-button.pin-button {
+    height: 40px;
+    width: 40px;
+    top: 10px;
+    right: 10px;
+    padding: 8px;
+}
+
+.action-button.first-button {
+    left: 10px;
+    bottom: 5px;
+}
+
+.action-button.second-button {
+    left: 55px;
+    bottom: 5px;
+}
+
+.action-button.third-button {
+    left: 100px;
+    bottom: 5px;
+}
+
+.action-button.fourth-button {
+    left: 145px;
+    bottom: 5px;
+}
+
+.action-button img {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #ddd;
+}
+
+.modal-block:hover .action-button img,
+.task-block:hover .action-button img,
+.action-button.pinned img {
+    opacity: 1;
+}
+
+.action-button:active {
+    background-color: #ccc;
+}
+
+.action-button.pinned {
+    color: transparent;
+}
+

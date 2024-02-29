@@ -1,0 +1,19 @@
+/* Modal scrollbar styling */
+.modal .text-container::-webkit-scrollbar {
+    width: 12px;
+}
+
+.modal .text-container::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 6px;
+    border: 3px solid #fff;
+}
+
+.modal .text-container::-webkit-scrollbar-track {
+    background-color: #eee;
+    border-radius: 6px;
+}
+
+.modal .text-container:not(:hover)::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
